@@ -15,7 +15,7 @@ The project was conducted with the goal of practising:
 The project has been documented using [Notion](https://gerumap.notion.site/Request-5484f5c082414cefa93308e405f314be) and may be accessed on the link below:
 
 1. Requirements:
-**https://gerumap.notion.site/Request-5484f5c082414cefa93308e405f314be**
+**https://gerumap.notion.site/GeRuMap-Requirements-5484f5c082414cefa93308e405f314be**
 
 2. Documentation:
 **https://gerumap.notion.site/GeRuMap-Documentation-346a22bd26b6435a9ee88d83d5c1d00f**
