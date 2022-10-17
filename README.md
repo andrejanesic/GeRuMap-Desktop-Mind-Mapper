@@ -54,5 +54,5 @@ To build the code locally, run Maven on your local machine and execute the code:
 mvn clean install
 
 # Execute main
-mvn exec:java -Dexec.mainClass="Main"
+mvn exec:java -Dexec.mainClass="rs.edu.raf.dsw.rudok.app.AppCore"
 ```
