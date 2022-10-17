@@ -1,7 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
 /**
- * GUI app component requirements.
+ * GUI component specification.
  */
 public interface Gui {
 

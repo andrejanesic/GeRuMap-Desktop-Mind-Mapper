@@ -5,16 +5,21 @@ package rs.edu.raf.dsw.rudok.app.core;
  */
 public abstract class ApplicationFramework {
 
-    /**
-     * GUI app component.
-     */
+    protected ConfigHandler configHandler;
+    protected ErrorHandler errorHandler;
     protected Gui gui;
+    protected Repository repository;
+    protected Serializer serializer;
 
     /**
      * Initializes the app.
      * @param gui
      */
-    public void initialize(Gui gui) {
+    public void initialize(ConfigHandler configHandler, ErrorHandler errorHandler, Gui gui, Repository repository, Serializer serializer) {
+        this.configHandler = configHandler;
+        this.errorHandler = errorHandler;
         this.gui = gui;
+        this.repository = repository;
+        this.serializer = serializer;
     }
 }
