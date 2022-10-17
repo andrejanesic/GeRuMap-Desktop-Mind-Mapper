@@ -20,7 +20,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>Main</mainClass>
+                            <mainClass>rs.edu.raf.dsw.rudok.app.AppCore</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
