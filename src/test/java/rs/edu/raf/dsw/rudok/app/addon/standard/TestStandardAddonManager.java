@@ -7,7 +7,7 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddonManager;
 import rs.edu.raf.dsw.rudok.app.addon.IAddonMeta;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
-import rs.edu.raf.dsw.rudok.app.core.ISerializer;
+import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
 
 import java.io.Serializable;
@@ -96,8 +96,8 @@ public class TestStandardAddonManager {
             }
 
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getSerializer() {
+                return new IFileSystem() {
 
                     @Override
                     public void save(Serializable serializable) {
@@ -177,8 +177,8 @@ public class TestStandardAddonManager {
             }
 
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getSerializer() {
+                return new IFileSystem() {
 
                     @Override
                     public void save(Serializable serializable) {

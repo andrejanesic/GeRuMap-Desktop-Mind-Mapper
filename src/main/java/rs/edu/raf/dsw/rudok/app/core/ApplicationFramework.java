@@ -11,7 +11,7 @@ public abstract class ApplicationFramework {
     protected IErrorHandler iErrorHandler;
     protected IGui iGui;
     protected IRepository iRepository;
-    protected ISerializer iSerializer;
+    protected IFileSystem iFileSystem;
 
     /**
      * Initializes the app.
@@ -20,14 +20,14 @@ public abstract class ApplicationFramework {
      * @param iErrorHandler  Error handler implementation instance.
      * @param iGui           Gui handler implementation instance.
      * @param iRepository    Repository implementation instance.
-     * @param iSerializer    Serializer implementation instance.
+     * @param iFileSystem    Serializer implementation instance.
      */
-    public void initialize(IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, ISerializer iSerializer) {
+    public void initialize(IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, IFileSystem iFileSystem) {
         this.iConfigHandler = iConfigHandler;
         this.iErrorHandler = iErrorHandler;
         this.iGui = iGui;
         this.iRepository = iRepository;
-        this.iSerializer = iSerializer;
+        this.iFileSystem = iFileSystem;
     }
 
     public IConfigHandler getConfigHandler() {
@@ -46,7 +46,7 @@ public abstract class ApplicationFramework {
         return iRepository;
     }
 
-    public ISerializer getSerializer() {
-        return iSerializer;
+    public IFileSystem getSerializer() {
+        return iFileSystem;
     }
 }

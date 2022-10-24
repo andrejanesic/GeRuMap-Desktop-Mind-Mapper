@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Serializer component specification.
  */
-public interface ISerializer {
+public interface IFileSystem {
 
     /**
      * Saves the serializable object.
