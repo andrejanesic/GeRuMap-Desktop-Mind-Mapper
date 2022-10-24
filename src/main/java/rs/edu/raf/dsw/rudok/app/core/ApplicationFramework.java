@@ -5,26 +5,26 @@ package rs.edu.raf.dsw.rudok.app.core;
  */
 public abstract class ApplicationFramework {
 
-    protected ConfigHandler configHandler;
-    protected ErrorHandler errorHandler;
-    protected Gui gui;
-    protected Repository repository;
-    protected Serializer serializer;
+    protected IConfigHandler iConfigHandler;
+    protected IErrorHandler iErrorHandler;
+    protected IGui iGui;
+    protected IRepository iRepository;
+    protected ISerializer iSerializer;
 
     /**
      * Initializes the app.
      *
-     * @param configHandler Config handler implementation instance.
-     * @param errorHandler  Error handler implementation instance.
-     * @param gui           Gui handler implementation instance.
-     * @param repository    Repository implementation instance.
-     * @param serializer    Serializer implementation instance.
+     * @param iConfigHandler Config handler implementation instance.
+     * @param iErrorHandler  Error handler implementation instance.
+     * @param iGui           Gui handler implementation instance.
+     * @param iRepository    Repository implementation instance.
+     * @param iSerializer    Serializer implementation instance.
      */
-    public void initialize(ConfigHandler configHandler, ErrorHandler errorHandler, Gui gui, Repository repository, Serializer serializer) {
-        this.configHandler = configHandler;
-        this.errorHandler = errorHandler;
-        this.gui = gui;
-        this.repository = repository;
-        this.serializer = serializer;
+    public void initialize(IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, ISerializer iSerializer) {
+        this.iConfigHandler = iConfigHandler;
+        this.iErrorHandler = iErrorHandler;
+        this.iGui = iGui;
+        this.iRepository = iRepository;
+        this.iSerializer = iSerializer;
     }
 }
