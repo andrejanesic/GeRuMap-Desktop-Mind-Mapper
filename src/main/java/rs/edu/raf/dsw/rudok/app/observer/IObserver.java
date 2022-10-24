@@ -22,10 +22,11 @@ public abstract class IObserver {
     private Set<IPublisher> publishers = new HashSet<>();
 
     /**
-     * Receive data update from publisher.
+     * Receive data update from publisher. Default implementation, should be overridden.
      * @param message Data sent by publisher.
      */
-    public abstract void receive(Object message);
+    public void receive(Object message) {
+    }
 
     /**
      * Adds a new publisher.

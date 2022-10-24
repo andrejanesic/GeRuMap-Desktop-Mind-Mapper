@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Publisher for observer design pattern.
+ * Publisher for observer design pattern. Extends IObserver to allow for publisher-observer classes.
  */
-public abstract class IPublisher<T> {
+public abstract class IPublisher<T> extends IObserver {
 
     public Set<IObserver> getObservers() {
         return observers;
