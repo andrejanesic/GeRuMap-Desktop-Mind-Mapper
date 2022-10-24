@@ -6,7 +6,7 @@ package rs.edu.raf.dsw.rudok.app.core;
 public interface IConfigHandler {
 
     /**
-     * Loads the configuration file from the given URI.
+     * Loads the configuration file from the given URI. Returns true if successful, false otherwise.
      *
      * @param relPath Config file relative path.
      * @return True if loaded, false otherwise.
