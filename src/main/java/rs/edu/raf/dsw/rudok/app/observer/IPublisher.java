@@ -23,7 +23,7 @@ public abstract class IPublisher extends IObserver {
      * Updates all subscribed observers.
      * @param message Message.
      */
-    public void update(IMessage message) {
+    public void publish(IMessage message) {
         Iterator<IObserver> iterator = observers.iterator();
         while (iterator.hasNext()) {
             IObserver observer = iterator.next();
