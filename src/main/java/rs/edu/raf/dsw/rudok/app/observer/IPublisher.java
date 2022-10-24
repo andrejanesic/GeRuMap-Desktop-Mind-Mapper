@@ -9,24 +9,24 @@ import java.util.Set;
  */
 public abstract class IPublisher<T> {
 
-    public Set<IObserver<T>> getObservers() {
+    public Set<IObserver> getObservers() {
         return observers;
     }
 
-    public void setObservers(Set<IObserver<T>> observers) {
+    public void setObservers(Set<IObserver> observers) {
         this.observers = observers;
     }
 
-    private Set<IObserver<T>> observers = new HashSet<>();
+    private Set<IObserver> observers = new HashSet<>();
 
     /**
      * Updates all subscribed observers.
      * @param message Message.
      */
     public void update(T message) {
-        Iterator<IObserver<T>> iterator = observers.iterator();
+        Iterator<IObserver> iterator = observers.iterator();
         while (iterator.hasNext()) {
-            IObserver<T> observer = iterator.next();
+            IObserver observer = iterator.next();
             observer.receive(message);
         }
     }
@@ -35,7 +35,7 @@ public abstract class IPublisher<T> {
      * Adds a new observer.
      * @param observer
      */
-    public void addObserver(IObserver<T> observer) {
+    public void addObserver(IObserver observer) {
         if (observer == null) return;
         if (this.observers.contains(observer)) return;
         this.observers.add(observer);
@@ -46,7 +46,7 @@ public abstract class IPublisher<T> {
      * Removes an observer.
      * @param observer
      */
-    public void removeObserver(IObserver<T> observer) {
+    public void removeObserver(IObserver observer) {
         if (observer == null) return;
         if (!this.observers.contains(observer)) return;
         this.observers.remove(observer);
