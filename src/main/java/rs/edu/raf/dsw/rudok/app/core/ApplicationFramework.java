@@ -13,7 +13,12 @@ public abstract class ApplicationFramework {
 
     /**
      * Initializes the app.
-     * @param gui
+     *
+     * @param configHandler Config handler implementation instance.
+     * @param errorHandler  Error handler implementation instance.
+     * @param gui           Gui handler implementation instance.
+     * @param repository    Repository implementation instance.
+     * @param serializer    Serializer implementation instance.
      */
     public void initialize(ConfigHandler configHandler, ErrorHandler errorHandler, Gui gui, Repository repository, Serializer serializer) {
         this.configHandler = configHandler;
