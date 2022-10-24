@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Publisher for observer design pattern. Extends IObserver to allow for publisher-observer classes.
  */
-public abstract class IPublisher<T> extends IObserver {
+public abstract class IPublisher extends IObserver {
 
     public Set<IObserver> getObservers() {
         return observers;
@@ -23,7 +23,7 @@ public abstract class IPublisher<T> extends IObserver {
      * Updates all subscribed observers.
      * @param message Message.
      */
-    public void update(T message) {
+    public void update(IMessage message) {
         Iterator<IObserver> iterator = observers.iterator();
         while (iterator.hasNext()) {
             IObserver observer = iterator.next();
