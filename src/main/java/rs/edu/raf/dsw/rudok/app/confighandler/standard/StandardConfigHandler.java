@@ -1,18 +1,26 @@
 package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
-import rs.edu.raf.dsw.rudok.app.core.ISerializer;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Standard (default) implementation of the IConfigHandler component.
  */
 public class StandardConfigHandler extends IPublisher implements IConfigHandler {
+
+    /**
+     * App core reference.
+     */
+    private ApplicationFramework applicationFramework;
+
+    public StandardConfigHandler(ApplicationFramework applicationFramework) {
+        this.applicationFramework = applicationFramework;
+    }
 
     /**
      * Holds all current config properties.
@@ -27,14 +35,9 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     }};
 
     @Override
-    public void loadConfig(ISerializer iSerializer, String relPath) {
-        Serializable configRaw = iSerializer.load(relPath);
-        if (configRaw == null) {
-            config = DEFAULT_CONFIG;
-
-            this.publish(new Message(Message.Type.CONFIG_LOADED, this));
-            return;
-        }
+    public boolean loadConfig(String relPath) {
+        Serializable configRaw = this.applicationFramework.getSerializer().load(relPath);
+        if (configRaw == null) return false;
 
         try {
             config = (HashMap<String, Object>) configRaw;
@@ -42,18 +45,27 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
             this.publish(new Message(Message.Type.CONFIG_LOADED, this));
         } catch (Exception e) {
             // TODO call error handler component
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void saveConfig(ISerializer iSerializer) {
-        iSerializer.save(config);
+    public void resetConfig() {
+        config = DEFAULT_CONFIG;
+
+        this.publish(new Message(Message.Type.CONFIG_LOADED, this));
+    }
+
+    @Override
+    public void saveConfig() {
+        this.applicationFramework.getSerializer().save(config);
 
         this.publish(new Message(Message.Type.CONFIG_SAVED, this));
     }
 
     @Override
-    public void set(String key, Object val) {
+    public void set(String key, String val) {
         config.put(key, val);
 
         this.publish(new Message(Message.Type.CONFIG_UPDATED, this));

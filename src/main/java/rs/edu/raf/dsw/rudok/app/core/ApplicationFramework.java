@@ -11,6 +11,10 @@ public abstract class ApplicationFramework {
     protected IRepository iRepository;
     protected ISerializer iSerializer;
 
+    public ISerializer getSerializer() {
+        return iSerializer;
+    }
+
     /**
      * Initializes the app.
      *

@@ -6,20 +6,21 @@ package rs.edu.raf.dsw.rudok.app.core;
 public interface IConfigHandler {
 
     /**
-     * Loads the configuration file from the given URI.
+     * Loads the configuration file from the given URI. Returns true if successful, false otherwise.
      *
-     * @param iSerializer Serializer component.
-     *                    TODO pitati da li se pass-uje u funkc ili konstruktor ili mora Core da se poziva
      * @param relPath Config file relative path.
      */
-    void loadConfig(ISerializer iSerializer, String relPath);
+    boolean loadConfig(String relPath);
+
+    /**
+     * Loads the default app configuration.
+     */
+    void resetConfig();
 
     /**
      * Saves the current configuration.
-     *
-     * @param iSerializer Serializer component.
      */
-    void saveConfig(ISerializer iSerializer);
+    void saveConfig();
 
     /**
      * Sets the configuration value for the given key.
@@ -27,7 +28,7 @@ public interface IConfigHandler {
      * @param key Config key.
      * @param val Value to set.
      */
-    void set(String key, Object val);
+    void set(String key, String val);
 
     /**
      * Returns the configuration value for the given key.
