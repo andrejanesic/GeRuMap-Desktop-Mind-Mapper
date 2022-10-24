@@ -31,11 +31,15 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
         Serializable configRaw = iSerializer.load(relPath);
         if (configRaw == null) {
             config = DEFAULT_CONFIG;
+
+            this.publish(new Message(Message.Type.CONFIG_LOADED, this));
             return;
         }
 
         try {
             config = (HashMap<String, Object>) configRaw;
+
+            this.publish(new Message(Message.Type.CONFIG_LOADED, this));
         } catch (Exception e) {
             // TODO call error handler component
         }
@@ -44,11 +48,14 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     @Override
     public void saveConfig(ISerializer iSerializer) {
         iSerializer.save(config);
+
+        this.publish(new Message(Message.Type.CONFIG_SAVED, this));
     }
 
     @Override
     public void set(String key, Object val) {
         config.put(key, val);
+
         this.publish(new Message(Message.Type.CONFIG_UPDATED, this));
     }
 
