@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
+import rs.edu.raf.dsw.rudok.app.gui.IGui;
+
 /**
  * The "glue" together between all components.
  */
