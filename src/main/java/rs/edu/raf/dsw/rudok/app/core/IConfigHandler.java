@@ -8,9 +8,11 @@ public interface IConfigHandler {
     /**
      * Loads the configuration file from the given URI.
      *
+     * @param iSerializer Serializer component.
+     *                    TODO pitati da li se pass-uje u funkc ili konstruktor ili mora Core da se poziva
      * @param relPath Config file relative path.
      */
-    void loadConfig(String relPath);
+    void loadConfig(ISerializer iSerializer, String relPath);
 
     /**
      * Saves the current configuration.
