@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.core;
+package rs.edu.raf.dsw.rudok.app.gui;
 
 /**
  * GUI component specification.
