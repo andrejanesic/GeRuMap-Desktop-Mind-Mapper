@@ -27,4 +27,24 @@ public abstract class ApplicationFramework {
         this.iRepository = iRepository;
         this.iSerializer = iSerializer;
     }
+
+    public IConfigHandler getConfigHandler() {
+        return iConfigHandler;
+    }
+
+    public IErrorHandler getErrorHandler() {
+        return iErrorHandler;
+    }
+
+    public IGui getGui() {
+        return iGui;
+    }
+
+    public IRepository getRepository() {
+        return iRepository;
+    }
+
+    public ISerializer getSerializer() {
+        return iSerializer;
+    }
 }

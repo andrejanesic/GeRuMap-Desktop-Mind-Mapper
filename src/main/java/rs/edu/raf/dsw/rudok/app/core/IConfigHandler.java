@@ -9,15 +9,21 @@ public interface IConfigHandler {
      * Loads the configuration file from the given URI.
      *
      * @param relPath Config file relative path.
+     * @return True if loaded, false otherwise.
      */
-    void loadConfig(String relPath);
+    boolean loadConfig(String relPath);
 
     /**
      * Saves the current configuration.
      *
-     * @param iSerializer Serializer component.
+     * @param relPath Path to save the config to.
      */
-    void saveConfig(ISerializer iSerializer);
+    void saveConfig(String relPath);
+
+    /**
+     * Loads the default config.
+     */
+    void resetConfig();
 
     /**
      * Sets the configuration value for the given key.
@@ -25,7 +31,7 @@ public interface IConfigHandler {
      * @param key Config key.
      * @param val Value to set.
      */
-    void set(String key, Object val);
+    void set(String key, String val);
 
     /**
      * Returns the configuration value for the given key.
