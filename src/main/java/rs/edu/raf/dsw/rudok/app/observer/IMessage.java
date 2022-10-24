@@ -5,24 +5,24 @@ import java.util.Objects;
 /**
  * Generic observer message.
  */
-public abstract class IMessage<T> {
+public abstract class IMessage<S, T> {
 
     /**
      * Message status code.
      */
-    private int status;
+    private S status;
 
     /**
      * Associated model.
      */
     private T data;
 
-    public IMessage(int status, T data) {
+    public IMessage(S status, T data) {
         this.status = status;
         this.data = data;
     }
 
-    public int getStatus() {
+    public S getStatus() {
         return status;
     }
 
@@ -30,7 +30,7 @@ public abstract class IMessage<T> {
         return data;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(S status) {
         this.status = status;
     }
 
@@ -38,8 +38,8 @@ public abstract class IMessage<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IMessage<?> iMessage = (IMessage<?>) o;
-        return getStatus() == iMessage.getStatus() && Objects.equals(getData(), iMessage.getData());
+        IMessage<?, ?> iMessage = (IMessage<?, ?>) o;
+        return Objects.equals(getStatus(), iMessage.getStatus()) && Objects.equals(getData(), iMessage.getData());
     }
 
     @Override
