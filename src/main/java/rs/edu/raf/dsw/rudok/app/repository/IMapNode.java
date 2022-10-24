@@ -4,6 +4,7 @@ import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -21,7 +22,11 @@ public abstract class IMapNode extends IPublisher {
     }
 
     public void setParents(Set<IMapNodeComposite> parents) {
-        this.parents = parents;
+        this.parents = new HashSet<>();
+        Iterator<IMapNodeComposite> iterator = parents.iterator();
+        while (iterator.hasNext()) {
+            addParent(iterator.next());
+        }
     }
 
     /**
@@ -34,6 +39,7 @@ public abstract class IMapNode extends IPublisher {
         if (this.parents.contains(parent)) return;
         this.parents.add(parent);
 
+        this.addObserver(parent);
         this.publish(new Message(Message.Type.PARENT_ADDED, this));
     }
 
@@ -47,6 +53,7 @@ public abstract class IMapNode extends IPublisher {
         if (!this.parents.contains(parent)) return;
         this.parents.remove(parent);
 
+        this.removeObserver(parent);
         this.publish(new Message(Message.Type.PARENT_REMOVED, this));
     }
 

@@ -3,6 +3,7 @@ package rs.edu.raf.dsw.rudok.app.repository;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -20,7 +21,11 @@ public abstract class IMapNodeComposite extends IMapNode {
     }
 
     public void setChildren(Set<IMapNode> children) {
-        this.children = children;
+        this.children = new HashSet<>();
+        Iterator<IMapNode> iterator = children.iterator();
+        while (iterator.hasNext()) {
+            addChild(iterator.next());
+        }
     }
 
     /**
@@ -33,6 +38,7 @@ public abstract class IMapNodeComposite extends IMapNode {
         if (this.children.contains(child)) return;
         this.children.add(child);
 
+        this.addObserver(child);
         this.publish(new Message(Message.Type.CHILD_ADDED, this));
     }
 
@@ -46,6 +52,7 @@ public abstract class IMapNodeComposite extends IMapNode {
         if (!this.children.contains(child)) return;
         this.children.remove(child);
 
+        this.removeObserver(child);
         this.publish(new Message(Message.Type.CHILD_REMOVED, this));
     }
 
