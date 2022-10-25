@@ -2,7 +2,10 @@ package rs.edu.raf.dsw.rudok.app.core;
 
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 
+import java.io.File;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * FileSystem component specification.
@@ -31,5 +34,18 @@ public interface IFileSystem {
      * @param classname Add-on class name.
      * @return Addon.
      */
-    IAddon loadAddon(String classname);
+    default IAddon loadAddon(String classname) {
+        File f = new File("./add-ons");
+        try {
+            URL url = f.toURI().toURL();
+            URL[] urls = new URL[]{url};
+
+            ClassLoader cl = new URLClassLoader(urls);
+            Class<?> cls = cl.loadClass(classname);
+            return (IAddon) cls.getConstructor().newInstance();
+        } catch (Exception e) {
+            // TODO call error handler here
+        }
+        return null;
+    }
 }
