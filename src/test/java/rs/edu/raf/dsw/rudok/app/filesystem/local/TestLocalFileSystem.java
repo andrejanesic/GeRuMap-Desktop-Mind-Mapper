@@ -7,6 +7,8 @@ import org.junit.rules.TemporaryFolder;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class TestLocalFileSystem {
@@ -56,15 +58,14 @@ public class TestLocalFileSystem {
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Test
-    public void testSave() throws IOException, ClassNotFoundException {
+    public void testSaveConfig() throws IOException, ClassNotFoundException {
         IFileSystem fs = new LocalFileSystem();
-        int foo = 25, bar = 10;
         String dirPath = "test/";
-        String fileName = "TestSerializable.gerumap";
+        String fileName = "config.ser";
         String relPath = dirPath + fileName;
-        Serializable testSerializable = new TestSerializable(foo, bar);
+        Map<String, String> testSerializable = new HashMap<>();
 
-        fs.save(temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath, testSerializable);
+        fs.saveConfig(temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath, testSerializable);
 
         FileInputStream fis = new FileInputStream(
                 temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath
@@ -75,13 +76,12 @@ public class TestLocalFileSystem {
     }
 
     @Test
-    public void testLoad() throws IOException, ClassNotFoundException {
+    public void testLoadConfig() throws IOException {
         IFileSystem fs = new LocalFileSystem();
-        int foo = 25, bar = 10;
         String dirPath = "test/";
-        String fileName = "TestSerializable.gerumap";
+        String fileName = "config.ser";
         String relPath = dirPath + fileName;
-        Serializable testSerializable = new TestSerializable(foo, bar);
+        Map<String, String> testSerializable = new HashMap<>();
 
         temporaryFolder.newFolder(dirPath);
 
@@ -92,7 +92,7 @@ public class TestLocalFileSystem {
 
         oos.writeObject(testSerializable);
 
-        Object obj = fs.load(temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath);
+        Object obj = fs.loadConfig(temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath);
 
         Assert.assertEquals(testSerializable, obj);
     }

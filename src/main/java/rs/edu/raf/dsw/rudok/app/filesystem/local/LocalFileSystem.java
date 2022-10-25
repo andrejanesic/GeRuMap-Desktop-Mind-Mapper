@@ -2,14 +2,18 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class LocalFileSystem implements IFileSystem {
 
     @Override
-    public void save(String path, Serializable serializable) {
+    public void saveConfig(String path, Map<String, String> config) {
         try {
             Files.createDirectories(Paths.get(path).getParent());
 
@@ -18,7 +22,7 @@ public class LocalFileSystem implements IFileSystem {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             // write object
-            oos.writeObject(serializable);
+            oos.writeObject(config);
 
             // close output streams
             oos.close();
@@ -29,7 +33,7 @@ public class LocalFileSystem implements IFileSystem {
     }
 
     @Override
-    public Serializable load(String path) {
+    public Map<String, String> loadConfig(String path) {
 
         /**
          * TODO DANGER! Deserialized data should be checked!
@@ -41,7 +45,7 @@ public class LocalFileSystem implements IFileSystem {
             ObjectInputStream ois = new ObjectInputStream(fis);
 
             // write object
-            Serializable obj = (Serializable) ois.readObject();
+            Map<String, String> obj = (Map<String, String>) ois.readObject();
 
             // close output streams
             ois.close();
