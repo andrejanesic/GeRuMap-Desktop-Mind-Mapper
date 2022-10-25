@@ -7,11 +7,13 @@ import org.junit.rules.TemporaryFolder;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConstants;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public class TestLocalFileSystem {
 
@@ -54,6 +56,26 @@ public class TestLocalFileSystem {
         public int hashCode() {
             return Objects.hash(getFoo(), getBar());
         }
+    }
+
+    public static class TestIMapNodeComposite extends IMapNodeComposite {
+
+    }
+
+    /**
+     * Generate a tree of IMapNodeComposites.
+     *
+     * @return Root of the tree.
+     */
+    private IMapNodeComposite tree(IMapNodeComposite root, int depth) {
+        if (root == null) root = new TestIMapNodeComposite();
+        if (depth == 0) return root;
+        int children = new Random().nextInt(3) + 1;
+        for (int i = 0; i < children; i++) {
+            IMapNodeComposite child = tree(null, depth - 1);
+            root.addChild(child);
+        }
+        return root;
     }
 
     @Rule
@@ -133,5 +155,37 @@ public class TestLocalFileSystem {
         Object obj = fs.loadConfig("default");
 
         Assert.assertEquals(testSerializable, obj);
+    }
+
+    @Test
+    public void testSaveProject() throws IOException {
+        IMapNodeComposite root = tree(null, new Random().nextInt(5) + 1);
+
+        String dirPath = "test/projects";
+        String fileName = "default.gerumap";
+        String relPath = dirPath + '/' + fileName;
+
+        ApplicationFramework applicationFramework = new ApplicationFramework() {
+            @Override
+            public IConstants getConstants() {
+                return new IConstants() {
+                    @Override
+                    public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
+                        return null;
+                    }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
+                        return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
+                    }
+                };
+            }
+        };
+
+        IFileSystem fs = new LocalFileSystem(applicationFramework);
+
+        fs.saveProject(root);
+
+        Assert.assertTrue(new File(temporaryFolder.getRoot().getAbsolutePath() + '/' + relPath).exists());
     }
 }

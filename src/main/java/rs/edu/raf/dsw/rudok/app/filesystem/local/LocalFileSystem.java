@@ -131,7 +131,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
         }
 
         // recreate operations from the root to the leaves of the tree
-        List<Object[]> operations = recreateOperations(project, null);
+        List<Object[]> operations = recreateOperations(project);
 
         // append the operations to the new db file
         Iterator<Object[]> iterator = operations.listIterator();
@@ -180,13 +180,12 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
      * Recreates the operations that build a tree of IMapNodeComposites from the given root element. If an IMapNode is
      * passed, returns only operations for that node.
      *
-     * @param node       Root IMapNode.
-     * @param operations List of operations. Pass null on first iteration.
+     * @param node Root IMapNode.
      * @return List of operations that recreate a tree of IMapNodeComposites.
      */
-    private List<Object[]> recreateOperations(IMapNode node, List<Object[]> operations) {
-        if (node == null) return operations;
-        if (operations == null) operations = new LinkedList<>();
+    private List<Object[]> recreateOperations(IMapNode node) {
+        if (node == null) return new LinkedList<>();
+        List<Object[]> operations = new LinkedList<>();
 
         // TODO here we will encode the actual properties of the node
         // operations.add(op_encode_Edit(new IMapNode.Message.EditedMessageData(key, val)))
@@ -202,7 +201,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     root, child
             )));
             if (child instanceof IMapNodeComposite)
-                operations.addAll(recreateOperations((IMapNodeComposite) child, operations));
+                operations.addAll(recreateOperations(child));
         }
 
         return operations;
@@ -223,6 +222,8 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
         String filePath = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() + '/' + fileName;
         try {
             Files.deleteIfExists(Paths.get(filePath));
+            if (backup) projectPath = null;
+            else projectPathBackup = null;
             return true;
         } catch (IOException e) {
             // TODO send to error handler
@@ -251,15 +252,16 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
             if (backup) {
                 projectPathBackup = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() + '/' + fileName;
-                projectPathBackup = new File(fileName).createNewFile() ? projectPathBackup : null;
+                projectPathBackup = new File(projectPathBackup).createNewFile() ? projectPathBackup : null;
             } else {
                 projectPath = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() + '/' + fileName;
-                projectPath = new File(fileName).createNewFile() ? projectPath : null;
+                projectPath = new File(projectPath).createNewFile() ? projectPath : null;
             }
         } catch (IOException e) {
             // TODO send to error handler
             if (backup) projectPathBackup = null;
             else projectPath = null;
+            e.printStackTrace();
         }
 
         if (backup) return projectPathBackup;
