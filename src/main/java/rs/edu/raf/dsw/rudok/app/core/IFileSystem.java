@@ -5,16 +5,17 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import java.io.Serializable;
 
 /**
- * Serializer component specification.
+ * FileSystem component specification.
  */
 public interface IFileSystem {
 
     /**
      * Saves the serializable object.
      *
+     * @param relPath      Relative path where to save.
      * @param serializable Serializable object.
      */
-    void save(Serializable serializable);
+    void save(String relPath, Serializable serializable);
 
     /**
      * Loads a serializable object from the given path. In case of error returns null.

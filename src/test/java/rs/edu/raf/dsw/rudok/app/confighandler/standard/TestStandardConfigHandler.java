@@ -2,9 +2,10 @@ package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
 import org.junit.Assert;
 import org.junit.Test;
+import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
-import rs.edu.raf.dsw.rudok.app.core.ISerializer;
+import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -16,10 +17,10 @@ public class TestStandardConfigHandler {
 
         IConfigHandler iConfigHandler = new StandardConfigHandler(new ApplicationFramework() {
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getFileSystem() {
+                return new IFileSystem() {
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 
@@ -28,6 +29,11 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("test", "abc");
                         }};
+                    }
+
+                    @Override
+                    public IAddon loadAddon(String classname) {
+                        return null;
                     }
                 };
             }
@@ -45,10 +51,10 @@ public class TestStandardConfigHandler {
 
         IConfigHandler iConfigHandler = new StandardConfigHandler(new ApplicationFramework() {
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getFileSystem() {
+                return new IFileSystem() {
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 
@@ -57,6 +63,11 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public IAddon loadAddon(String classname) {
+                        return null;
                     }
                 };
             }
@@ -76,10 +87,10 @@ public class TestStandardConfigHandler {
 
         IConfigHandler iConfigHandler = new StandardConfigHandler(new ApplicationFramework() {
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getFileSystem() {
+                return new IFileSystem() {
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
                         Assert.assertEquals(((HashMap<String, String>) serializable).get("abc"), "def");
                     }
 
@@ -89,12 +100,17 @@ public class TestStandardConfigHandler {
                             put("language", "French");
                         }};
                     }
+
+                    @Override
+                    public IAddon loadAddon(String classname) {
+                        return null;
+                    }
                 };
             }
         });
 
         iConfigHandler.set("abc", "def");
-        iConfigHandler.saveConfig();
+        iConfigHandler.saveConfig("foobar");
     }
 
     @Test
@@ -102,10 +118,10 @@ public class TestStandardConfigHandler {
 
         IConfigHandler iConfigHandler = new StandardConfigHandler(new ApplicationFramework() {
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getFileSystem() {
+                return new IFileSystem() {
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 
@@ -114,6 +130,11 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public IAddon loadAddon(String classname) {
+                        return null;
                     }
                 };
             }
@@ -131,10 +152,10 @@ public class TestStandardConfigHandler {
 
         IConfigHandler iConfigHandler = new StandardConfigHandler(new ApplicationFramework() {
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getFileSystem() {
+                return new IFileSystem() {
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 
@@ -143,6 +164,11 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public IAddon loadAddon(String classname) {
+                        return null;
                     }
                 };
             }
@@ -160,10 +186,10 @@ public class TestStandardConfigHandler {
 
         IConfigHandler iConfigHandler = new StandardConfigHandler(new ApplicationFramework() {
             @Override
-            public ISerializer getSerializer() {
-                return new ISerializer() {
+            public IFileSystem getFileSystem() {
+                return new IFileSystem() {
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 
@@ -172,6 +198,11 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public IAddon loadAddon(String classname) {
+                        return null;
                     }
                 };
             }

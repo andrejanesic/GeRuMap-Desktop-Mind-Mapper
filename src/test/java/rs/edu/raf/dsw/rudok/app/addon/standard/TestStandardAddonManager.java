@@ -96,11 +96,11 @@ public class TestStandardAddonManager {
             }
 
             @Override
-            public IFileSystem getSerializer() {
+            public IFileSystem getFileSystem() {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 
@@ -177,11 +177,11 @@ public class TestStandardAddonManager {
             }
 
             @Override
-            public IFileSystem getSerializer() {
+            public IFileSystem getFileSystem() {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(Serializable serializable) {
+                    public void save(String relPath, Serializable serializable) {
 
                     }
 

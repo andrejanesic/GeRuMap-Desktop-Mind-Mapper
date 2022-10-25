@@ -24,7 +24,7 @@ public class StandardAddonManager extends IAddonManager {
         for (int i = 0; i < addonClassnames.length; i++) {
             String classname = addonClassnames[i];
 
-            IAddon addon = getApplicationFramework().getSerializer().loadAddon(classname);
+            IAddon addon = getApplicationFramework().getFileSystem().loadAddon(classname);
             addAddon(addon);
 
             publish(new IAddonManager.Message(Message.Type.ADDON_INITIALIZED, addon));

@@ -36,7 +36,7 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
     @Override
     public boolean loadConfig(String relPath) {
-        Serializable configRaw = this.applicationFramework.getSerializer().load(relPath);
+        Serializable configRaw = this.applicationFramework.getFileSystem().load(relPath);
         if (configRaw == null) return false;
 
         try {
@@ -58,8 +58,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     }
 
     @Override
-    public void saveConfig() {
-        this.applicationFramework.getSerializer().save(config);
+    public void saveConfig(String relPath) {
+        this.applicationFramework.getFileSystem().save(relPath, config);
 
         this.publish(new Message(Message.Type.CONFIG_SAVED, this));
     }
