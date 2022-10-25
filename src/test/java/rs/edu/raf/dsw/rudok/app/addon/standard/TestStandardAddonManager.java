@@ -10,8 +10,8 @@ import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
 
-import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Map;
 
 public class TestStandardAddonManager {
 
@@ -100,12 +100,12 @@ public class TestStandardAddonManager {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(String path, Serializable serializable) {
+                    public void saveConfig(String path, Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String path) {
                         return null;
                     }
 
@@ -181,12 +181,12 @@ public class TestStandardAddonManager {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(String path, Serializable serializable) {
+                    public void saveConfig(String path, Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String path) {
                         return null;
                     }
 
