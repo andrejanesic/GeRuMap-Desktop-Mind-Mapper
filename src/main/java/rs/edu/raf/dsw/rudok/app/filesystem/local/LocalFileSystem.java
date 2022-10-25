@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -70,5 +71,15 @@ public class LocalFileSystem implements IFileSystem {
             // TODO to error component
             return null;
         }
+    }
+
+    @Override
+    public void saveProject(IMapNodeComposite project) {
+
+    }
+
+    @Override
+    public IMapNodeComposite loadProject(String name) {
+        return null;
     }
 }

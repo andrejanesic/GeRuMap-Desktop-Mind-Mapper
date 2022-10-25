@@ -9,6 +9,7 @@ import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -110,6 +111,16 @@ public class TestStandardAddonManager {
                     }
 
                     @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         try {
                             return TestAddon.class.getConstructor().newInstance();
@@ -187,6 +198,16 @@ public class TestStandardAddonManager {
 
                     @Override
                     public Map<String, String> loadConfig(String name) {
+                        return null;
+                    }
+
+                    @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
                         return null;
                     }
 
