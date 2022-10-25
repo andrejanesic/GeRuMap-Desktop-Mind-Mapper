@@ -7,8 +7,8 @@ import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
-import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TestStandardConfigHandler {
 
@@ -20,12 +20,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("test", "abc");
                         }};
@@ -54,12 +54,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -90,12 +90,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
-                        Assert.assertEquals(((HashMap<String, String>) serializable).get("abc"), "def");
+                    public void saveConfig(Map<String, String> config) {
+                        Assert.assertEquals(((HashMap<String, String>) config).get("abc"), "def");
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -110,7 +110,7 @@ public class TestStandardConfigHandler {
         });
 
         iConfigHandler.set("abc", "def");
-        iConfigHandler.saveConfig("foobar");
+        iConfigHandler.saveConfig();
     }
 
     @Test
@@ -121,12 +121,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -155,12 +155,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -189,12 +189,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};

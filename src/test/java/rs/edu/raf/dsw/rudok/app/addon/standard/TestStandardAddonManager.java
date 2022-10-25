@@ -10,8 +10,8 @@ import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
 
-import java.io.Serializable;
 import java.util.Iterator;
+import java.util.Map;
 
 public class TestStandardAddonManager {
 
@@ -61,12 +61,12 @@ public class TestStandardAddonManager {
             public IConfigHandler getConfigHandler() {
                 return new IConfigHandler() {
                     @Override
-                    public boolean loadConfig(String relPath) {
+                    public boolean loadConfig(String name) {
                         return false;
                     }
 
                     @Override
-                    public void saveConfig(String relPath) {
+                    public void saveConfig() {
 
                     }
 
@@ -100,12 +100,12 @@ public class TestStandardAddonManager {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return null;
                     }
 
@@ -142,12 +142,12 @@ public class TestStandardAddonManager {
             public IConfigHandler getConfigHandler() {
                 return new IConfigHandler() {
                     @Override
-                    public boolean loadConfig(String relPath) {
+                    public boolean loadConfig(String name) {
                         return false;
                     }
 
                     @Override
-                    public void saveConfig(String relPath) {
+                    public void saveConfig() {
 
                     }
 
@@ -181,12 +181,12 @@ public class TestStandardAddonManager {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Serializable load(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return null;
                     }
 

@@ -8,17 +8,24 @@ public interface IConfigHandler {
     /**
      * Loads the configuration file from the given URI. Returns true if successful, false otherwise.
      *
-     * @param relPath Config file relative path.
+     * @param name Config name.
      * @return True if loaded, false otherwise.
      */
-    boolean loadConfig(String relPath);
+    boolean loadConfig(String name);
+
+    /**
+     * Loads the configuration file from the given URI. Returns true if successful, false otherwise.
+     *
+     * @return True if loaded, false otherwise.
+     */
+    default boolean loadConfig() {
+        return loadConfig("default");
+    }
 
     /**
      * Saves the current configuration.
-     *
-     * @param relPath Path to save the config to.
      */
-    void saveConfig(String relPath);
+    void saveConfig();
 
     /**
      * Loads the default config.

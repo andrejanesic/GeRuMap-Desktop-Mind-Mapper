@@ -2,7 +2,10 @@ package rs.edu.raf.dsw.rudok.app.core;
 
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 
-import java.io.Serializable;
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Map;
 
 /**
  * FileSystem component specification.
@@ -10,20 +13,19 @@ import java.io.Serializable;
 public interface IFileSystem {
 
     /**
-     * Saves the serializable object.
+     * Saves the config map.
      *
-     * @param relPath      Relative path where to save.
-     * @param serializable Serializable object.
+     * @param config Serializable object.
      */
-    void save(String relPath, Serializable serializable);
+    void saveConfig(Map<String, String> config);
 
     /**
      * Loads a serializable object from the given path. In case of error returns null.
      *
-     * @param path Path to load the object from.
+     * @param name Relative path to load the object from.
      * @return The serializable object or null if error.
      */
-    Serializable load(String path);
+    Map<String, String> loadConfig(String name);
 
     /**
      * Loads an add-on based on class name.
@@ -31,5 +33,18 @@ public interface IFileSystem {
      * @param classname Add-on class name.
      * @return Addon.
      */
-    IAddon loadAddon(String classname);
+    default IAddon loadAddon(String classname) {
+        File f = new File("./add-ons");
+        try {
+            URL url = f.toURI().toURL();
+            URL[] urls = new URL[]{url};
+
+            ClassLoader cl = new URLClassLoader(urls);
+            Class<?> cls = cl.loadClass(classname);
+            return (IAddon) cls.getConstructor().newInstance();
+        } catch (Exception e) {
+            // TODO call error handler here
+        }
+        return null;
+    }
 }

@@ -5,8 +5,8 @@ import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
-import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Standard (default) implementation of the IConfigHandler component.
@@ -25,22 +25,23 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     /**
      * Holds all current config properties.
      */
-    private HashMap<String, Object> config = new HashMap<>();
+    private HashMap<String, String> config = new HashMap<>();
 
     /**
      * Default (fallback) config properties.
      */
-    private static final HashMap<String, Object> DEFAULT_CONFIG = new HashMap<String, Object>() {{
+    private static final HashMap<String, String> DEFAULT_CONFIG = new HashMap<String, String>() {{
+        put("config", "default");
         put("language", "English");
     }};
 
     @Override
-    public boolean loadConfig(String relPath) {
-        Serializable configRaw = this.applicationFramework.getFileSystem().load(relPath);
+    public boolean loadConfig(String name) {
+        Map<String, String> configRaw = this.applicationFramework.getFileSystem().loadConfig(name);
         if (configRaw == null) return false;
 
         try {
-            config = (HashMap<String, Object>) configRaw;
+            config = (HashMap<String, String>) configRaw;
 
             this.publish(new Message(Message.Type.CONFIG_LOADED, this));
         } catch (Exception e) {
@@ -58,8 +59,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     }
 
     @Override
-    public void saveConfig(String relPath) {
-        this.applicationFramework.getFileSystem().save(relPath, config);
+    public void saveConfig() {
+        this.applicationFramework.getFileSystem().saveConfig(config);
 
         this.publish(new Message(Message.Type.CONFIG_SAVED, this));
     }
@@ -78,7 +79,9 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
     @Override
     public Object get(String key, Object defaultValue) {
-        return config.getOrDefault(key, defaultValue);
+        String val = config.get(key);
+        if (val == null) return defaultValue;
+        return val;
     }
 
     public static class Message extends IMessage<StandardConfigHandler.Message.Type, StandardConfigHandler> {
