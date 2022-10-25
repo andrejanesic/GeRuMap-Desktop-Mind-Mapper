@@ -8,4 +8,11 @@ public class StandardConstants implements IConstants {
     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
         return "config/";
     }
+
+    @Override
+    public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
+        return "projects/";
+    }
+
+
 }
