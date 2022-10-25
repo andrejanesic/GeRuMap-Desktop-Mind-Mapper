@@ -7,6 +7,7 @@ import rs.edu.raf.dsw.rudok.app.gui.IGui;
  */
 public abstract class ApplicationFramework {
 
+    protected IConstants iConstants;
     protected IConfigHandler iConfigHandler;
     protected IErrorHandler iErrorHandler;
     protected IGui iGui;
@@ -16,18 +17,24 @@ public abstract class ApplicationFramework {
     /**
      * Initializes the app.
      *
+     * @param iConstants     Environment/app constants.
      * @param iConfigHandler Config handler implementation instance.
      * @param iErrorHandler  Error handler implementation instance.
      * @param iGui           Gui handler implementation instance.
      * @param iRepository    Repository implementation instance.
      * @param iFileSystem    FileSystem implementation instance.
      */
-    public void initialize(IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, IFileSystem iFileSystem) {
+    public void initialize(IConstants iConstants, IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, IFileSystem iFileSystem) {
+        this.iConstants = iConstants;
         this.iConfigHandler = iConfigHandler;
         this.iErrorHandler = iErrorHandler;
         this.iGui = iGui;
         this.iRepository = iRepository;
         this.iFileSystem = iFileSystem;
+    }
+
+    public IConstants getConstants() {
+        return iConstants;
     }
 
     public IConfigHandler getConfigHandler() {
