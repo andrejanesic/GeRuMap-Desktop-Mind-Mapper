@@ -24,6 +24,7 @@ import java.util.*;
  * <ul>
  *     <li>Node is edited: <code>&lt;nodeId&gt; &lt;attribute&gt; &lt;value&gt;</code></li>
  *     <li>Child is added to a parent node: <code>&lt;childId&gt; &lt;parentId&gt;</code></li>
+ *     <li>Child is removed from a parent node: <code>&lt;childId&gt; &lt;parentId&gt;</code></li>
  * </ul>
  */
 public class LocalFileSystem extends IPublisher implements IFileSystem {
