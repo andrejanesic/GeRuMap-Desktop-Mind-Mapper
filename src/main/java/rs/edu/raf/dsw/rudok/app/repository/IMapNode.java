@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.repository;
 
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
+import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.util.HashSet;
@@ -40,7 +41,7 @@ public abstract class IMapNode extends IPublisher {
         this.parents.add(parent);
 
         this.addObserver(parent);
-        this.publish(new Message(Message.Type.PARENT_ADDED, this));
+        this.publish(new Message(Message.Type.PARENT_ADDED, new Message.ParentChangeMessageData(this, parent)));
     }
 
     /**
@@ -54,15 +55,15 @@ public abstract class IMapNode extends IPublisher {
         this.parents.remove(parent);
 
         this.removeObserver(parent);
-        this.publish(new Message(Message.Type.PARENT_REMOVED, this));
+        this.publish(new Message(Message.Type.PARENT_REMOVED, new Message.ParentChangeMessageData(this, parent)));
     }
 
     /**
      * Message for publishing.
      */
-    public static class Message extends IMessage<IMapNode.Message.Type, IMapNode> {
+    public static class Message extends IMessage<IMapNode.Message.Type, IMessageData> {
 
-        public Message(Type status, IMapNode data) {
+        public Message(Type status, IMessageData data) {
             super(status, data);
         }
 
@@ -70,10 +71,50 @@ public abstract class IMapNode extends IPublisher {
          * Types of message.
          */
         public enum Type {
+            // When some value of a node is edited TODO this will be overwritten once we have Projects, Maps, etc.
+            EDITED,
             // When a parent is added
             PARENT_ADDED,
             // When a parent is removed
             PARENT_REMOVED,
+        }
+
+        public static class EditedMessageData implements IMessageData {
+
+            private final String key;
+            private final Object value;
+
+            public EditedMessageData(String key, Object value) {
+                this.key = key;
+                this.value = value;
+            }
+
+            public String getKey() {
+                return key;
+            }
+
+            public Object getValue() {
+                return value;
+            }
+        }
+
+        public static class ParentChangeMessageData implements IMessageData {
+
+            private final IMapNode child;
+            private final IMapNodeComposite parent;
+
+            public ParentChangeMessageData(IMapNode child, IMapNodeComposite parent) {
+                this.child = child;
+                this.parent = parent;
+            }
+
+            public IMapNode getChild() {
+                return child;
+            }
+
+            public IMapNodeComposite getParent() {
+                return parent;
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
+import rs.edu.raf.dsw.rudok.app.observer.IMessage;
+import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
+
 /**
  * Config component specification.
  */
@@ -66,5 +69,56 @@ public interface IConfigHandler {
      */
     default Object getOrDefault(String key, Object defaultValue) {
         return this.get(key, defaultValue);
+    }
+
+    /**
+     * Used for sending out updates by implementations of IConfigHandler.
+     */
+    class Message extends IMessage<Message.Type, IMessageData> {
+
+        public Message(Type status, IMessageData data) {
+            super(status, data);
+        }
+
+        public enum Type {
+            // When a (new) config is loaded
+            CONFIG_LOADED,
+            // When a key is updated
+            CONFIG_UPDATED,
+            // When the config is saved
+            CONFIG_SAVED,
+        }
+
+        public static class ConfigMessageData implements IMessageData {
+
+            private final IConfigHandler configHandler;
+
+            public ConfigMessageData(IConfigHandler configHandler) {
+                this.configHandler = configHandler;
+            }
+
+            public IConfigHandler getConfigHandler() {
+                return configHandler;
+            }
+        }
+
+        public static class ConfigChangeMessageData implements IMessageData {
+
+            private final String key;
+            private final String value;
+
+            public ConfigChangeMessageData(String key, String value) {
+                this.key = key;
+                this.value = value;
+            }
+
+            public String getKey() {
+                return key;
+            }
+
+            public String getValue() {
+                return value;
+            }
+        }
     }
 }

@@ -74,6 +74,11 @@ public class TestLocalFileSystem {
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
                     }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
+                        return null;
+                    }
                 };
             }
         };
@@ -104,6 +109,11 @@ public class TestLocalFileSystem {
                     @Override
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
+                    }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
+                        return null;
                     }
                 };
             }

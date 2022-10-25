@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.core;
 
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
+import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.io.File;
@@ -30,14 +31,16 @@ public interface IFileSystem {
     Map<String, String> loadConfig(String name);
 
     /**
-     * Saves the project and its subtree.
+     * Saves the project and its subtree. TODO IProject should be used here, not IMapNodeComposite.
+     * TODO this method needs to be updated to support multiple projects
      *
      * @param project Project to save.
      */
     void saveProject(IMapNodeComposite project);
 
     /**
-     * Loads the project under "name".
+     * Loads the project under "name". TODO IProject should be used here, not IMapNodeComposite.
+     * TODO this method needs to be updated to support multiple projects
      *
      * @param name Project name.
      * @return Returns project as an IMapNodeComposite if successful, null otherwise.
@@ -45,7 +48,8 @@ public interface IFileSystem {
     IMapNodeComposite loadProject(String name);
 
     /**
-     * Loads the most recent project.
+     * Loads the most recent project. TODO IProject should be used here, not IMapNodeComposite.
+     * TODO this method needs to be updated to support multiple projects
      *
      * @return Returns project as an IMapNodeComposite if successful, null otherwise.
      */
@@ -77,7 +81,7 @@ public interface IFileSystem {
     /**
      * Messages broadcasted by IFileSystem sub-classes.
      */
-    final class Message extends IMessage<Message.Type, Object> {
+    final class Message extends IMessage<Message.Type, IMessageData> {
 
         public enum Type {
             // When a config is saved
@@ -92,7 +96,7 @@ public interface IFileSystem {
             ADDON_LOADED,
         }
 
-        public Message(Type status, Object data) {
+        public Message(Type status, IMessageData data) {
             super(status, data);
         }
     }
