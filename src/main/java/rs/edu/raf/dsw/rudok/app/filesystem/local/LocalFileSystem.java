@@ -1,11 +1,8 @@
 package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
-import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class LocalFileSystem implements IFileSystem {
 
