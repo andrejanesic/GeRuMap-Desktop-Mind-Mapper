@@ -5,7 +5,6 @@ import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,12 +31,13 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
      * Default (fallback) config properties.
      */
     private static final HashMap<String, String> DEFAULT_CONFIG = new HashMap<String, String>() {{
+        put("config", "default");
         put("language", "English");
     }};
 
     @Override
-    public boolean loadConfig(String relPath) {
-        Map<String, String> configRaw = this.applicationFramework.getFileSystem().loadConfig(relPath);
+    public boolean loadConfig(String name) {
+        Map<String, String> configRaw = this.applicationFramework.getFileSystem().loadConfig(name);
         if (configRaw == null) return false;
 
         try {
@@ -59,8 +59,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     }
 
     @Override
-    public void saveConfig(String relPath) {
-        this.applicationFramework.getFileSystem().saveConfig(relPath, config);
+    public void saveConfig() {
+        this.applicationFramework.getFileSystem().saveConfig(config);
 
         this.publish(new Message(Message.Type.CONFIG_SAVED, this));
     }

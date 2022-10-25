@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
+import rs.edu.raf.dsw.rudok.app.core.IConstants;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
 import java.io.*;
@@ -59,13 +61,26 @@ public class TestLocalFileSystem {
 
     @Test
     public void testSaveConfig() throws IOException, ClassNotFoundException {
-        IFileSystem fs = new LocalFileSystem();
-        String dirPath = "test/";
-        String fileName = "config.ser";
+        String dirPath = "test/config/";
+        String fileName = "default.ser";
         String relPath = dirPath + fileName;
         Map<String, String> testSerializable = new HashMap<>();
 
-        fs.saveConfig(temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath, testSerializable);
+        ApplicationFramework applicationFramework = new ApplicationFramework() {
+            @Override
+            public IConstants getConstants() {
+                return new IConstants() {
+                    @Override
+                    public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
+                        return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
+                    }
+                };
+            }
+        };
+
+        IFileSystem fs = new LocalFileSystem(applicationFramework);
+
+        fs.saveConfig(testSerializable);
 
         FileInputStream fis = new FileInputStream(
                 temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath
@@ -77,11 +92,22 @@ public class TestLocalFileSystem {
 
     @Test
     public void testLoadConfig() throws IOException {
-        IFileSystem fs = new LocalFileSystem();
-        String dirPath = "test/";
-        String fileName = "config.ser";
+        String dirPath = "test/config/";
+        String fileName = "default.ser";
         String relPath = dirPath + fileName;
         Map<String, String> testSerializable = new HashMap<>();
+
+        ApplicationFramework applicationFramework = new ApplicationFramework() {
+            @Override
+            public IConstants getConstants() {
+                return new IConstants() {
+                    @Override
+                    public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
+                        return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
+                    }
+                };
+            }
+        };
 
         temporaryFolder.newFolder(dirPath);
 
@@ -92,7 +118,9 @@ public class TestLocalFileSystem {
 
         oos.writeObject(testSerializable);
 
-        Object obj = fs.loadConfig(temporaryFolder.getRoot().getAbsolutePath() + "/" + relPath);
+        IFileSystem fs = new LocalFileSystem(applicationFramework);
+
+        Object obj = fs.loadConfig("default");
 
         Assert.assertEquals(testSerializable, obj);
     }

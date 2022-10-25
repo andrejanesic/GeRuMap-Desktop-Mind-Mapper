@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 
 import java.io.FileInputStream;
@@ -12,13 +13,22 @@ import java.util.Map;
 
 public class LocalFileSystem implements IFileSystem {
 
+    private final ApplicationFramework applicationFramework;
+
+    public LocalFileSystem(ApplicationFramework applicationFramework) {
+        this.applicationFramework = applicationFramework;
+    }
+
     @Override
-    public void saveConfig(String path, Map<String, String> config) {
+    public void saveConfig(Map<String, String> config) {
         try {
-            Files.createDirectories(Paths.get(path).getParent());
+            String filePath = applicationFramework.getConstants().FILESYSTEM_LOCAL_CONFIG_FOLDER() +
+                    config.getOrDefault("config", "default") +
+                    ".ser";
+            Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_CONFIG_FOLDER()));
 
             // open output streams
-            FileOutputStream fos = new FileOutputStream(path);
+            FileOutputStream fos = new FileOutputStream(filePath);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             // write object
@@ -33,15 +43,19 @@ public class LocalFileSystem implements IFileSystem {
     }
 
     @Override
-    public Map<String, String> loadConfig(String path) {
+    public Map<String, String> loadConfig(String name) {
 
         /**
          * TODO DANGER! Deserialized data should be checked!
          */
 
+        String filePath = applicationFramework.getConstants().FILESYSTEM_LOCAL_CONFIG_FOLDER() +
+                name +
+                ".ser";
+
         try {
             // open output streams
-            FileInputStream fis = new FileInputStream(path);
+            FileInputStream fis = new FileInputStream(filePath);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
             // write object

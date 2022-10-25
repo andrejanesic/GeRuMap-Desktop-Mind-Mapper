@@ -14,18 +14,18 @@ public interface IFileSystem {
 
     /**
      * Saves the config map.
-     *  @param path         Relative path where to save.
+     *
      * @param config Serializable object.
      */
-    void saveConfig(String path, Map<String, String> config);
+    void saveConfig(Map<String, String> config);
 
     /**
      * Loads a serializable object from the given path. In case of error returns null.
      *
-     * @param path Relative path to load the object from.
+     * @param name Relative path to load the object from.
      * @return The serializable object or null if error.
      */
-    Map<String, String> loadConfig(String path);
+    Map<String, String> loadConfig(String name);
 
     /**
      * Loads an add-on based on class name.

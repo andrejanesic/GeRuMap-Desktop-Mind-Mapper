@@ -20,12 +20,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void saveConfig(String path, Map<String, String> config) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Map<String, String> loadConfig(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("test", "abc");
                         }};
@@ -54,12 +54,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void saveConfig(String path, Map<String, String> config) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Map<String, String> loadConfig(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -90,12 +90,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void saveConfig(String path, Map<String, String> config) {
+                    public void saveConfig(Map<String, String> config) {
                         Assert.assertEquals(((HashMap<String, String>) config).get("abc"), "def");
                     }
 
                     @Override
-                    public Map<String, String> loadConfig(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -110,7 +110,7 @@ public class TestStandardConfigHandler {
         });
 
         iConfigHandler.set("abc", "def");
-        iConfigHandler.saveConfig("foobar");
+        iConfigHandler.saveConfig();
     }
 
     @Test
@@ -121,12 +121,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void saveConfig(String path, Map<String, String> config) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Map<String, String> loadConfig(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -155,12 +155,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void saveConfig(String path, Map<String, String> config) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Map<String, String> loadConfig(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
@@ -189,12 +189,12 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void saveConfig(String path, Map<String, String> config) {
+                    public void saveConfig(Map<String, String> config) {
 
                     }
 
                     @Override
-                    public Map<String, String> loadConfig(String path) {
+                    public Map<String, String> loadConfig(String name) {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
