@@ -20,10 +20,10 @@ public interface IFileSystem {
     /**
      * Loads a serializable object from the given path. In case of error returns null.
      *
-     * @param path Path to load the object from.
+     * @param relPath Relative path to load the object from.
      * @return The serializable object or null if error.
      */
-    Serializable load(String path);
+    Serializable load(String relPath);
 
     /**
      * Loads an add-on based on class name.
