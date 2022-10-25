@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.io.File;
 import java.net.URL;
@@ -26,6 +27,30 @@ public interface IFileSystem {
      * @return The serializable object or null if error.
      */
     Map<String, String> loadConfig(String name);
+
+    /**
+     * Saves the project and its subtree.
+     *
+     * @param project Project to save.
+     */
+    void saveProject(IMapNodeComposite project);
+
+    /**
+     * Loads the project under "name".
+     *
+     * @param name Project name.
+     * @return Returns project as an IMapNodeComposite if successful, null otherwise.
+     */
+    IMapNodeComposite loadProject(String name);
+
+    /**
+     * Loads the most recent project.
+     *
+     * @return Returns project as an IMapNodeComposite if successful, null otherwise.
+     */
+    default IMapNodeComposite loadProject() {
+        return loadProject("default");
+    }
 
     /**
      * Loads an add-on based on class name.
