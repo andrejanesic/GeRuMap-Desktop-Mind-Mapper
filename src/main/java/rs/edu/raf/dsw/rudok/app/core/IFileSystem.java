@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
+import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.io.File;
@@ -71,5 +72,28 @@ public interface IFileSystem {
             // TODO call error handler here
         }
         return null;
+    }
+
+    /**
+     * Messages broadcasted by IFileSystem sub-classes.
+     */
+    final class Message extends IMessage<Message.Type, Object> {
+
+        public enum Type {
+            // When a config is saved
+            CONFIG_SAVED,
+            // When a config is loaded
+            CONFIG_LOADED,
+            // When a project is saved
+            PROJECT_SAVED,
+            // When a project is loaded
+            PROJECT_LOADED,
+            // When an addon is loaded
+            ADDON_LOADED,
+        }
+
+        public Message(Type status, Object data) {
+            super(status, data);
+        }
     }
 }
