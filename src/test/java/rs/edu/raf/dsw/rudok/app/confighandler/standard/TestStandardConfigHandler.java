@@ -20,7 +20,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 
@@ -54,7 +54,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 
@@ -90,7 +90,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
                         Assert.assertEquals(((HashMap<String, String>) serializable).get("abc"), "def");
                     }
 
@@ -121,7 +121,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 
@@ -155,7 +155,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 
@@ -189,7 +189,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 

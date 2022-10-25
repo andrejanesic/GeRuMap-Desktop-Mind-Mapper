@@ -100,7 +100,7 @@ public class TestStandardAddonManager {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 
@@ -181,7 +181,7 @@ public class TestStandardAddonManager {
                 return new IFileSystem() {
 
                     @Override
-                    public void save(String relPath, Serializable serializable) {
+                    public void save(String path, Serializable serializable) {
 
                     }
 
