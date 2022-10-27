@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.addon;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
+import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.util.HashSet;
@@ -60,15 +61,28 @@ public abstract class IAddonManager extends IPublisher {
         }
     }
 
-    public static class Message extends IMessage<Message.Type, Object> {
+    public static class Message extends IMessage<Message.Type, IMessageData> {
 
-        public Message(Type status, IAddon data) {
+        public Message(Type status, IMessageData data) {
             super(status, data);
         }
 
         public enum Type {
             // When an add-on is initialized
             ADDON_INITIALIZED,
+        }
+
+        public static class AddonInitializedMessageData implements IMessageData {
+
+            private final IAddon addon;
+
+            public AddonInitializedMessageData(IAddon addon) {
+                this.addon = addon;
+            }
+
+            public IAddon getAddon() {
+                return addon;
+            }
         }
     }
 }

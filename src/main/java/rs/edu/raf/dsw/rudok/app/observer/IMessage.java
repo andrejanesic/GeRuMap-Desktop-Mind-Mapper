@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Generic observer message.
  */
-public abstract class IMessage<S, T> {
+public abstract class IMessage<S, T extends IMessageData> {
 
     /**
      * Message status code.

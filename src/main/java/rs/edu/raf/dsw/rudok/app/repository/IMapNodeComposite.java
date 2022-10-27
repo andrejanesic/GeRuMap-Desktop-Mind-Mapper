@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.repository;
 
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
+import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,7 +40,7 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.children.add(child);
 
         this.addObserver(child);
-        this.publish(new Message(Message.Type.CHILD_ADDED, this));
+        this.publish(new Message(Message.Type.CHILD_ADDED, new Message.ChildChangeMessageData(this, child)));
     }
 
     /**
@@ -53,7 +54,7 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.children.remove(child);
 
         this.removeObserver(child);
-        this.publish(new Message(Message.Type.CHILD_REMOVED, this));
+        this.publish(new Message(Message.Type.CHILD_REMOVED, new Message.ChildChangeMessageData(this, child)));
     }
 
     @Override
@@ -64,11 +65,11 @@ public abstract class IMapNodeComposite extends IMapNode {
             switch (((IMapNode.Message) message).getStatus()) {
 
                 case PARENT_ADDED:
-                    this.addChild(((IMapNode.Message) message).getData());
+                    this.addChild(((IMapNode.Message.ParentChangeMessageData) ((IMapNode.Message) message).getData()).getChild());
                     return;
 
                 case PARENT_REMOVED:
-                    this.removeChild(((IMapNode.Message) message).getData());
+                    this.removeChild(((IMapNode.Message.ParentChangeMessageData) ((IMapNode.Message) message).getData()).getChild());
                     return;
             }
         }
@@ -77,9 +78,9 @@ public abstract class IMapNodeComposite extends IMapNode {
     /**
      * Message for publishing.
      */
-    public static class Message extends IMessage<IMapNodeComposite.Message.Type, IMapNodeComposite> {
+    public static class Message extends IMessage<IMapNodeComposite.Message.Type, IMessageData> {
 
-        public Message(Type status, IMapNodeComposite data) {
+        public Message(Type status, IMessageData data) {
             super(status, data);
         }
 
@@ -91,6 +92,25 @@ public abstract class IMapNodeComposite extends IMapNode {
             CHILD_ADDED,
             // When a parent is removed
             CHILD_REMOVED,
+        }
+
+        public static class ChildChangeMessageData implements IMessageData {
+
+            private final IMapNodeComposite parent;
+            private final IMapNode child;
+
+            public ChildChangeMessageData(IMapNodeComposite parent, IMapNode child) {
+                this.parent = parent;
+                this.child = child;
+            }
+
+            public IMapNodeComposite getParent() {
+                return parent;
+            }
+
+            public IMapNode getChild() {
+                return child;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,16 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("test", "abc");
                         }};
+                    }
+
+                    @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
                     }
 
                     @Override
@@ -63,6 +74,16 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
                     }
 
                     @Override
@@ -102,6 +123,16 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -130,6 +161,16 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
                     }
 
                     @Override
@@ -167,6 +208,16 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -198,6 +249,16 @@ public class TestStandardConfigHandler {
                         return new HashMap<String, String>() {{
                             put("language", "French");
                         }};
+                    }
+
+                    @Override
+                    public void saveProject(IMapNodeComposite project) {
+
+                    }
+
+                    @Override
+                    public IMapNodeComposite loadProject(String name) {
+                        return null;
                     }
 
                     @Override

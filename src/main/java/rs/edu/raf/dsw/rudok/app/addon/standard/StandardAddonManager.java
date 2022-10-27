@@ -27,7 +27,7 @@ public class StandardAddonManager extends IAddonManager {
             IAddon addon = getApplicationFramework().getFileSystem().loadAddon(classname);
             addAddon(addon);
 
-            publish(new IAddonManager.Message(Message.Type.ADDON_INITIALIZED, addon));
+            publish(new IAddonManager.Message(Message.Type.ADDON_INITIALIZED, new Message.AddonInitializedMessageData(addon)));
         }
     }
 }
