@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
+package rs.edu.raf.dsw.rudok.app.core.view.listeners;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -13,9 +13,8 @@ public class MyWindowListener implements WindowListener {
     @Override
     public void windowClosing(WindowEvent e) {
         JFrame frame= (JFrame) e.getComponent();
-        int code=JOptionPane.showConfirmDialog(frame, "Are you sure you want to close this app?","Close the app?",JOptionPane.YES_NO_OPTION);
-        if (code!=JOptionPane.YES_OPTION){
-
+        int code = JOptionPane.showConfirmDialog(frame, "Are you sure you want to close this app?","Close the app?",JOptionPane.YES_NO_OPTION);
+        if (code != JOptionPane.YES_OPTION){
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         }
         else{
