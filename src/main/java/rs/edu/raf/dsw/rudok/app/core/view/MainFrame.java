@@ -9,7 +9,7 @@ public class MainFrame extends JFrame {
     private static MainFrame instance = null;
     private MyMenuBar menu;
     private Toolbar toolbar;
-    private JPanel panel;
+
 
     private MainFrame() {
     }
@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
         Dimension screenSize = toolkit.getScreenSize();
         int height = screenSize.height;
         int width = screenSize.width;
-        this.setSize(height / 2, width / 2);
+        this.setSize( width / 2,height / 2);
 
         this.setTitle("GeRuMap");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,11 +28,17 @@ public class MainFrame extends JFrame {
         this.addWindowListener(new MyWindowListener());
 
 
-        panel = new JPanel();
-        this.add(panel);
+        JPanel projectTree = new JPanel();
+        JScrollPane treeScroll = new JScrollPane(projectTree,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JPanel workspace = new JPanel();
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeScroll,workspace);
+        this.add(splitPane);
+
 
         menu = new MyMenuBar();
         toolbar = new Toolbar();
+        this.setJMenuBar(menu);
+        this.add(toolbar,BorderLayout.NORTH);
     }
 
     public static MainFrame getInstance() {
@@ -44,9 +50,6 @@ public class MainFrame extends JFrame {
         return instance;
     }
 
-    public JPanel getPanel() {
-        return panel;
-    }
 }
 
 

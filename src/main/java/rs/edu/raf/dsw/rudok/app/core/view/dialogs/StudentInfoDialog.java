@@ -9,8 +9,10 @@ public class StudentInfoDialog extends JDialog {
 
         this.setSize(200,200);
         this.setLocationRelativeTo(owner);
-        JLabel studentInfoLb = new JLabel("Students who worked on this project:/nAleksa Vučinić 60/20 RN/nAndreja Nešić 31/19 RN");
-        this.add(studentInfoLb);
+        JLabel studentInfoLb = new JLabel("Students who worked on this project:" +
+                "Aleksa Vučinić 60/20 RN " +
+                "Andreja Nešić 31/19 RN");
+        this.add(studentInfoLb,BorderLayout.CENTER);
     }
 
 }

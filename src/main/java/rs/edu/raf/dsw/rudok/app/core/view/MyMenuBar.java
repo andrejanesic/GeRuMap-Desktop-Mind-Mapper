@@ -10,9 +10,9 @@ public class MyMenuBar extends JMenuBar {
         JMenuItem Edit = new JMenuItem("Edit");
 
         File.add(New);
-        Edit.add(Help);
+        Help.add(Edit);
 
         this.add(File);
-        this.add(Edit);
+        this.add(Help);
     }
 }
