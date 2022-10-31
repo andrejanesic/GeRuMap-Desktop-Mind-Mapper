@@ -1,11 +1,14 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.controller.ActionManager;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.listeners.MyWindowListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.controller.ActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * TODO add documentation
+ */
 public class MainFrame extends JFrame {
     private static MainFrame instance = null;
     private MyMenuBar menu;
@@ -23,7 +26,7 @@ public class MainFrame extends JFrame {
         Dimension screenSize = toolkit.getScreenSize();
         int height = screenSize.height;
         int width = screenSize.width;
-        this.setSize( width / 2,height / 2);
+        this.setSize(width / 2, height / 2);
 
         this.setTitle("GeRuMap");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,18 +36,18 @@ public class MainFrame extends JFrame {
 
 
         JPanel projectTree = new JPanel();
-        JScrollPane treeScroll = new JScrollPane(projectTree,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane treeScroll = new JScrollPane(projectTree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel workspace = new JPanel();
-        workspace.setMinimumSize(new Dimension(600,300));
-        treeScroll.setMinimumSize(new Dimension(70,300));
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeScroll,workspace);
+        workspace.setMinimumSize(new Dimension(600, 300));
+        treeScroll.setMinimumSize(new Dimension(70, 300));
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, workspace);
         this.add(splitPane);
 
 
         menu = new MyMenuBar();
         toolbar = new Toolbar();
         this.setJMenuBar(menu);
-        this.add(toolbar,BorderLayout.NORTH);
+        this.add(toolbar, BorderLayout.NORTH);
 
 
     }

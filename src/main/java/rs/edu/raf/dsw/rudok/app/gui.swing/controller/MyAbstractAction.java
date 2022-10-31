@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
 
 import javax.swing.*;
 
