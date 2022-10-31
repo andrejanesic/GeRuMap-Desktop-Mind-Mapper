@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing;
 
 import rs.edu.raf.dsw.rudok.app.core.Gui;
 import rs.edu.raf.dsw.rudok.app.core.view.MainFrame;
