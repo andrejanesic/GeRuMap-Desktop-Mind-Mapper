@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.core.view.listeners;
+package rs.edu.raf.dsw.rudok.app.gui.swing.view.listeners;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;

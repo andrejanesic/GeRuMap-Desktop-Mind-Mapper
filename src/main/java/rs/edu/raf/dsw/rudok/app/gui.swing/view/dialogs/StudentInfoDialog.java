@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.core.view.dialogs;
+package rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs;
 
 import javax.swing.*;
 import java.awt.*;

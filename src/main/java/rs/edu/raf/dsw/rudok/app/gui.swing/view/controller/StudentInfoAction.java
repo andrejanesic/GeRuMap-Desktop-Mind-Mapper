@@ -1,7 +1,7 @@
-package rs.edu.raf.dsw.rudok.app.core.view.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.view.controller;
 
-import rs.edu.raf.dsw.rudok.app.core.view.MainFrame;
-import rs.edu.raf.dsw.rudok.app.core.view.dialogs.StudentInfoDialog;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.StudentInfoDialog;
 
 import java.awt.event.ActionEvent;
 

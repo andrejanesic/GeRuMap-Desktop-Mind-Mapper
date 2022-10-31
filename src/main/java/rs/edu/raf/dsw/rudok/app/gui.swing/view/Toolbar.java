@@ -1,11 +1,6 @@
-package rs.edu.raf.dsw.rudok.app.core.view;
-
-import rs.edu.raf.dsw.rudok.app.core.view.dialogs.StudentInfoDialog;
+package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Toolbar extends JToolBar{
     public Toolbar() {

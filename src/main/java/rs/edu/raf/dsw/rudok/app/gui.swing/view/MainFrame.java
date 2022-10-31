@@ -1,7 +1,7 @@
-package rs.edu.raf.dsw.rudok.app.core.view;
+package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
-import rs.edu.raf.dsw.rudok.app.core.view.controller.ActionManager;
-import rs.edu.raf.dsw.rudok.app.core.view.listeners.MyWindowListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.controller.ActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.listeners.MyWindowListener;
 
 import javax.swing.*;
 import java.awt.*;
