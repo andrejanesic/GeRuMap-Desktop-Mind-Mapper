@@ -5,6 +5,7 @@ import org.junit.Test;
 import rs.edu.raf.dsw.rudok.app.core.*;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
+import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import java.util.Map;
 
@@ -16,8 +17,8 @@ public class TestGuiSwing {
 
         ApplicationFramework applicationFramework = new ApplicationFramework() {
             @Override
-            public void initialize(IConstants iConstants, IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, IFileSystem iFileSystem) {
-                super.initialize(iConstants, iConfigHandler, iErrorHandler, iGui, iRepository, iFileSystem);
+            public void initialize(IConstants iConstants, IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
+                super.initialize(iConstants, iConfigHandler, iErrorHandler, iGui, projectExplorer, iFileSystem);
                 this.iGui.run();
             }
         };
@@ -68,7 +69,7 @@ public class TestGuiSwing {
                 new IErrorHandler() {
                 },
                 gui,
-                new IRepository() {
+                new ProjectExplorer() {
                 },
                 new IFileSystem() {
                     @Override
