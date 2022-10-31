@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
+import rs.edu.raf.dsw.rudok.app.gui.swing.GuiSwing;
 
 /**
  * Main application class.
