@@ -31,6 +31,9 @@ public abstract class ApplicationFramework {
         this.iGui = iGui;
         this.iRepository = iRepository;
         this.iFileSystem = iFileSystem;
+
+        // TODO other setup
+        this.iGui.run();
     }
 
     public IConstants getConstants() {
