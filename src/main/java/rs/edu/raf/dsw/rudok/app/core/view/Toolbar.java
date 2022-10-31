@@ -17,13 +17,7 @@ public class Toolbar extends JToolBar{
 
         this.setFloatable(false);
 
-        btwInfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                StudentInfoDialog studentInfoDialog = new StudentInfoDialog(MainFrame.getInstance(),"Information", false);
-                studentInfoDialog.setVisible(true);
-            }
-        });
+        btwInfo.addActionListener(MainFrame.getInstance().getActionManager().getStudentInfoAction());
 
     }
 }
