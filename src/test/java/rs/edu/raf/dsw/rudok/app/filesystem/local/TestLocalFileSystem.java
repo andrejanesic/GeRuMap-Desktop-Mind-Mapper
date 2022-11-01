@@ -7,13 +7,10 @@ import org.junit.rules.TemporaryFolder;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConstants;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
+import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class TestLocalFileSystem {
 
@@ -63,16 +60,56 @@ public class TestLocalFileSystem {
     }
 
     /**
-     * Generate a tree of IMapNodeComposites.
+     * Generate a tree of IMapNodeComposites. The root is a ProjectExplorer, with sub-elements being Project, MindMap
+     * and Element. Start with depth 4 for all, 3 for Project, 2 for MindMap and 1 for Element.
      *
+     * @param depth Depth of the tree. Cannot be greater than 4.
      * @return Root of the tree.
      */
-    private IMapNodeComposite tree(IMapNodeComposite root, int depth) {
-        if (root == null) root = new TestIMapNodeComposite();
-        if (depth == 0) return root;
+    private IMapNode tree(int depth) {
+        if (depth > 4) throw new RuntimeException("Depth may not be > 4");
+        IMapNodeComposite root = null;
+
+        // if initial node
+        switch (depth) {
+            case 4:
+                root = new ProjectExplorer();
+                break;
+            case 3:
+                String projectName = null, authorName = null, filepath = null;
+                switch (new Random().nextInt(3)) {
+                    case 2:
+                        projectName = "Baz";
+                        break;
+                    case 1:
+                        projectName = "Bar";
+                        break;
+                    case 0:
+                        projectName = "Foo";
+                }
+                switch (new Random().nextInt(3)) {
+                    case 2:
+                        authorName = "Baz";
+                        break;
+                    case 1:
+                        authorName = "Bar";
+                        break;
+                    case 0:
+                        authorName = "Foo";
+                }
+                filepath = projectName.toLowerCase(Locale.ROOT) + ".grm";
+                root = new Project(projectName, authorName, filepath);
+                break;
+            case 2:
+                root = new MindMap(new Random().nextBoolean());
+                break;
+            case 1:
+                return new Element();
+        }
+
         int children = new Random().nextInt(3) + 1;
         for (int i = 0; i < children; i++) {
-            IMapNodeComposite child = tree(null, depth - 1);
+            IMapNode child = tree(depth - 1);
             root.addChild(child);
         }
         return root;
@@ -158,12 +195,9 @@ public class TestLocalFileSystem {
     }
 
     @Test
-    public void testSaveProject() throws IOException {
-        IMapNodeComposite root = tree(null, new Random().nextInt(5) + 1);
-
-        String dirPath = "test/projects";
-        String fileName = "default.gerumap";
-        String relPath = dirPath + '/' + fileName;
+    public void testSaveLoadProject() throws IOException {
+        Project root = (Project) tree(3);
+        String fPath = root.getFilepath();
 
         ApplicationFramework applicationFramework = new ApplicationFramework() {
             @Override
@@ -176,7 +210,7 @@ public class TestLocalFileSystem {
 
                     @Override
                     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
-                        return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
+                        return temporaryFolder.getRoot().getAbsolutePath();
                     }
                 };
             }
@@ -186,6 +220,15 @@ public class TestLocalFileSystem {
 
         fs.saveProject(root);
 
-        Assert.assertTrue(new File(temporaryFolder.getRoot().getAbsolutePath() + '/' + relPath).exists());
+        Assert.assertTrue(new File(temporaryFolder.getRoot().getAbsolutePath() + '/' + fPath).exists());
+        Assert.assertTrue(new File(temporaryFolder.getRoot().getAbsolutePath() + '/' + fPath).length() > 0);
+
+        Project cmp = fs.loadProject(root.getFilepath());
+
+        Assert.assertEquals(root.getProjectName(), cmp.getProjectName());
+        Assert.assertEquals(root.getFilepath(), cmp.getFilepath());
+        Assert.assertEquals(root.getAuthorName(), cmp.getAuthorName());
+
+        // TODO add method for testing subtrees individually - when debugged by hand, it works!
     }
 }

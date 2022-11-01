@@ -79,6 +79,9 @@ public abstract class IMapNode extends IPublisher {
             PARENT_REMOVED,
         }
 
+        /**
+         * For messages about changed values of the node.
+         */
         public static class EditedMessageData implements IMessageData {
 
             private final String key;
