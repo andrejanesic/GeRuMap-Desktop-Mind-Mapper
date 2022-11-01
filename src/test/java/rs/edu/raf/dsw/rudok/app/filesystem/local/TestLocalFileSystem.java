@@ -195,7 +195,7 @@ public class TestLocalFileSystem {
     }
 
     @Test
-    public void testSaveProject() throws IOException {
+    public void testSaveLoadProject() throws IOException {
         Project root = (Project) tree(3);
         String fPath = root.getFilepath();
 
@@ -222,5 +222,13 @@ public class TestLocalFileSystem {
 
         Assert.assertTrue(new File(temporaryFolder.getRoot().getAbsolutePath() + '/' + fPath).exists());
         Assert.assertTrue(new File(temporaryFolder.getRoot().getAbsolutePath() + '/' + fPath).length() > 0);
+
+        Project cmp = fs.loadProject(root.getFilepath());
+
+        Assert.assertEquals(root.getProjectName(), cmp.getProjectName());
+        Assert.assertEquals(root.getFilepath(), cmp.getFilepath());
+        Assert.assertEquals(root.getAuthorName(), cmp.getAuthorName());
+
+        // TODO add method for testing subtrees individually - when debugged by hand, it works!
     }
 }

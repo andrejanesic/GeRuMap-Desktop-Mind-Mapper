@@ -15,26 +15,25 @@ import java.util.*;
 
 /**
  * <h1>Local file system</h1>
- * Saves data into the local file system.
- * <br><br>
- * Continuously listens for changes to the project structure and appends them to a database log file. Every
- * FILESYSTEM_PROJECT_DATABASE_CYCLE cycles the data is compacted into a new file, with the old one being overwritten.
- * The data is saved as bytes, in the format: <code>&lt;operation code&gt; &lt;data byte size&gt; (...arguments)</code>.
- * Arguments are the following (spaces for clarity, but a byte-separator is used):
- * <ul>
- *     <li>Node values are changed: <code>&lt;nodeId&gt; &lt;number of changes&gt; [...attribute [value]]</code>.
- *     There may be an arbitrary amount of attributes and values, depending on the node type. Node type is inferred from
- *     the schema. The schema is written for forwards and backwards compatibility, but could be omitted to preserve
- *     space.</li>
- *     <li>Child is added to a parent node: <code>&lt;childId&gt; &lt;parentId&gt;</code></li>
- *     <li>Child is removed from a parent node: <code>&lt;childId&gt; &lt;parentId&gt;</code></li>
- * </ul>
+ * Saves data into the local file system.<br>
+ * <br>
+ * Continuously listens for changes to the project structure and appends them to a database log file. Changes are saved
+ * in the form of "state" statements for each node. Each statement logs a change to the state of a node, overwriting the
+ * previous one. States are formatted in the database like so:<br>
+ * <br>
+ * <code>&lt;nodeId (int)&gt; &lt;number of changes (byte)&gt; [...attribute [...value]</code><br>
+ * <br>
+ * There may be an arbitrary amount of attributes and values, depending on the node type. Node type is inferred from the
+ * schema. The schema is written for forwards and backwards compatibility, but could be omitted to preserve space.<br>
+ * <br>
  * A backup of the project is kept in the <code>&lt;filename&gt;.bak</code> file located in the same directory as the
- * project file.
+ * project file.<br>
+ * <br>
  * <h2>Database structure</h2>
  * <h3>Save file</h3>
  * The save file of the project (the "source"/"original" project file) is saved in a log-alike structure, in binary
- * format without compression. Only final states of each node are recorded&mdash;the project history is omitted.
+ * format without compression. Only final states of each node are recorded&mdash;the project history is omitted.<br>
+ * <br>
  * <h3>Backup file</h3>
  * A backup file is created for each project. It works in a similar way to the source project file&mdash;however, full
  * project history is recorded in this file and the current state of the project can be re-created anywhere by
@@ -48,24 +47,15 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     private final ApplicationFramework applicationFramework;
 
     /**
-     * Int-code for each operation on the tree.
-     */
-    private enum OPCODES {
-        END,
-        SEPARATOR,
-        NODE_VALUE,
-        NODE_CHILD_ADD,
-        NODE_CHILD_REMOVE,
-    }
-
-    /**
      * Int-codes representing the schema for each node.
      */
     private enum ATTR_SCHEMA {
         PROJECT_PROJECTNAME,
         PROJECT_AUTHORNAME,
         PROJECT_FILEPATH,
+        PROJECT_CHILDREN,
         MINDMAP_TEMPLATE,
+        MINDMAP_CHILDREN,
         ELEMENT_EMPTY,
         // TODO add other attributes here
     }
@@ -140,20 +130,26 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             return;
         }
 
-        // recreate operations from the root to the leaves of the tree
-        List<Object[]> operations = recreateOperations(project);
+        try {
+            FileOutputStream fos = new FileOutputStream(
+                    this.parseProjectFilepath(project, false),
+                    true);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            DataOutputStream dos = new DataOutputStream(bos);
 
-        // append the operations to the new db file
-        Iterator<Object[]> iterator = operations.listIterator();
-        while (iterator.hasNext()) {
-            if (!appendOp(project, false, iterator.next())) {
-                // TODO log to error handler, there was an error
-                return;
-            }
+            // encode values
+            recreateOperations(dos, project);
+
+            dos.close();
+            bos.close();
+            fos.close();
+
+            // backup no longer needed, clean
+            eraseDb(project, true);
+
+        } catch (IOException e) {
+            // TODO log to error handler
         }
-
-        // backup no longer needed, clean
-        eraseDb(project, true);
     }
 
     @Override
@@ -165,55 +161,39 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
         try {
             File f = new File(filepath);
-            InputStream is = new FileInputStream(f);
+            FileInputStream fis = new FileInputStream(f);
+            DataInputStream dis = new DataInputStream(fis);
 
-            // Get the size of the file
-            long length = f.length();
+            // Store a temporary map of node IDs and their objects for easier referencing
+            Map<Integer, IMapNode> nodes = new HashMap<>();
 
-            // Not possible to create a byte-array with more than Integer values, so check to ensure casting won't fail
-            if (length > Integer.MAX_VALUE) {
-                // File is too large
-                // TODO log error
-                return null;
+            // Parse states.
+            while (dis.available() > 0) {
+                if (!decodeNodeState(dis, nodes)) {
+                    // TODO invalid operation or programmatic error in parsing
+                    // TODO log error
+                    return null;
+                }
             }
 
-            // Create the byte array to hold the data
-            byte[] bytes = new byte[(int) length];
-
-            // Read in the bytes
-            int offset = 0;
-            int numRead = 0;
-            while (offset < bytes.length
-                    && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-                offset += numRead;
-            }
-
-            // Ensure all the bytes have been read in
-            if (offset < length) {
-                // throw new IOException("Could not completely read file "+file.getName());
-                // TODO log error
-                return null;
-            }
-
-            // Ensure all the bytes have been read in
-            if (numRead < length) {
-                // throw new IOException("Could not completely read file "+file.getName());
-                // TODO log error
-                return null;
-            }
-
-            // Parse bytes
-            int i = 0;
-            while (i < numRead) {
-
+            // Find root project. TODO there should be a better solution than traversing the whole structure again
+            Iterator<Integer> iterator = nodes.keySet().iterator();
+            while (iterator.hasNext()) {
+                int key = iterator.next();
+                if (nodes.get(key) instanceof Project) {
+                    if (project != null) {
+                        // TODO programmatic error, there may only be one project per project file
+                        return null;
+                    }
+                    project = (Project) nodes.get(key);
+                }
             }
 
             // Close the input stream and return project
-            is.close();
+            dis.close();
+            fis.close();
             return project;
-        } catch (FileNotFoundException e) {
-            // TODO log error
-            // e.printStackTrace();
+
         } catch (IOException e) {
             // TODO log error
             // e.printStackTrace();
@@ -232,60 +212,68 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
         // TODO execute on a separate thread
 
+        // If message from IMapNodeComposite
         if (message instanceof IMapNodeComposite.Message) {
-            switch (((IMapNodeComposite.Message) message).getStatus()) {
 
-                case CHILD_ADDED: {
-                    ChildChangeMessageData data = (ChildChangeMessageData)
-                            ((IMapNodeComposite.Message) message).getData();
+            ChildChangeMessageData data = (ChildChangeMessageData)
+                    ((IMapNodeComposite.Message) message).getData();
 
-                    // Child because we want to avoid getting the "root-est" ProjectExplorer
-                    Set<Project> projects = getProjects(data.getChild());
-                    if (projects == null) {
-                        // TODO log error
-                        return;
+            // Child because we want to avoid getting the "root-est" ProjectExplorer
+            Set<Project> projects = getProjects(data.getChild());
+            if (projects == null) {
+                // TODO log error
+                return;
+            }
+
+            Iterator<Project> iterator = projects.iterator();
+            while (iterator.hasNext()) {
+                Project p = iterator.next();
+
+                switch (((IMapNodeComposite.Message) message).getStatus()) {
+
+                    case CHILD_ADDED: {
+                        if (data.getChild() instanceof Project) {
+                            appendOp(p, true, data.getChild());
+                        } else if (data.getChild() instanceof MindMap) {
+                            appendOp(p, true, data.getChild());
+                            appendOp(p, true, data.getParent(),
+                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
+                        } else if (data.getChild() instanceof Element) {
+                            appendOp(p, true, data.getChild());
+                            appendOp(p, true, data.getParent(),
+                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
+                        }
+                        break;
                     }
 
-                    Iterator<Project> iterator = projects.iterator();
-                    while (iterator.hasNext()) {
-                        appendOp(iterator.next(), true, op_encode_ChildAdd(data));
+                    case CHILD_REMOVED: {
+                        if (data.getChild() instanceof Project) {
+                            // TODO Check if nothing should be done here (project was removed from workspace, potentially deleted)
+                        } else if (data.getChild() instanceof MindMap) {
+                            appendOp(p, true, data.getChild());
+                            appendOp(p, true, data.getParent(),
+                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
+                        } else if (data.getChild() instanceof Element) {
+                            appendOp(p, true, data.getChild());
+                            appendOp(p, true, data.getParent(),
+                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
+                        }
+                        break;
                     }
-
-                    break;
-                }
-
-                case CHILD_REMOVED: {
-                    ChildChangeMessageData data = (ChildChangeMessageData)
-                            ((IMapNodeComposite.Message) message).getData();
-
-                    // Child because we want to avoid getting the "root-est" ProjectExplorer
-                    Set<Project> projects = getProjects(data.getChild());
-                    if (projects == null) {
-                        // TODO log error
-                        return;
-                    }
-
-                    Iterator<Project> iterator = projects.iterator();
-                    while (iterator.hasNext()) {
-                        appendOp(iterator.next(), true, op_encode_ChildRemove(data));
-                    }
-
-                    break;
                 }
             }
+
         } else if (message instanceof IMapNode.Message) {
             switch (((IMapNode.Message) message).getStatus()) {
 
                 case EDITED:
                     // TODO call op_encode_Value
-                    // TODO right now changes to actual ndoe values are not being backed up, only the structure is. Node values have to be backed up
+                    // TODO right now changes to actual node values are not being backed up, only the structure is. Node values have to be backed up, but we can't access them!
                     break;
 
                 case PARENT_ADDED:
-                    // Ignore because we listen for changes in the parent.
-                    break;
-
                 case PARENT_REMOVED:
+                default:
                     // Ignore because we listen for changes in the parent.
                     break;
             }
@@ -293,34 +281,30 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     }
 
     /**
-     * Recreates the operations that build a tree of IMapNodeComposites from the given root element. If an IMapNode is
-     * passed, returns only operations for that node.
+     * Encodes the project tree by reverse-encoding it from the leaves to the root.
      *
+     * @param dos  {@link DataOutputStream} Stream to write to.
      * @param node Root IMapNode.
-     * @return List of operations that recreate a tree of IMapNodeComposites.
+     * @return True if no errors, false otherwise.
      */
-    private List<Object[]> recreateOperations(IMapNode node) {
-        if (node == null) return new LinkedList<>();
-        List<Object[]> operations = new LinkedList<>();
+    private boolean recreateOperations(DataOutputStream dos, IMapNode node) {
+        if (node == null) return true;
 
-        // Encode the properties of the node
-        operations.add(op_encode_Value(node));
+        // If a composite, write leaves first so we can read the children first
+        if (node instanceof IMapNodeComposite) {
+            IMapNodeComposite root = (IMapNodeComposite) node;
 
-        // stop here if not a composite
-        if (!(node instanceof IMapNodeComposite)) return operations;
-        IMapNodeComposite root = (IMapNodeComposite) node;
-
-        Iterator<IMapNode> iterator = root.getChildren().iterator();
-        while (iterator.hasNext()) {
-            IMapNode child = iterator.next();
-            operations.add(op_encode_ChildAdd(new IMapNodeComposite.Message.ChildChangeMessageData(
-                    root, child
-            )));
-            if (child instanceof IMapNodeComposite)
-                operations.addAll(recreateOperations(child));
+            Iterator<IMapNode> iterator = root.getChildren().iterator();
+            while (iterator.hasNext()) {
+                IMapNode child = iterator.next();
+                if (!recreateOperations(dos, child)) {
+                    // TODO log error
+                    return false;
+                }
+            }
         }
 
-        return operations;
+        return encodeNodeState(dos, node);
     }
 
     /**
@@ -362,22 +346,15 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     }
 
     /**
-     * Appends to the currently opened project's database.
+     * Appends partial attribute (changes) of a node to a project's database.
      *
-     * @param backup Which database to append to for the given project.
-     * @param tokens Operation tokens to append (operation code plus arguments, omit separators.) First token must be
-     *               operation code.
+     * @param project Which project to append ot.
+     * @param backup  Which database to append to for the given project.
+     * @param node    Node the delta occurred on.
+     * @param attrs   Which attributes to append to regarding the changed node.
+     * @return True if no errors, false otherwise.
      */
-    private boolean appendOp(Project project, boolean backup, Object... tokens) {
-        if (tokens == null || tokens.length == 0) {
-            // TODO log to error handler here?
-            return false;
-        }
-
-        // coding error, this shouldn't (ever) happen
-        if (!(tokens[0] instanceof Byte)) {
-            throw new RuntimeException("First operation in appendOp(tokens) must be the OPCODE.");
-        }
+    private boolean appendOp(Project project, boolean backup, IMapNode node, ATTR_SCHEMA[] attrs) {
 
         // Ensure deltas DB is available
         if (!setupDb(project, backup)) {
@@ -392,52 +369,8 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             DataOutputStream dos = new DataOutputStream(bos);
 
-            for (int j = 0; j < tokens.length; j++) {
-                Object tok = tokens[j];
-
-                if (tok instanceof String) {
-                    dos.writeUTF((String) tok);
-                    continue;
-                }
-
-                if (tok instanceof Long) {
-                    dos.writeLong((Long) tok);
-                }
-
-                if (tok instanceof Integer) {
-                    dos.writeInt((int) tok);
-                    continue;
-                }
-
-                if (tok instanceof Short) {
-                    dos.writeShort((short) tok);
-                    continue;
-                }
-
-                if (tok instanceof Character) {
-                    dos.writeChar((char) tok);
-                    continue;
-                }
-
-                if (tok instanceof Double) {
-                    dos.writeDouble((double) tok);
-                    continue;
-                }
-
-                if (tok instanceof Float) {
-                    dos.writeFloat((float) tok);
-                    continue;
-                }
-
-                if (tok instanceof Byte) {
-                    dos.write((byte) tok);
-                }
-
-                if (j < tokens.length - 1)
-                    dos.write((byte) OPCODES.SEPARATOR.ordinal());
-            }
-
-            dos.write((byte) OPCODES.END.ordinal());
+            // encode values
+            encodeNodeState(dos, node, attrs);
 
             dos.close();
             bos.close();
@@ -447,6 +380,18 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             // TODO log to error handler
             return false;
         }
+    }
+
+    /**
+     * Appends all attributes of a node to a project's database.
+     *
+     * @param project Which project to append ot.
+     * @param backup  Which database to append to for the given project.
+     * @param node    Node the delta occurred on.
+     * @return True if no errors, false otherwise.
+     */
+    private boolean appendOp(Project project, boolean backup, IMapNode node) {
+        return appendOp(project, backup, node, new ATTR_SCHEMA[]{});
     }
 
     /**
@@ -505,98 +450,387 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     }
 
     /**
-     * Encode the state of the node.
+     * Encode the full state of a node into the DataOutputStream.
      *
+     * @param dos  {@link DataOutputStream} Stream to write to.
      * @param node {@link IMapNode} node.
-     * @return Byte-representation of the node state.
+     * @return True if no errors, false otherwise.
      */
-    private Object[] op_encode_Value(IMapNode node) {
+    private boolean encodeNodeState(DataOutputStream dos, IMapNode node) {
+        return encodeNodeState(dos, node, new ATTR_SCHEMA[]{});
+    }
+
+    /**
+     * Partially encode the state of a node (only select values).
+     *
+     * @param dos   {@link DataOutputStream} Stream to write to.
+     * @param node  {@link IMapNode} node.
+     * @param attrs {@link ATTR_SCHEMA}[] array of schema attributes to encode.
+     * @return True if no errors, false otherwise.
+     */
+    private boolean encodeNodeState(DataOutputStream dos, IMapNode node, ATTR_SCHEMA[] attrs) {
 
         // TODO add other attributes here
 
-        if (node instanceof Project) {
-            return new Object[]{
-                    (byte) node.hashCode(),
-                    (byte) OPCODES.NODE_VALUE.ordinal(),
-                    (byte) ATTR_SCHEMA.PROJECT_PROJECTNAME.ordinal(),
-                    ((Project) node).getProjectName(),
-                    (byte) ATTR_SCHEMA.PROJECT_AUTHORNAME.ordinal(),
-                    ((Project) node).getAuthorName(),
-                    (byte) ATTR_SCHEMA.PROJECT_PROJECTNAME.ordinal(),
-                    ((Project) node).getFilepath(),
-            };
+        try {
+            if (node instanceof Project) {
+                Project p = (Project) node;
 
-        } else if (node instanceof MindMap) {
-            return new Object[]{
-                    (byte) node.hashCode(),
-                    (byte) OPCODES.NODE_VALUE.ordinal(),
-                    (byte) ATTR_SCHEMA.MINDMAP_TEMPLATE.ordinal(),
-                    (((MindMap) node).isTemplate() ? 1 : 0),
-            };
+                if (attrs.length == 0) {
+                    attrs = new ATTR_SCHEMA[]{
+                            ATTR_SCHEMA.PROJECT_PROJECTNAME,
+                            ATTR_SCHEMA.PROJECT_AUTHORNAME,
+                            ATTR_SCHEMA.PROJECT_FILEPATH,
+                            ATTR_SCHEMA.PROJECT_CHILDREN,
+                    };
+                }
 
-        } else if (node instanceof Element) {
-            // TODO add element attributes here
-            return new Object[]{
-                    (byte) node.hashCode(),
-                    (byte) OPCODES.NODE_VALUE.ordinal(),
-                    (byte) ATTR_SCHEMA.ELEMENT_EMPTY.ordinal()
-            };
+                dos.writeInt(node.hashCode());
+                // TODO this could snap if more than 2^8 attributes on node
+                dos.writeByte(attrs.length);
 
-        } else {
+                for (int i = 0; i < attrs.length; i++) {
+                    dos.write((byte) attrs[i].ordinal());
+
+                    switch (attrs[i]) {
+                        case PROJECT_PROJECTNAME:
+                            dos.writeUTF(p.getProjectName());
+                            break;
+                        case PROJECT_AUTHORNAME:
+                            dos.writeUTF(p.getAuthorName());
+                            break;
+                        case PROJECT_FILEPATH:
+                            dos.writeUTF(p.getFilepath());
+                            break;
+                        case PROJECT_CHILDREN:
+                            dos.writeInt(p.getChildren().size());
+
+                            Iterator<IMapNode> iterator = p.getChildren().iterator();
+                            while (iterator.hasNext()) {
+                                dos.writeInt(iterator.next().hashCode());
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                return true;
+            }
+
+            if (node instanceof MindMap) {
+
+                MindMap m = (MindMap) node;
+
+                if (attrs.length == 0) {
+                    attrs = new ATTR_SCHEMA[]{
+                            ATTR_SCHEMA.MINDMAP_TEMPLATE,
+                            ATTR_SCHEMA.MINDMAP_CHILDREN,
+                    };
+                }
+
+                dos.writeInt(node.hashCode());
+                // TODO this could snap if more than 2^8 attributes on node
+                dos.writeByte(attrs.length);
+
+                for (int i = 0; i < attrs.length; i++) {
+                    dos.write((byte) attrs[i].ordinal());
+
+                    switch (attrs[i]) {
+                        case MINDMAP_TEMPLATE:
+                            dos.writeBoolean(m.isTemplate());
+                            break;
+                        case MINDMAP_CHILDREN:
+                            dos.writeInt(m.getChildren().size());
+
+                            Iterator<IMapNode> iterator = m.getChildren().iterator();
+                            while (iterator.hasNext()) {
+                                dos.writeInt(iterator.next().hashCode());
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                return true;
+
+            }
+
+            if (node instanceof Element) {
+
+                Element e = (Element) node;
+
+                if (attrs.length == 0) {
+                    attrs = new ATTR_SCHEMA[]{
+                            ATTR_SCHEMA.ELEMENT_EMPTY,
+                    };
+                }
+
+                dos.writeInt(node.hashCode());
+                // TODO this could snap if more than 2^8 attributes on node
+                dos.writeByte(attrs.length);
+
+                for (int i = 0; i < attrs.length; i++) {
+                    dos.write((byte) attrs[i].ordinal());
+
+                    switch (attrs[i]) {
+                        // TODO add element attributes here
+
+                        default:
+                            break;
+                    }
+                }
+
+                return true;
+
+            }
+
             // TODO add a method on IAddon for exporting repository objects of arbitrary type as bytes
             // Arbitrary implementation of IMapNode
-            return new Object[]{};
+            return false;
+
+        } catch (Exception e) {
+            // TODO log error in writing
+            return false;
         }
     }
 
-    private Object[] op_encode_ChildAdd(IMapNodeComposite.Message.ChildChangeMessageData data) {
-        IMapNode child = data.getChild();
-        IMapNodeComposite parent = data.getParent();
+    /**
+     * Decode the state of a node from a byte array into a tree of nodes.
+     *
+     * @param dis   DataInputStream to read from.
+     * @param nodes Map of nodes where the node is (potentially) located.
+     * @return True if no error, false otherwise.
+     */
+    private boolean decodeNodeState(DataInputStream dis, Map<Integer, IMapNode> nodes) {
+        try {
+            // Read node ID
+            int nodeId = dis.readInt();
 
-        if (child instanceof Project) {
-            // New project created. Here we can't add a child anywhere because ProjectExplorer is not saved
-            return op_encode_Value(child);
+            // Read number of changes
+            int changes = dis.readByte();
+
+            // Possible values to be read from schema for each delta
+            String
+                    project_projectName = null,
+                    project_authorName = null,
+                    project_filePath = null;
+            Boolean
+                    mindmap_template = null;
+            List<Integer>
+                    project_children = null,
+                    mindmap_children = null;
+
+            int type = -1;
+            int i = changes;
+
+            // Iterate on deltas while checking schema
+            while (i > 0) {
+                ATTR_SCHEMA schema = ATTR_SCHEMA.values()[dis.readUnsignedByte()];
+
+                switch (schema) {
+                    case PROJECT_PROJECTNAME: {
+                        if (type > -1 && type != 0) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 0;
+                        project_projectName = dis.readUTF();
+                        break;
+                    }
+
+                    case PROJECT_AUTHORNAME: {
+                        if (type > -1 && type != 0) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 0;
+                        project_authorName = dis.readUTF();
+                        break;
+                    }
+
+                    case PROJECT_FILEPATH: {
+                        if (type > -1 && type != 0) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 0;
+                        project_filePath = dis.readUTF();
+                        break;
+                    }
+
+                    case PROJECT_CHILDREN: {
+                        // TODO this will fail if children are not loaded yet!
+
+                        if (type > -1 && type != 0) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 0;
+                        project_children = new ArrayList<>();
+                        int numChildren = dis.readInt();
+                        for (int j = 0; j < numChildren; j++) {
+                            project_children.add(dis.readInt());
+                        }
+                        break;
+                    }
+
+                    case MINDMAP_TEMPLATE: {
+                        if (type > -1 && type != 1) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 1;
+                        mindmap_template = dis.readBoolean();
+                        break;
+                    }
+
+                    case MINDMAP_CHILDREN: {
+                        // TODO this will fail if children are not loaded yet!
+
+                        if (type > -1 && type != 1) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 1;
+                        mindmap_children = new ArrayList<>();
+                        int numChildren = dis.readInt();
+                        for (int j = 0; j < numChildren; j++) {
+                            mindmap_children.add(dis.readInt());
+                        }
+                        break;
+                    }
+
+                    case ELEMENT_EMPTY: {
+                        if (type > -1 && type != 2) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 2;
+                        // TODO add values to read here in the future
+                        break;
+                    }
+                }
+
+                i--;
+            }
+
+            switch (type) {
+
+                case 0: {
+
+                    // If Project schema
+                    Project p = (Project) nodes.getOrDefault(nodeId, null);
+                    if (p == null) {
+                        p = new Project(
+                                project_projectName,
+                                project_authorName,
+                                project_filePath
+                        );
+                        nodes.put(nodeId, p);
+                    }
+                    if (project_projectName != null) {
+                        p.setProjectName(project_projectName);
+                    }
+                    if (project_authorName != null) {
+                        p.setAuthorName(project_authorName);
+                    }
+                    if (project_filePath != null) {
+                        p.setFilepath(project_filePath);
+                    }
+                    if (project_children != null) {
+                        // Remove all children
+                        Iterator<IMapNode> iterator = p.getChildren().iterator();
+                        while (iterator.hasNext()) {
+                            p.removeChild(iterator.next());
+                        }
+
+                        for (int k = 0; k < project_children.size(); k++) {
+                            IMapNode child = nodes.getOrDefault(project_children.get(k), null);
+                            if (child == null) {
+                                // TODO this is a programmatic error as children are not yet initialized
+                                continue;
+                            }
+                            if (!(child instanceof MindMap)) {
+                                // TODO log error, could be programmatic or corruption of data, invalid subelement
+                                continue;
+                            }
+                            p.addChild(child);
+                        }
+                    }
+
+                    break;
+                }
+
+                case 1: {
+
+                    // If MindMap schema
+                    MindMap m = (MindMap) nodes.getOrDefault(nodeId, null);
+                    if (m == null) {
+                        m = new MindMap(
+                                Boolean.TRUE.equals(mindmap_template)
+                        );
+                        nodes.put(nodeId, m);
+                    }
+                    if (mindmap_template != null) {
+                        m.setTemplate(Boolean.TRUE.equals(mindmap_template));
+                    }
+                    if (mindmap_children != null) {
+                        // Remove all children
+                        Iterator<IMapNode> iterator = m.getChildren().iterator();
+                        while (iterator.hasNext()) {
+                            m.removeChild(iterator.next());
+                        }
+
+                        for (int k = 0; k < mindmap_children.size(); k++) {
+                            IMapNode child = nodes.getOrDefault(mindmap_children.get(k), null);
+                            if (child == null) {
+                                // TODO this is a programmatic error as children are not yet initialized
+                                continue;
+                            }
+                            if (!(child instanceof Element)) {
+                                // TODO log error, could be programmatic or corruption of data, invalid subelement
+                                continue;
+                            }
+                            m.addChild(child);
+                        }
+                    }
+
+                    break;
+                }
+
+                case 2: {
+
+                    // If Element schema
+                    Element e = (Element) nodes.getOrDefault(nodeId, null);
+                    if (e == null) {
+                        e = new Element();
+                        nodes.put(nodeId, e);
+                    } else {
+                        // TODO update values here
+                    }
+                    break;
+                }
+
+                default:
+                    // TODO log error or pass to IAddon because no registered  type inferred
+                    return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            // TODO log error, bad schema
+            return false;
         }
-
-        // New arbitrary object (mind map, element, or else) created OR added to a valid parent
-
-        Object[] bytes = new Object[]{
-                (byte) OPCODES.NODE_CHILD_ADD.ordinal(),
-                child.hashCode(),
-                parent.hashCode(),
-        };
-
-        // TODO this won't work in async code if a parent gets added after a parent is added but before this line
-        if (data.getChild().getParents().size() == 1) {
-            // If just added, save the values too
-            List<Object> arr = Arrays.asList(bytes);
-            arr.addAll(Arrays.asList(op_encode_Value(child)));
-            bytes = arr.toArray();
-        }
-
-        return bytes;
-    }
-
-    private Object[] op_encode_ChildRemove(IMapNodeComposite.Message.ChildChangeMessageData data) {
-        IMapNode child = data.getChild();
-        IMapNodeComposite parent = data.getParent();
-
-        return new Object[]{
-                (byte) OPCODES.NODE_CHILD_REMOVE.ordinal(),
-                child.hashCode(),
-                parent.hashCode()
-        };
-    }
-
-    private Object[] op_decode_ChildAdd() {
-        return null;
-    }
-
-    private Object[] op_encode_ChildRemove(IMapNodeComposite.Message message) {
-        return null;
-    }
-
-    private Object[] op_decode_ChildRemove() {
-        return null;
     }
 }
