@@ -18,6 +18,8 @@ public abstract class IMapNode extends IPublisher {
      */
     public Set<IMapNodeComposite> parents = new HashSet<>();
 
+
+
     public Set<IMapNodeComposite> getParents() {
         return parents;
     }
