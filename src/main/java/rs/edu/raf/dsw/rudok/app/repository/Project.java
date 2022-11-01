@@ -2,11 +2,19 @@ package rs.edu.raf.dsw.rudok.app.repository;
 
 import java.util.Set;
 
-public class Project extends IMapNodeComposite{
+public class Project extends IMapNodeComposite {
+
     private String projectName;
     private String authorName;
     private String filepath;
 
+    /**
+     * Default constructor.
+     *
+     * @param projectName Project name.
+     * @param authorName  Project author.
+     * @param filepath    Filepath to the project.
+     */
     public Project(String projectName, String authorName, String filepath) {
         this.projectName = projectName;
         this.authorName = authorName;
@@ -39,27 +47,27 @@ public class Project extends IMapNodeComposite{
 
     @Override
     public void setParents(Set<IMapNodeComposite> parents) {
-        for(IMapNode parent: parents){
-            if(!(parent instanceof ProjectExplorer)) return;
+        for (IMapNode parent : parents) {
+            if (!(parent instanceof ProjectExplorer)) return;
         }
         super.setParents(parents);
     }
 
     @Override
     public void addParent(IMapNodeComposite parent) {
-        if(parent instanceof ProjectExplorer) super.addParent(parent);
+        if (parent instanceof ProjectExplorer) super.addParent(parent);
     }
 
     @Override
     public void setChildren(Set<IMapNode> children) {
-        for(IMapNode child: children){
-            if(!(child instanceof MindMap)) return;
+        for (IMapNode child : children) {
+            if (!(child instanceof MindMap)) return;
         }
         super.setChildren(children);
     }
 
     @Override
     public void addChild(IMapNode child) {
-        if(child instanceof MindMap) super.addChild(child);
+        if (child instanceof MindMap) super.addChild(child);
     }
 }
