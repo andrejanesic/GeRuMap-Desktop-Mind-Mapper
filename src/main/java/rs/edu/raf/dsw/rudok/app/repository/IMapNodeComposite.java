@@ -94,6 +94,9 @@ public abstract class IMapNodeComposite extends IMapNode {
             CHILD_REMOVED,
         }
 
+        /**
+         * For messages about changes on its children.
+         */
         public static class ChildChangeMessageData implements IMessageData {
 
             private final IMapNodeComposite parent;
