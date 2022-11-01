@@ -2,6 +2,11 @@ package rs.edu.raf.dsw.rudok.app.repository;
 
 import java.util.Set;
 
+/**
+ * <h1>Project.</h1>
+ * <p>Represents a group of mind maps.</p>
+ * <p><b>NOTE:</b> the filepath only points to the name of the file database, not the fully-qualified pathname!</p>
+ */
 public class Project extends IMapNodeComposite {
 
     private String projectName;

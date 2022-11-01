@@ -3,9 +3,10 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
+import rs.edu.raf.dsw.rudok.app.repository.*;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
+import javax.swing.text.Element;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -32,20 +33,13 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     private final ApplicationFramework applicationFramework;
 
     /**
-     * Path to the current open project.
-     */
-    private String projectPath = null;
-
-    /**
-     * Path to the backup of the current open project.
-     */
-    private String projectPathBackup = null;
-
-    /**
      * Stores the IDs of all map nodes.
      */
     private Map<Integer, IMapNode> ids = new HashMap<>();
 
+    /**
+     * Int-code for each operation on the tree.
+     */
     private enum OPCODES {
         END,
         SEPARATOR,
@@ -112,22 +106,9 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     }
 
     @Override
-    public void saveProject(IMapNodeComposite project) {
-        // TODO this method needs to be updated to support multiple projects
-        // TODO this should be the name of the project
-
-        if (projectPath == null) {
-            setupDb(false);
-        }
-
-        if (projectPath == null) {
+    public void saveProject(Project project) {
+        if (!eraseDb(project, false) || !setupDb(project, false)) {
             // TODO log to error handler, cannot append
-            return;
-        }
-
-        // reset the project db if already existing
-        if (!eraseDb(false) || setupDb(false) == null) {
-            // TODO log to error handler, something went wrong
             return;
         }
 
@@ -137,18 +118,18 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
         // append the operations to the new db file
         Iterator<Object[]> iterator = operations.listIterator();
         while (iterator.hasNext()) {
-            if (!appendOp(false, iterator.next())) {
+            if (!appendOp(project, false, iterator.next())) {
                 // TODO log to error handler, there was an error
                 return;
             }
         }
 
         // backup no longer needed, clean
-        eraseDb(true);
+        eraseDb(project, true);
     }
 
     @Override
-    public IMapNodeComposite loadProject(String name) {
+    public Project loadProject(String name) {
 
         // TODO this method needs to be updated to support multiple projects
         // TODO this should be the name of the project
@@ -164,15 +145,33 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
         if (message instanceof IMapNodeComposite.Message) {
             switch (((IMapNodeComposite.Message) message).getStatus()) {
 
-                case CHILD_ADDED:
-                    appendOp(true, op_encode_ChildAdd((IMapNodeComposite.Message.ChildChangeMessageData)
-                            ((IMapNodeComposite.Message) message).getData()));
+                case CHILD_ADDED: {
+                    ChildChangeMessageData data = (ChildChangeMessageData) ((IMapNodeComposite.Message) message).getData();
+                    Set<Project> projects = getProjects(data.getParent());
+                    if (projects == null) {
+                        // TODO log error
+                        return;
+                    }
+                    Iterator<Project> iterator = projects.iterator();
+                    while (iterator.hasNext()) {
+                        appendOp(iterator.next(), true, op_encode_ChildAdd(data));
+                    }
                     break;
+                }
 
-                case CHILD_REMOVED:
-                    appendOp(true, op_encode_ChildRemove((IMapNodeComposite.Message.ChildChangeMessageData)
-                            ((IMapNodeComposite.Message) message).getData()));
+                case CHILD_REMOVED: {
+                    ChildChangeMessageData data = (ChildChangeMessageData) ((IMapNodeComposite.Message) message).getData();
+                    Set<Project> projects = getProjects(data.getParent());
+                    if (projects == null) {
+                        // TODO log error
+                        return;
+                    }
+                    Iterator<Project> iterator = projects.iterator();
+                    while (iterator.hasNext()) {
+                        appendOp(iterator.next(), true, op_encode_ChildRemove(data));
+                    }
                     break;
+                }
             }
         }
     }
@@ -214,17 +213,10 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
      * @param backup Whether to erase the actual DB or its backup.
      * @return Returns true if no error, false otherwise.
      */
-    private boolean eraseDb(boolean backup) {
-        // TODO this method needs to be updated to support multiple projects
-        // TODO this should be the name of the project
-
-        String dbName = "default";
-        String fileName = dbName + (backup ? ".bak" : "") + ".gerumap";
-        String filePath = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() + '/' + fileName;
+    private boolean eraseDb(Project project, boolean backup) {
+        String fileName = this.parseProjectFilepath(project, backup);
         try {
-            Files.deleteIfExists(Paths.get(filePath));
-            if (backup) projectPath = null;
-            else projectPathBackup = null;
+            Files.deleteIfExists(Paths.get(fileName));
             return true;
         } catch (IOException e) {
             // TODO send to error handler
@@ -234,39 +226,23 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
     /**
      * Sets up the database for the project. Does not reset an existing file. Creates new file if not found.
-     * TODO this should use project name as filename.
      *
-     * @param backup Whether to make this into a backup DB or not.
-     * @return String path to the setup database.
+     * @param project Project to set up the DB for.
+     * @param backup  Whether to make this into a backup DB or not.
      */
-    private String setupDb(boolean backup) {
-        // if already setup
-        if (!backup && projectPath != null) return projectPath;
-        if (backup && projectPathBackup != null) return projectPathBackup;
-
+    private boolean setupDb(Project project, boolean backup) {
         try {
-            // TODO this method needs to be updated to support multiple projects
-            // TODO this should be the name of the project
-            String dbName = "default";
-            String fileName = dbName + (backup ? ".bak" : "") + ".gerumap";
+            String fileName = this.parseProjectFilepath(project, backup);
+
             Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER()));
 
-            if (backup) {
-                projectPathBackup = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() + '/' + fileName;
-                projectPathBackup = new File(projectPathBackup).createNewFile() ? projectPathBackup : null;
-            } else {
-                projectPath = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() + '/' + fileName;
-                projectPath = new File(projectPath).createNewFile() ? projectPath : null;
-            }
+            new File(fileName).createNewFile();
+            return true;
         } catch (IOException e) {
             // TODO send to error handler
-            if (backup) projectPathBackup = null;
-            else projectPath = null;
             e.printStackTrace();
+            return false;
         }
-
-        if (backup) return projectPathBackup;
-        return projectPath;
     }
 
     /**
@@ -276,7 +252,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
      * @param tokens Operation tokens to append (operation code plus arguments, omit separators.) First token must be
      *               operation code.
      */
-    private boolean appendOp(boolean backup, Object... tokens) {
+    private boolean appendOp(Project project, boolean backup, Object... tokens) {
         if (tokens == null || tokens.length == 0) {
             // TODO log to error handler here?
             return false;
@@ -287,14 +263,16 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             throw new RuntimeException("First operation in appendOp(tokens) must be the OPCODE.");
         }
 
-        String pathToWrite = setupDb(backup);
-        if (pathToWrite == null) {
-            // TODO log to error handler, cannot append
+        // Ensure deltas DB is available
+        if (!setupDb(project, backup)) {
+            // TODO log to error handler
             return false;
         }
 
         try {
-            FileOutputStream fos = new FileOutputStream(pathToWrite, true);
+            FileOutputStream fos = new FileOutputStream(
+                    this.parseProjectFilepath(project, backup),
+                    true);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             DataOutputStream dos = new DataOutputStream(bos);
 
@@ -353,6 +331,55 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             // TODO log to error handler
             return false;
         }
+    }
+
+    /**
+     * Returns the fully-qualified path to the project, taking all parameters into account.
+     *
+     * @param project The project.
+     * @param backup  Whether to create a filepath to the backup of the project or the original.
+     * @return The fully qualified filepath.
+     */
+    private String parseProjectFilepath(Project project, boolean backup) {
+        return applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() +
+                "/" +
+                project.getFilepath() +
+                (backup ? ".bak" : "");
+    }
+
+    /**
+     * Retrieves the Project parent for the given IMapNodeComposite of arbitrary implementation. Assumes that parents
+     * are correctly set (e.g. MindMap's parent cannot be Element, Project's parent must be ProjectExplorer, etc.)
+     *
+     * @param composite Composite, assumed to be part of a Project.
+     * @return Project root node.
+     */
+    private Set<Project> getProjects(IMapNodeComposite composite) {
+        if (composite instanceof ProjectExplorer) return null;
+        Set<Project> s = new HashSet<>();
+        if (composite instanceof Project) {
+            s.add((Project) composite);
+            return s;
+        }
+        if (composite instanceof MindMap) {
+            Iterator<IMapNodeComposite> iterator = composite.getParents().iterator();
+            while (iterator.hasNext()) {
+                s.add((Project) iterator.next());
+            }
+            return s;
+        }
+        if (composite instanceof Element) {
+            Iterator<IMapNodeComposite> iterator = composite.getParents().iterator();
+            while (iterator.hasNext()) {
+                MindMap m = (MindMap) iterator.next();
+                Iterator<IMapNodeComposite> nestedIterator = m.getParents().iterator();
+                while (nestedIterator.hasNext()) {
+                    s.add((Project) nestedIterator.next());
+                }
+            }
+        }
+        // Should never be reached
+        return null;
     }
 
     private Object[] op_encode_Edit(IMapNode.Message.EditedMessageData data) {

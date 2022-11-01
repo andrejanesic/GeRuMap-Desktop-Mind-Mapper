@@ -4,6 +4,7 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
+import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.io.File;
 import java.net.URL;
@@ -31,29 +32,26 @@ public interface IFileSystem {
     Map<String, String> loadConfig(String name);
 
     /**
-     * Saves the project and its subtree. TODO IProject should be used here, not IMapNodeComposite.
-     * TODO this method needs to be updated to support multiple projects
+     * Saves the project and its subtree.
      *
      * @param project Project to save.
      */
-    void saveProject(IMapNodeComposite project);
+    void saveProject(Project project);
 
     /**
-     * Loads the project under "name". TODO IProject should be used here, not IMapNodeComposite.
-     * TODO this method needs to be updated to support multiple projects
+     * Loads the project under "name".
      *
      * @param name Project name.
      * @return Returns project as an IMapNodeComposite if successful, null otherwise.
      */
-    IMapNodeComposite loadProject(String name);
+    Project loadProject(String name);
 
     /**
-     * Loads the most recent project. TODO IProject should be used here, not IMapNodeComposite.
-     * TODO this method needs to be updated to support multiple projects
+     * Loads the most recent project.
      *
      * @return Returns project as an IMapNodeComposite if successful, null otherwise.
      */
-    default IMapNodeComposite loadProject() {
+    default Project loadProject() {
         return loadProject("default");
     }
 
