@@ -303,8 +303,8 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
         if (node == null) return new LinkedList<>();
         List<Object[]> operations = new LinkedList<>();
 
-        // TODO here we will encode the actual properties of the node
-        // operations.add(op_encode_Edit(new IMapNode.Message.EditedMessageData(key, val)))
+        // Encode the properties of the node
+        operations.add(op_encode_Value(node));
 
         // stop here if not a composite
         if (!(node instanceof IMapNodeComposite)) return operations;
