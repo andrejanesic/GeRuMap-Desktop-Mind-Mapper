@@ -21,15 +21,6 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (!(clickedOn instanceof MapTreeItem))
-            return;
-
-        MapTreeItem clicked = (MapTreeItem) clickedOn;
-        clicked.setName(e.getActionCommand());
-    }
-
-    @Override
     public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
         clickedOn = value;
         edit = new JTextField(value.toString());
@@ -45,5 +36,14 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
             }
         }
         return false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!(clickedOn instanceof MapTreeItem))
+            return;
+
+        MapTreeItem clicked = (MapTreeItem) clickedOn;
+        clicked.setName(e.getActionCommand());
     }
 }

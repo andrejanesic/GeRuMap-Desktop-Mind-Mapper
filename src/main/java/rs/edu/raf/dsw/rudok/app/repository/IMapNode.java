@@ -32,6 +32,11 @@ public abstract class IMapNode extends IPublisher {
         return nodeName;
     }
 
+    @Override
+    public String toString() {
+        return nodeName;
+    }
+
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }

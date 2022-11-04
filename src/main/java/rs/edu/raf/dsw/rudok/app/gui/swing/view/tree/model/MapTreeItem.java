@@ -7,7 +7,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class MapTreeItem extends DefaultMutableTreeNode {
 
     private IMapNode iMapNode;
-    private String name;
 
     public MapTreeItem(IMapNode iMapNode) {
         this.iMapNode = iMapNode;
@@ -22,7 +21,11 @@ public class MapTreeItem extends DefaultMutableTreeNode {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.iMapNode.setNodeName(name);
     }
-    //TODO razresiti name konvenciju
+
+    @Override
+    public String toString() {
+        return iMapNode.getNodeName();
+    }
 }
