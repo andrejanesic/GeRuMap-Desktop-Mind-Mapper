@@ -18,10 +18,22 @@ public abstract class IMapNode extends IPublisher {
      */
     public Set<IMapNodeComposite> parents = new HashSet<>();
 
+    private String nodeName;
 
+    public IMapNode(String nodeName) {
+        this.nodeName = nodeName;
+    }
 
     public Set<IMapNodeComposite> getParents() {
         return parents;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public void setParents(Set<IMapNodeComposite> parents) {

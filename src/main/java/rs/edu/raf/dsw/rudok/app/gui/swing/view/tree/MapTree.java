@@ -13,7 +13,7 @@ public class MapTree implements IMapTree{
     private DefaultTreeModel defaultTreeModel;
 
     @Override
-    public JTree generateTree(ProjectExplorer projectExplorer) {
+    public MapTreeView generateTree(ProjectExplorer projectExplorer) {
         MapTreeItem root = new MapTreeItem(projectExplorer);
         defaultTreeModel = new DefaultTreeModel(root);
         mapTreeView = new MapTreeView(defaultTreeModel);
