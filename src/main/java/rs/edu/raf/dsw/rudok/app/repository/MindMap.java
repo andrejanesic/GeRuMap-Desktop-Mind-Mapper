@@ -6,7 +6,7 @@ public class MindMap extends IMapNodeComposite {
 
     private boolean template;
 
-    public MindMap(boolean template,String nodeName) {
+    public MindMap(boolean template, String nodeName) {
         super(nodeName);
         this.template = template;
     }

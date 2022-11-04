@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.repository;
 
 import org.junit.Assert;
 import org.junit.Test;
+import rs.edu.raf.dsw.rudok.app.Helper;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,25 +11,17 @@ import java.util.Set;
 
 public class TestIMapNodeComposite {
 
-    public static class IMapNodeTestImplement extends IMapNode {
-
-    }
-
-    public static class IMapNodeCompositeTestImplement extends IMapNode {
-
-    }
-
     private static Set<IMapNode> generateSamples() {
         Set<IMapNode> samples = new HashSet<>();
         for (int i = new Random().nextInt(5); i > 0; i--) {
-            samples.add(new TestIMapNode.IMapNodeTestImplement());
+            samples.add(new TestIMapNode.IMapNodeTestImplement(Helper.randString()));
         }
         return samples;
     }
 
     @Test
     public void testSetChildren() {
-        IMapNodeComposite parent = new TestIMapNode.IMapNodeCompositeTestImplement();
+        IMapNodeComposite parent = new TestIMapNode.IMapNodeCompositeTestImplement(Helper.randString());
         Set<IMapNode> samples = generateSamples();
 
         parent.setChildren(samples);
@@ -37,7 +30,7 @@ public class TestIMapNodeComposite {
 
     @Test
     public void testAddChild() {
-        IMapNodeComposite parent = new TestIMapNode.IMapNodeCompositeTestImplement();
+        IMapNodeComposite parent = new TestIMapNode.IMapNodeCompositeTestImplement(Helper.randString());
         Set<IMapNode> samples = generateSamples();
 
         int i = 0;
@@ -54,7 +47,7 @@ public class TestIMapNodeComposite {
 
     @Test
     public void testRemoveParent() {
-        IMapNodeComposite parent = new TestIMapNode.IMapNodeCompositeTestImplement();
+        IMapNodeComposite parent = new TestIMapNode.IMapNodeCompositeTestImplement(Helper.randString());
         Set<IMapNode> samples = generateSamples();
         parent.setChildren(samples);
 
