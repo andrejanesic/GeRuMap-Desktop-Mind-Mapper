@@ -2,6 +2,11 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.ActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.IMapTree;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.MapTree;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.view.MapTreeView;
+import rs.edu.raf.dsw.rudok.app.repository.Project;
+import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +19,9 @@ public class MainFrame extends JFrame {
     private MyMenuBar menu;
     private Toolbar toolbar;
     private ActionManager actionManager;
+    private IMapTree mapTree;
+    private MapTreeView mapTreeView;
+    private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
 
 
     private MainFrame() {
@@ -34,10 +42,13 @@ public class MainFrame extends JFrame {
 
         this.addWindowListener(new MyWindowListener());
 
+        mapTree = new MapTree();
+        mapTreeView = mapTree.generateTree(projectExplorer);
+//        Project project = new Project("pr","asd","asd");
+//        projectExplorer.addChild(project);
 
-        JPanel projectTree = new JPanel();
-        JScrollPane treeScroll = new JScrollPane(projectTree, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        JPanel workspace = new JPanel();
+        JScrollPane treeScroll = new JScrollPane(mapTreeView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JTabbedPane workspace = new JTabbedPane();
         workspace.setMinimumSize(new Dimension(600, 300));
         treeScroll.setMinimumSize(new Dimension(70, 300));
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, workspace);

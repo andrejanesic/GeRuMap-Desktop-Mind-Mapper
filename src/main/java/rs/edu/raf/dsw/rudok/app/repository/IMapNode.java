@@ -18,8 +18,27 @@ public abstract class IMapNode extends IPublisher {
      */
     public Set<IMapNodeComposite> parents = new HashSet<>();
 
+    private String nodeName;
+
+    public IMapNode(String nodeName) {
+        this.nodeName = nodeName;
+    }
+
     public Set<IMapNodeComposite> getParents() {
         return parents;
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    @Override
+    public String toString() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public void setParents(Set<IMapNodeComposite> parents) {
@@ -79,6 +98,9 @@ public abstract class IMapNode extends IPublisher {
             PARENT_REMOVED,
         }
 
+        /**
+         * For messages about changed values of the node.
+         */
         public static class EditedMessageData implements IMessageData {
 
             private final String key;

@@ -12,6 +12,10 @@ import java.util.Set;
  */
 public abstract class IMapNodeComposite extends IMapNode {
 
+    public IMapNodeComposite(String nodeName) {
+        super(nodeName);
+    }
+
     /**
      * Set of all children.
      */
@@ -57,6 +61,7 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.publish(new Message(Message.Type.CHILD_REMOVED, new Message.ChildChangeMessageData(this, child)));
     }
 
+
     @Override
     public void receive(Object message) {
 
@@ -94,6 +99,9 @@ public abstract class IMapNodeComposite extends IMapNode {
             CHILD_REMOVED,
         }
 
+        /**
+         * For messages about changes on its children.
+         */
         public static class ChildChangeMessageData implements IMessageData {
 
             private final IMapNodeComposite parent;
