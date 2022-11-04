@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.model;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.model;
 
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 

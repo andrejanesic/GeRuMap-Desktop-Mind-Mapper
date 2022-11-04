@@ -2,10 +2,9 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.ActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.IMapTree;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.MapTree;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.view.MapTreeView;
-import rs.edu.raf.dsw.rudok.app.repository.Project;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.IMapTree;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.MapTree;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;

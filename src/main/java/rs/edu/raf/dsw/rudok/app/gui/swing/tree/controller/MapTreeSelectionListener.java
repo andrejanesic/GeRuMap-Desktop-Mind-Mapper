@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;

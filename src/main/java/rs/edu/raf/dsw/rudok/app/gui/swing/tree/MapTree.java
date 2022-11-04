@@ -1,10 +1,9 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.tree;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.model.MapTreeItem;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.view.MapTreeView;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
-import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
 public class MapTree implements IMapTree{

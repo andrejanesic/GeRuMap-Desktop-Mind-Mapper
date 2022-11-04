@@ -1,6 +1,6 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.model.MapTreeItem;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellEditor;

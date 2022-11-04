@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.view;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.view;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
