@@ -4,15 +4,24 @@ import javax.swing.*;
 
 public class MyMenuBar extends JMenuBar {
     public MyMenuBar() {
-        JMenu File = new JMenu("File");
-        JMenuItem New = new JMenuItem("New");
-        JMenu Help = new JMenu("Help");
-        JMenuItem Edit = new JMenuItem("Edit");
+        JMenu file = new JMenu("File");
+        JMenuItem menuNew = new JMenuItem("New");
+        JMenuItem delete = new JMenuItem("Delete");
+        JMenu help = new JMenu("Help");
+        JMenu edit = new JMenu("Edit");
+        JMenuItem author = new JMenuItem("Project Author");
 
-        File.add(New);
-        Help.add(Edit);
 
-        this.add(File);
-        this.add(Help);
+        file.add(menuNew);
+        file.addSeparator();
+        file.add(delete);
+        help.add(edit);
+        edit.add(author);
+        this.add(file);
+        this.add(help);
+
+        menuNew.addActionListener(MainFrame.getInstance().getActionManager().getNewAction());
+        delete.addActionListener(MainFrame.getInstance().getActionManager().getDeleteAction());
+        author.addActionListener(MainFrame.getInstance().getActionManager().getProjectAuthorAction());
     }
 }

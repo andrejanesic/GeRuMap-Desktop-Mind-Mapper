@@ -1,6 +1,7 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.model.MapTreeItem;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
+import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellEditor;
@@ -13,8 +14,8 @@ import java.util.EventObject;
 
 public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionListener {
 
-    private Object clickedOn =null;
-    private JTextField edit=null;
+    private Object clickedOn = null;
+    private JTextField edit = null;
 
     public MapTreeCellEditor(JTree tree, DefaultTreeCellRenderer renderer) {
         super(tree, renderer);
@@ -30,8 +31,8 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
 
     @Override
     public boolean isCellEditable(EventObject event) {
-        if(event instanceof MouseEvent){
-            if(((MouseEvent)event).getClickCount()==3){
+        if (event instanceof MouseEvent) {
+            if (((MouseEvent) event).getClickCount() == 3) {
                 return true;
             }
         }
@@ -43,7 +44,16 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
         if (!(clickedOn instanceof MapTreeItem))
             return;
 
+        if (!e.getActionCommand().matches("^[a-zA-Z0-9-_.& ]+$")) {
+            // TODO log error, invalid name string
+            return;
+        }
+
         MapTreeItem clicked = (MapTreeItem) clickedOn;
+
+        if (clicked.getMapNode() instanceof ProjectExplorer)
+            return;
+
         clicked.setName(e.getActionCommand());
     }
 }

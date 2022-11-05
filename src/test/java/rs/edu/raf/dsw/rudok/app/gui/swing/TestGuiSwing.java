@@ -2,9 +2,11 @@ package rs.edu.raf.dsw.rudok.app.gui.swing;
 
 import org.junit.After;
 import org.junit.Test;
+import rs.edu.raf.dsw.rudok.app.Helper;
 import rs.edu.raf.dsw.rudok.app.core.*;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
+import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import java.util.Map;
@@ -69,7 +71,7 @@ public class TestGuiSwing {
                 new IErrorHandler() {
                 },
                 gui,
-                new ProjectExplorer() {
+                new ProjectExplorer(Helper.randString()) {
                 },
                 new IFileSystem() {
                     @Override
@@ -83,12 +85,12 @@ public class TestGuiSwing {
                     }
 
                     @Override
-                    public void saveProject(IMapNodeComposite project) {
+                    public void saveProject(Project project) {
 
                     }
 
                     @Override
-                    public IMapNodeComposite loadProject(String name) {
+                    public Project loadProject(String name) {
                         return null;
                     }
                 });

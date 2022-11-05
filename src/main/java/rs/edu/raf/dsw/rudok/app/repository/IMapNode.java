@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Composite design pattern unit. Cannot have any children.
+ * Composite design pattern unit. Cannot have any children. Can have multiple {@link IMapNodeComposite} parents.
  */
 public abstract class IMapNode extends IPublisher {
 
@@ -28,25 +28,32 @@ public abstract class IMapNode extends IPublisher {
         return parents;
     }
 
-    public String getNodeName() {
-        return nodeName;
-    }
-
-    @Override
-    public String toString() {
-        return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-    }
-
     public void setParents(Set<IMapNodeComposite> parents) {
         this.parents = new HashSet<>();
         Iterator<IMapNodeComposite> iterator = parents.iterator();
         while (iterator.hasNext()) {
             addParent(iterator.next());
         }
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        "nodeName",
+                        nodeName
+                )
+        ));
+    }
+
+    @Override
+    public String toString() {
+        return nodeName;
     }
 
     /**

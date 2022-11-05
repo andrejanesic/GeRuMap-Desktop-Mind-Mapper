@@ -2,9 +2,9 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.ActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.IMapTree;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.MapTree;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.tree.view.MapTreeView;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.IMapTree;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.MapTree;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
@@ -15,16 +15,41 @@ import java.awt.*;
  * TODO add documentation
  */
 public class MainFrame extends JFrame {
+
+    private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
     private static MainFrame instance = null;
     private MyMenuBar menu;
     private Toolbar toolbar;
     private ActionManager actionManager;
     private IMapTree mapTree;
     private MapTreeView mapTreeView;
-    private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
-
 
     private MainFrame() {
+    }
+
+    public static MainFrame getInstance() {
+        if (instance == null) {
+            instance = new MainFrame();
+            instance.initialise();
+
+        }
+        return instance;
+    }
+
+    public MyMenuBar getMenu() {
+        return menu;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public IMapTree getMapTree() {
+        return mapTree;
+    }
+
+    public MapTreeView getMapTreeView() {
+        return mapTreeView;
     }
 
     private void initialise() {
@@ -44,8 +69,6 @@ public class MainFrame extends JFrame {
 
         mapTree = new MapTree();
         mapTreeView = mapTree.generateTree(projectExplorer);
-//        Project project = new Project("pr","asd","asd");
-//        projectExplorer.addChild(project);
 
         JScrollPane treeScroll = new JScrollPane(mapTreeView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JTabbedPane workspace = new JTabbedPane();
@@ -61,15 +84,6 @@ public class MainFrame extends JFrame {
         this.add(toolbar, BorderLayout.NORTH);
 
 
-    }
-
-    public static MainFrame getInstance() {
-        if (instance == null) {
-            instance = new MainFrame();
-            instance.initialise();
-
-        }
-        return instance;
     }
 
     public ActionManager getActionManager() {
