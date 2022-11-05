@@ -2,7 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import javax.swing.*;
 
-public class Toolbar extends JToolBar{
+public class Toolbar extends JToolBar {
     public Toolbar() {
         JButton btnNew = new JButton("New");
         JButton btwInfo = new JButton("Info");
@@ -12,6 +12,7 @@ public class Toolbar extends JToolBar{
 
         this.setFloatable(false);
 
+        add(MainFrame.getInstance().getActionManager().getNewAction());
         btwInfo.addActionListener(MainFrame.getInstance().getActionManager().getStudentInfoAction());
 
     }

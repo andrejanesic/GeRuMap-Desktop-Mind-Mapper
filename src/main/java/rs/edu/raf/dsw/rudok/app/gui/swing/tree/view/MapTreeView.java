@@ -8,12 +8,12 @@ import javax.swing.tree.DefaultTreeModel;
 
 public class MapTreeView extends JTree {
 
-public MapTreeView(DefaultTreeModel newModel) {
-        this.setModel(newModel);
+    public MapTreeView(DefaultTreeModel newModel) {
+        setModel(newModel);
         MapTreeCellRenderer renderer = new MapTreeCellRenderer();
-        this.addTreeSelectionListener(new MapTreeSelectionListener());
-        this.setCellRenderer(renderer);
-        this.setCellEditor(new MapTreeCellEditor(this, renderer));
-        this.setEditable(true);
+        addTreeSelectionListener(new MapTreeSelectionListener());
+        setCellRenderer(renderer);
+        setCellEditor(new MapTreeCellEditor(this, renderer));
+        setEditable(true);
     }
 }

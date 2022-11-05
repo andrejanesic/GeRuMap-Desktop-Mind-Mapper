@@ -14,16 +14,41 @@ import java.awt.*;
  * TODO add documentation
  */
 public class MainFrame extends JFrame {
+
+    private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
     private static MainFrame instance = null;
     private MyMenuBar menu;
     private Toolbar toolbar;
     private ActionManager actionManager;
     private IMapTree mapTree;
     private MapTreeView mapTreeView;
-    private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
-
 
     private MainFrame() {
+    }
+
+    public static MainFrame getInstance() {
+        if (instance == null) {
+            instance = new MainFrame();
+            instance.initialise();
+
+        }
+        return instance;
+    }
+
+    public MyMenuBar getMenu() {
+        return menu;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public IMapTree getMapTree() {
+        return mapTree;
+    }
+
+    public MapTreeView getMapTreeView() {
+        return mapTreeView;
     }
 
     private void initialise() {
@@ -60,15 +85,6 @@ public class MainFrame extends JFrame {
         this.add(toolbar, BorderLayout.NORTH);
 
 
-    }
-
-    public static MainFrame getInstance() {
-        if (instance == null) {
-            instance = new MainFrame();
-            instance.initialise();
-
-        }
-        return instance;
     }
 
     public ActionManager getActionManager() {
