@@ -16,9 +16,11 @@ public class Project extends IMapNodeComposite {
      * Default constructor.
      *
      * @param nodeName   Project name.
-     * @param authorName Project author.
-     * @param filepath   Filepath to the project.
      */
+    public Project(String nodeName) {
+        super(nodeName);
+    }
+
     public Project(String nodeName, String authorName, String filepath) {
         super(nodeName);
         this.authorName = authorName;

@@ -6,6 +6,8 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.nio.file.Paths;
@@ -21,7 +23,7 @@ public class MapTreeNodeNew extends AbstractAction {
         if(node instanceof IMapNodeComposite){
            IMapNodeComposite parent = (IMapNodeComposite)node;
             if(parent instanceof ProjectExplorer){
-                child = new Project("a","a","a");
+                child = new Project("a");
             } else if(parent instanceof Project){
                 child = new MindMap(false,"a");
             } else {
@@ -30,6 +32,8 @@ public class MapTreeNodeNew extends AbstractAction {
             parent.addChild(child);
             System.out.println(parent.getChildren());
         }
+
+
         mapTreeView.expandPath(mapTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(mapTreeView);
 

@@ -18,4 +18,5 @@ public class MapTree implements IMapTree{
         mapTreeView = new MapTreeView(defaultTreeModel);
         return mapTreeView;
     }
+
 }
