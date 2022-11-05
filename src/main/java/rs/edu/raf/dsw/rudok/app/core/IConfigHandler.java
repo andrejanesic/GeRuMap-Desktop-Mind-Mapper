@@ -89,11 +89,12 @@ public interface IConfigHandler {
             CONFIG_SAVED,
         }
 
-        public static class ConfigMessageData implements IMessageData {
+        public static class ConfigMessageData extends IMessageData<IConfigHandler> {
 
             private final IConfigHandler configHandler;
 
             public ConfigMessageData(IConfigHandler configHandler) {
+                super(configHandler);
                 this.configHandler = configHandler;
             }
 
@@ -102,12 +103,13 @@ public interface IConfigHandler {
             }
         }
 
-        public static class ConfigChangeMessageData implements IMessageData {
+        public static class ConfigChangeMessageData extends IMessageData<IConfigHandler> {
 
             private final String key;
             private final String value;
 
-            public ConfigChangeMessageData(String key, String value) {
+            public ConfigChangeMessageData(IConfigHandler configHandler, String key, String value) {
+                super(configHandler);
                 this.key = key;
                 this.value = value;
             }

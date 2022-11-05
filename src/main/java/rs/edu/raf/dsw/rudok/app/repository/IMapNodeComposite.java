@@ -12,14 +12,14 @@ import java.util.Set;
  */
 public abstract class IMapNodeComposite extends IMapNode {
 
-    public IMapNodeComposite(String nodeName) {
-        super(nodeName);
-    }
-
     /**
      * Set of all children.
      */
     private Set<IMapNode> children = new HashSet<>();
+
+    public IMapNodeComposite(String nodeName) {
+        super(nodeName);
+    }
 
     public Set<IMapNode> getChildren() {
         return children;
@@ -44,7 +44,8 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.children.add(child);
 
         this.addObserver(child);
-        this.publish(new Message(Message.Type.CHILD_ADDED, new Message.ChildChangeMessageData(this, child)));
+        this.publish(new Message(Message.Type.CHILD_ADDED,
+                new Message.ChildChangeMessageData(this, this, child)));
     }
 
     /**
@@ -58,7 +59,8 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.children.remove(child);
 
         this.removeObserver(child);
-        this.publish(new Message(Message.Type.CHILD_REMOVED, new Message.ChildChangeMessageData(this, child)));
+        this.publish(new Message(Message.Type.CHILD_REMOVED,
+                new Message.ChildChangeMessageData(this, this, child)));
     }
 
 
@@ -102,12 +104,13 @@ public abstract class IMapNodeComposite extends IMapNode {
         /**
          * For messages about changes on its children.
          */
-        public static class ChildChangeMessageData implements IMessageData {
+        public static class ChildChangeMessageData extends IMessageData<IMapNodeComposite> {
 
             private final IMapNodeComposite parent;
             private final IMapNode child;
 
-            public ChildChangeMessageData(IMapNodeComposite parent, IMapNode child) {
+            public ChildChangeMessageData(IMapNodeComposite sender, IMapNodeComposite parent, IMapNode child) {
+                super(sender);
                 this.parent = parent;
                 this.child = child;
             }

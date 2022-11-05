@@ -45,6 +45,7 @@ public abstract class IMapNode extends IPublisher {
         this.publish(new IMapNode.Message(
                 Message.Type.EDITED,
                 new Message.EditedMessageData(
+                        this,
                         "nodeName",
                         nodeName
                 )
@@ -67,7 +68,7 @@ public abstract class IMapNode extends IPublisher {
         this.parents.add(parent);
 
         this.addObserver(parent);
-        this.publish(new Message(Message.Type.PARENT_ADDED, new Message.ParentChangeMessageData(this, parent)));
+        this.publish(new Message(Message.Type.PARENT_ADDED, new Message.ParentChangeMessageData(this, this, parent)));
     }
 
     /**
@@ -81,7 +82,7 @@ public abstract class IMapNode extends IPublisher {
         this.parents.remove(parent);
 
         this.removeObserver(parent);
-        this.publish(new Message(Message.Type.PARENT_REMOVED, new Message.ParentChangeMessageData(this, parent)));
+        this.publish(new Message(Message.Type.PARENT_REMOVED, new Message.ParentChangeMessageData(this, this, parent)));
     }
 
     /**
@@ -108,12 +109,13 @@ public abstract class IMapNode extends IPublisher {
         /**
          * For messages about changed values of the node.
          */
-        public static class EditedMessageData implements IMessageData {
+        public static class EditedMessageData extends IMessageData<IMapNode> {
 
             private final String key;
             private final Object value;
 
-            public EditedMessageData(String key, Object value) {
+            public EditedMessageData(IMapNode mapNode, String key, Object value) {
+                super(mapNode);
                 this.key = key;
                 this.value = value;
             }
@@ -127,12 +129,13 @@ public abstract class IMapNode extends IPublisher {
             }
         }
 
-        public static class ParentChangeMessageData implements IMessageData {
+        public static class ParentChangeMessageData extends IMessageData<IMapNode> {
 
             private final IMapNode child;
             private final IMapNodeComposite parent;
 
-            public ParentChangeMessageData(IMapNode child, IMapNodeComposite parent) {
+            public ParentChangeMessageData(IMapNode sender, IMapNode child, IMapNodeComposite parent) {
+                super(sender);
                 this.child = child;
                 this.parent = parent;
             }
