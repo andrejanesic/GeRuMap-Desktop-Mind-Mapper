@@ -59,7 +59,6 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                 switch (((IMapNode.Message) message).getStatus()) {
 
                     case EDITED: {
-                        IMapNode.Message.ParentChangeMessageData data = (IMapNode.Message.ParentChangeMessageData) ((IMapNode.Message) message).getData();
                         MainFrame.getInstance().getMapTree().refreshTree();
                         break;
                     }
