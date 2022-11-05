@@ -1,18 +1,28 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import javax.swing.*;
+import java.io.File;
 
 public class MyMenuBar extends JMenuBar {
     public MyMenuBar() {
-        JMenu File = new JMenu("File");
-        JMenuItem New = new JMenuItem("New");
-        JMenu Help = new JMenu("Help");
-        JMenuItem Edit = new JMenuItem("Edit");
+        JMenu file = new JMenu("File");
+        JMenuItem menuNew = new JMenuItem("New");
+        JMenuItem delete = new JMenuItem("Delete");
+        JMenu help = new JMenu("Help");
+        JMenu edit = new JMenu("Edit");
+        JMenuItem author = new JMenuItem("Project Author");
 
-        File.add(New);
-        Help.add(Edit);
 
-        this.add(File);
-        this.add(Help);
+        file.add(menuNew);
+        file.addSeparator();
+        file.add(delete);
+        help.add(edit);
+        edit.add(author);
+        this.add(file);
+        this.add(help);
+
+        menuNew.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeNodeNew());
+        delete.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeCellDelete());
+        author.addActionListener(MainFrame.getInstance().getActionManager().getProjectAuthorAction());
     }
 }

@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.IMapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.MapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
+import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
@@ -68,8 +69,6 @@ public class MainFrame extends JFrame {
 
         mapTree = new MapTree();
         mapTreeView = mapTree.generateTree(projectExplorer);
-//        Project project = new Project("pr","asd","asd");
-//        projectExplorer.addChild(project);
 
         JScrollPane treeScroll = new JScrollPane(mapTreeView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JTabbedPane workspace = new JTabbedPane();
@@ -89,6 +88,10 @@ public class MainFrame extends JFrame {
 
     public ActionManager getActionManager() {
         return actionManager;
+    }
+
+    public MapTreeView getMapTreeView() {
+        return mapTreeView;
     }
 }
 
