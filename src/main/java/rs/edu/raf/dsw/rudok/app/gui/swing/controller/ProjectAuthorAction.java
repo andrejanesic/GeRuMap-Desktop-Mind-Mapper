@@ -11,14 +11,16 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class ProjectAuthorAction extends AbstractAction {
+
     @Override
     public void actionPerformed(ActionEvent e) {
         MapTreeView mapTreeView = MainFrame.getInstance().getMapTreeView();
-        MapTreeItem item = (MapTreeItem)mapTreeView.getLastSelectedPathComponent();
-        IMapNode node = item.getiMapNode();
-        if(node instanceof Project){
+        MapTreeItem item = (MapTreeItem) mapTreeView.getLastSelectedPathComponent();
+        IMapNode node = item.getMapNode();
+        if (node instanceof Project) {
         }
-            ProjectAuthorDialog projectAuthorDialog = new ProjectAuthorDialog(MainFrame.getInstance(),"Project author modification",true);
-            projectAuthorDialog.setVisible(true);
+        ProjectAuthorDialog projectAuthorDialog = new ProjectAuthorDialog(MainFrame.getInstance(), "Project author modification", true);
+        projectAuthorDialog.setVisible(true);
     }
+
 }

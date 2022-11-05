@@ -5,11 +5,11 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
 public class MapTree extends IObserver implements IMapTree {
 
-    private final IObserver traverseRef = this;
     private MapTreeItem root;
     private DefaultTreeModel defaultTreeModel;
     private MapTreeView treeView;
@@ -34,8 +34,14 @@ public class MapTree extends IObserver implements IMapTree {
     }
 
     @Override
-    public void refreshTree() {
-        refreshTree(false);
+    public void refreshTree(boolean expand) {
+        if (expand)
+            treeView.expandPath(treeView.getSelectionPath());
+        SwingUtilities.updateComponentTreeUI(treeView);
     }
 
+    @Override
+    public MapTreeItem getSelectedNode() {
+        return (MapTreeItem) treeView.getLastSelectedPathComponent();
+    }
 }

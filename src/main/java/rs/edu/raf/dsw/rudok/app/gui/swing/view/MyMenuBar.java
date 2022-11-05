@@ -1,7 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import javax.swing.*;
-import java.io.File;
 
 public class MyMenuBar extends JMenuBar {
     public MyMenuBar() {
@@ -21,8 +20,8 @@ public class MyMenuBar extends JMenuBar {
         this.add(file);
         this.add(help);
 
-        menuNew.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeNodeNew());
-        delete.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeCellDelete());
+        menuNew.addActionListener(MainFrame.getInstance().getActionManager().getNewAction());
+        delete.addActionListener(MainFrame.getInstance().getActionManager().getDeleteAction());
         author.addActionListener(MainFrame.getInstance().getActionManager().getProjectAuthorAction());
     }
 }

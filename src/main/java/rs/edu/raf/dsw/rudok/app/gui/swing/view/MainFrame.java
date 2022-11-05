@@ -89,10 +89,6 @@ public class MainFrame extends JFrame {
     public ActionManager getActionManager() {
         return actionManager;
     }
-
-    public MapTreeView getMapTreeView() {
-        return mapTreeView;
-    }
 }
 
 

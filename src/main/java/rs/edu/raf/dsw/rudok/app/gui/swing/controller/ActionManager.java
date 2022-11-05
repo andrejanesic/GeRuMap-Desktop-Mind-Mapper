@@ -1,14 +1,10 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.MapTreeCellDelete;
-import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.MapTreeNodeNew;
-
 public class ActionManager {
 
     private StudentInfoAction studentInfoAction;
     private NewAction newAction;
-    private MapTreeNodeNew mapTreeNodeNew;
-    private MapTreeCellDelete mapTreeCellDelete;
+    private DeleteAction mapTreeCellDelete;
     private ProjectAuthorAction projectAuthorAction;
 
     public ActionManager() {
@@ -18,8 +14,7 @@ public class ActionManager {
     public void initActions() {
         studentInfoAction = new StudentInfoAction();
         newAction = new NewAction();
-        mapTreeNodeNew = new MapTreeNodeNew();
-        mapTreeCellDelete = new MapTreeCellDelete();
+        mapTreeCellDelete = new DeleteAction();
         projectAuthorAction = new ProjectAuthorAction();
     }
 
@@ -31,11 +26,7 @@ public class ActionManager {
         return newAction;
     }
 
-    public MapTreeNodeNew getMapTreeNodeNew() {
-        return mapTreeNodeNew;
-    }
-
-    public MapTreeCellDelete getMapTreeCellDelete() {
+    public DeleteAction getDeleteAction() {
         return mapTreeCellDelete;
     }
 

@@ -18,8 +18,8 @@ public class Toolbar extends JToolBar {
 
         add(MainFrame.getInstance().getActionManager().getNewAction());
         btwInfo.addActionListener(MainFrame.getInstance().getActionManager().getStudentInfoAction());
-        btnNew.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeNodeNew());
-        btnDelete.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeCellDelete());
+        btnNew.addActionListener(MainFrame.getInstance().getActionManager().getNewAction());
+        btnDelete.addActionListener(MainFrame.getInstance().getActionManager().getDeleteAction());
         btnAuthor.addActionListener(MainFrame.getInstance().getActionManager().getProjectAuthorAction());
 
     }

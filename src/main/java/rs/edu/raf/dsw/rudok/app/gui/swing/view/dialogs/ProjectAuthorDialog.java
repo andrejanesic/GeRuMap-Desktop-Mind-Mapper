@@ -32,7 +32,7 @@ public class ProjectAuthorDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 MapTreeView mapTreeView = MainFrame.getInstance().getMapTreeView();
                 MapTreeItem item = (MapTreeItem)mapTreeView.getLastSelectedPathComponent();
-                Project node = (Project)item.getiMapNode();
+                Project node = (Project)item.getMapNode();
                 node.setAuthorName(tfAuthor.getText());
             }
         });
