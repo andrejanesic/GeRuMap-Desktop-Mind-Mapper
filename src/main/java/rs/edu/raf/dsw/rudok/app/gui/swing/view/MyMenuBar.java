@@ -11,8 +11,9 @@ public class MyMenuBar extends JMenuBar {
 
         File.add(New);
         Help.add(Edit);
-
         this.add(File);
         this.add(Help);
+
+        New.setAction(MainFrame.getInstance().getActionManager().getMapTreeNodeNew());
     }
 }

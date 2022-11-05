@@ -13,6 +13,6 @@ public class Toolbar extends JToolBar{
         this.setFloatable(false);
 
         btwInfo.addActionListener(MainFrame.getInstance().getActionManager().getStudentInfoAction());
-
+        btnNew.addActionListener(MainFrame.getInstance().getActionManager().getMapTreeNodeNew());
     }
 }
