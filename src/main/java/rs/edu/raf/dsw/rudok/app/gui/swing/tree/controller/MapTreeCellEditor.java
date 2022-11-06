@@ -1,6 +1,9 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
+import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
@@ -32,8 +35,25 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
     @Override
     public boolean isCellEditable(EventObject event) {
         if (event instanceof MouseEvent) {
+
+            if (((MouseEvent) event).getClickCount() > 0) {
+                MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
+                if (selected != null) {
+
+                    IMapNode node = selected.getMapNode();
+                    if (node instanceof Project) {
+                        MainFrame.getInstance().getProjectExplorerPanel().openProject((Project) node);
+                    }
+                }
+            }
+
             if (((MouseEvent) event).getClickCount() == 3) {
-                return true;
+                MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
+                if (selected == null)
+                    return false;
+
+                IMapNode node = selected.getMapNode();
+                return !(node instanceof ProjectExplorer);
             }
         }
         return false;
