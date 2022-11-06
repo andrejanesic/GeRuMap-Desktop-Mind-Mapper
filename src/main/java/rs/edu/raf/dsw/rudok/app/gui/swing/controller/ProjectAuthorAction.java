@@ -18,9 +18,9 @@ public class ProjectAuthorAction extends AbstractAction {
         MapTreeItem item = (MapTreeItem) mapTreeView.getLastSelectedPathComponent();
         IMapNode node = item.getMapNode();
         if (node instanceof Project) {
+            ProjectAuthorDialog projectAuthorDialog = new ProjectAuthorDialog(MainFrame.getInstance(), "Project author modification", true);
+            projectAuthorDialog.setVisible(true);
         }
-        ProjectAuthorDialog projectAuthorDialog = new ProjectAuthorDialog(MainFrame.getInstance(), "Project author modification", true);
-        projectAuthorDialog.setVisible(true);
     }
 
 }

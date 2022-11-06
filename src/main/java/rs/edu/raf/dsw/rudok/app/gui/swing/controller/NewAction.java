@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.NewProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import javax.swing.*;
@@ -18,37 +19,41 @@ public class NewAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
-        IMapNode parent = selected.getMapNode();
+        if(MainFrame.getInstance().getMapTree().getSelectedNode()!=null){
+            MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
+            IMapNode parent = selected.getMapNode();
 
-        // new project added
-        if (parent instanceof ProjectExplorer) {
-            // TODO connect this with project autosave
-            // TODO this should use data from current user
-            // TODO how do we set the project filepath for this?
-            Project child = new Project("New project", "Foo", null);
-            ((ProjectExplorer) parent).addChild(child);
-            return;
-        }
+            // new project added
+            if (parent instanceof ProjectExplorer) {
+                // TODO connect this with project autosave
+                // TODO this should use data from current user
+                // TODO how do we set the project filepath for this?
+                NewProjectDialog newProjectDialog = new NewProjectDialog(MainFrame.getInstance(),"Create a project",true);
+                newProjectDialog.setVisible(true);
+                return;
+            }
 
-        // new mindmap added
-        if (parent instanceof Project) {
-            MindMap child = new MindMap(false, "New mind map");
-            ((Project) parent).addChild(child);
-            return;
-        }
+            // new mindmap added
+            if (parent instanceof Project) {
+                MindMap child = new MindMap(false, "New mind map");
+                ((Project) parent).addChild(child);
+                child.addParent((Project)parent);
+                return;
+            }
 
-        // new element added
-        if (parent instanceof MindMap) {
-            Element child = new Element("New element");
-            ((MindMap) parent).addChild(child);
-            return;
-        }
+            // new element added
+            if (parent instanceof MindMap) {
+                Element child = new Element("New element");
+                ((MindMap) parent).addChild(child);
+                child.addParent((MindMap)parent);
+                return;
+            }
 
-        if (parent instanceof Element) {
-            // TODO log error, cannot be done
-            return;
+            if (parent instanceof Element) {
+                // TODO log error, cannot be done
+                return;
+            }
+            // TODO extra case here, unidentified impl of IMapNode--handled by Addon?
         }
-        // TODO extra case here, unidentified impl of IMapNode--handled by Addon?
     }
 }

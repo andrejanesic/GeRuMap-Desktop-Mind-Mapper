@@ -18,7 +18,7 @@ public class ProjectAuthorDialog extends JDialog {
     public ProjectAuthorDialog(Frame owner, String title, boolean modal) {
         super(owner, title, modal);
 
-        this.setSize(new Dimension(350,100));
+        this.setSize(new Dimension(350,130));
         this.setLayout(new BorderLayout());
 
         this.setLocationRelativeTo(owner);
@@ -34,6 +34,7 @@ public class ProjectAuthorDialog extends JDialog {
                 MapTreeItem item = (MapTreeItem)mapTreeView.getLastSelectedPathComponent();
                 Project node = (Project)item.getMapNode();
                 node.setAuthorName(tfAuthor.getText());
+                dispose();
             }
         });
 
