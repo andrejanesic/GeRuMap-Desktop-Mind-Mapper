@@ -80,6 +80,26 @@ public abstract class IMapNodeComposite extends IMapNode {
                     return;
             }
         }
+
+        if (message instanceof Message) {
+
+            switch (((Message) message).getStatus()) {
+
+                case CHILD_ADDED:
+                case CHILD_REMOVED: {
+                    Message.ChildChangeMessageData data = (Message.ChildChangeMessageData)
+                            ((Message) message).getData();
+                    if (data.getChild().equals(this)) {
+                        if (((Message) message).getStatus().equals(Message.Type.CHILD_ADDED)) {
+                            this.addParent(data.getParent());
+                        } else {
+                            this.removeParent(data.getParent());
+                        }
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     /**

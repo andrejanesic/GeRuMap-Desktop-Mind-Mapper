@@ -85,6 +85,31 @@ public abstract class IMapNode extends IPublisher {
         this.publish(new Message(Message.Type.PARENT_REMOVED, new Message.ParentChangeMessageData(this, this, parent)));
     }
 
+
+    @Override
+    public void receive(Object message) {
+
+        if (message instanceof IMapNodeComposite.Message) {
+
+            switch (((IMapNodeComposite.Message) message).getStatus()) {
+
+                case CHILD_ADDED:
+                case CHILD_REMOVED: {
+                    IMapNodeComposite.Message.ChildChangeMessageData data = (IMapNodeComposite.Message.ChildChangeMessageData)
+                            ((IMapNodeComposite.Message) message).getData();
+                    if (data.getChild().equals(this)) {
+                        if (((IMapNodeComposite.Message) message).getStatus().equals(IMapNodeComposite.Message.Type.CHILD_ADDED)) {
+                            this.addParent(data.getParent());
+                        } else {
+                            this.removeParent(data.getParent());
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     /**
      * Message for publishing.
      */
