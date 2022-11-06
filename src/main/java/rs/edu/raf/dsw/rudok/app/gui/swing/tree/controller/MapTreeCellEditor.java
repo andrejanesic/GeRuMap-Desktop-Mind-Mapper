@@ -36,17 +36,6 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
     public boolean isCellEditable(EventObject event) {
         if (event instanceof MouseEvent) {
 
-            if (((MouseEvent) event).getClickCount() > 0) {
-                MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
-                if (selected != null) {
-
-                    IMapNode node = selected.getMapNode();
-                    if (node instanceof Project) {
-                        MainFrame.getInstance().getProjectExplorerPanel().openProject((Project) node);
-                    }
-                }
-            }
-
             if (((MouseEvent) event).getClickCount() == 3) {
                 MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
                 if (selected == null)

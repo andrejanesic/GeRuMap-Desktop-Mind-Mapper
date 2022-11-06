@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.MapTreeClickListener;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
@@ -30,6 +31,7 @@ public class MapTree extends IObserver implements IMapTree {
         root = new MapTreeItem(projectExplorer);
         defaultTreeModel = new DefaultTreeModel(root);
         treeView = new MapTreeView(defaultTreeModel);
+        treeView.addMouseListener(new MapTreeClickListener());
         return treeView;
     }
 

@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.projectexplorerpanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.IProjectPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.ProjectPanel;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
@@ -56,6 +57,11 @@ public class ProjectExplorerPanel extends JPanel implements IProjectExplorerPane
                 i--;
             }
         }
+    }
+
+    @Override
+    public IProjectPanel getProjectPanel() {
+        return (IProjectPanel) tabs.getSelectedComponent();
     }
 
     /**
@@ -164,6 +170,11 @@ public class ProjectExplorerPanel extends JPanel implements IProjectExplorerPane
 
                             host.tabs.setTitleAt(i, data.getValue().toString());
                         }
+
+                        if (data.getKey().equals("filepath")) {
+                            // TODO react on filepath key change (what if two projects are named the same? use different fp?)
+                        }
+
                         break;
                     }
 

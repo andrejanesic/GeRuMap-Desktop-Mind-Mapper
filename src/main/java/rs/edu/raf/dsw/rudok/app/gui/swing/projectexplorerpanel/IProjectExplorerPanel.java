@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.projectexplorerpanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.IProjectPanel;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 /**
@@ -20,4 +21,11 @@ public interface IProjectExplorerPanel {
      * @param p Project to open.
      */
     void closeProject(Project p);
+
+    /**
+     * Returns the current open project panel.
+     *
+     * @return {@link IProjectPanel}.
+     */
+    IProjectPanel getProjectPanel();
 }
