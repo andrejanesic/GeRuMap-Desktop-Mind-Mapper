@@ -1,6 +1,8 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.MindMapPanel;
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller.ProjectActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
@@ -24,12 +26,16 @@ public class ProjectPanel extends JPanel implements IProjectPanel {
     private JButton edit;
     private JButton delete;
 
+    private ProjectActionManager projectActionManager;
+
     public ProjectPanel(Project project) {
         super(new BorderLayout());
         this.project = project;
         this.project.addObserver(
                 new ProjectObserver(this, project)
         );
+
+        projectActionManager = new ProjectActionManager();
 
         // Configure tabs
         tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
@@ -46,8 +52,11 @@ public class ProjectPanel extends JPanel implements IProjectPanel {
         // Create actions section
         JPanel actions = new JPanel(new FlowLayout());
         add = new JButton("Add Mind map");
+        add.addActionListener(MainFrame.getInstance().getActionManager().getNewAction());
         edit = new JButton("Edit Project");
+        edit.addActionListener(projectActionManager.getEditProjectAction());
         delete = new JButton("Delete Project");
+        delete.addActionListener(projectActionManager.getDeleteProjectAction());
         actions.add(add);
         actions.add(edit);
         actions.add(delete);
@@ -84,6 +93,11 @@ public class ProjectPanel extends JPanel implements IProjectPanel {
                 i--;
             }
         }
+    }
+
+    @Override
+    public Project getProject() {
+        return project;
     }
 
     /**

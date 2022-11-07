@@ -2,7 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.NewProjectDialog;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class NewAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(MainFrame.getInstance().getMapTree().getSelectedNode()!=null){
+        if (MainFrame.getInstance().getMapTree().getSelectedNode() != null) {
             MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
             IMapNode parent = selected.getMapNode();
 
@@ -28,8 +28,14 @@ public class NewAction extends AbstractAction {
                 // TODO connect this with project autosave
                 // TODO this should use data from current user
                 // TODO how do we set the project filepath for this?
-                NewProjectDialog newProjectDialog = new NewProjectDialog(MainFrame.getInstance(),"Create a project",true);
-                newProjectDialog.setVisible(true);
+                EditProjectDialog editProjectDialog = new EditProjectDialog(null, MainFrame.getInstance(), "Create a project", true);
+                editProjectDialog.setVisible(true);
+                String nodeName = editProjectDialog.getNodeName();
+                String authorName = editProjectDialog.getAuthorName();
+                String filepath = editProjectDialog.getFilepath();
+                Project child = new Project(nodeName, authorName, filepath);
+                ((ProjectExplorer) parent).addChild(child);
+                child.addParent((ProjectExplorer) parent);
                 return;
             }
 
@@ -37,7 +43,7 @@ public class NewAction extends AbstractAction {
             if (parent instanceof Project) {
                 MindMap child = new MindMap(false, "New mind map");
                 ((Project) parent).addChild(child);
-                child.addParent((Project)parent);
+                child.addParent((Project) parent);
                 return;
             }
 
@@ -45,7 +51,7 @@ public class NewAction extends AbstractAction {
             if (parent instanceof MindMap) {
                 Element child = new Element("New element");
                 ((MindMap) parent).addChild(child);
-                child.addParent((MindMap)parent);
+                child.addParent((MindMap) parent);
                 return;
             }
 

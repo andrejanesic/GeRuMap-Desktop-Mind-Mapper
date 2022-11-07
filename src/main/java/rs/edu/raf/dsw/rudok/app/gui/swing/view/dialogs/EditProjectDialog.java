@@ -1,18 +1,15 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
-import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
-import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.nio.file.Paths;
 
-public class NewProjectDialog extends JDialog {
+public class EditProjectDialog extends JDialog {
 
+    private Project project;
     private JLabel lbName;
     private JTextField tfName;
     private JLabel lbAuthor;
@@ -20,10 +17,11 @@ public class NewProjectDialog extends JDialog {
     private JFileChooser fileChooser;
     private JButton button;
 
-    public NewProjectDialog(Frame owner, String title, boolean modal) {
+    public EditProjectDialog(Project project, Frame owner, String title, boolean modal) {
         super(owner, title, modal);
 
-        this.setSize(new Dimension(550,550));
+        this.project = project;
+        this.setSize(new Dimension(550, 550));
         this.setLayout(new BorderLayout());
 
         this.setLocationRelativeTo(owner);
@@ -36,41 +34,57 @@ public class NewProjectDialog extends JDialog {
         this.button = new JButton("Confirm");
 
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setMaximumSize(new Dimension(300,100));
-        tfName.setMaximumSize(new Dimension(225,20));
-        tfAuthor.setMaximumSize(new Dimension(225,20));
+        fileChooser.setMaximumSize(new Dimension(300, 100));
+        tfName.setMaximumSize(new Dimension(225, 20));
+        tfAuthor.setMaximumSize(new Dimension(225, 20));
 
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MapTreeItem selected = MainFrame.getInstance().getMapTree().getSelectedNode();
-                IMapNode parent = selected.getMapNode();
-                Project child = new Project(tfName.getText(), tfAuthor.getText(), fileChooser.getCurrentDirectory().toString());
-                ((ProjectExplorer) parent).addChild(child);
-                child.addParent((ProjectExplorer)parent);
                 dispose();
             }
         });
 
         JPanel panel = new JPanel();
-        BoxLayout box = new BoxLayout(panel,BoxLayout.Y_AXIS);
+        BoxLayout box = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setLayout(box);
 
         panel.add(lbName);
         panel.add(Box.createVerticalStrut(10));
         panel.add(tfName);
         panel.add(Box.createVerticalStrut(10));
+        if (project != null) {
+            tfName.setText(project.getNodeName());
+        }
         panel.add(lbAuthor);
         panel.add(Box.createVerticalStrut(10));
         panel.add(tfAuthor);
+        if (project != null) {
+            tfAuthor.setText(project.getAuthorName());
+        }
         panel.add(Box.createVerticalStrut(10));
         JPanel chooserPanel = new JPanel();
         chooserPanel.add(fileChooser);
+        if (project != null) {
+            fileChooser.setCurrentDirectory(Paths.get(project.getFilepath()).getParent().toFile());
+        }
 
         panel.add(chooserPanel);
         panel.add(button);
         panel.add(Box.createVerticalStrut(10));
-        this.add(panel,BorderLayout.CENTER);
+        this.add(panel, BorderLayout.CENTER);
+    }
+
+    public String getNodeName() {
+        return tfName.getText();
+    }
+
+    public String getAuthorName() {
+        return tfAuthor.getText();
+    }
+
+    public String getFilepath() {
+        return fileChooser.getCurrentDirectory().getAbsolutePath() + "/" + getNodeName() + ".grm";
     }
 }
 
