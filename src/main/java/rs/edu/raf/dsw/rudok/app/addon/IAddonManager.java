@@ -72,11 +72,12 @@ public abstract class IAddonManager extends IPublisher {
             ADDON_INITIALIZED,
         }
 
-        public static class AddonInitializedMessageData implements IMessageData {
+        public static class AddonInitializedMessageData extends IMessageData<IAddonManager> {
 
             private final IAddon addon;
 
-            public AddonInitializedMessageData(IAddon addon) {
+            public AddonInitializedMessageData(IAddonManager manager, IAddon addon) {
+                super(manager);
                 this.addon = addon;
             }
 

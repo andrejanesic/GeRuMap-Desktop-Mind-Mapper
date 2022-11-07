@@ -15,7 +15,7 @@ public abstract class IMessage<S, T extends IMessageData> {
     /**
      * Associated model.
      */
-    private T data;
+    private final T data;
 
     public IMessage(S status, T data) {
         this.status = status;
@@ -28,10 +28,6 @@ public abstract class IMessage<S, T extends IMessageData> {
 
     public T getData() {
         return data;
-    }
-
-    public void setStatus(S status) {
-        this.status = status;
     }
 
     @Override

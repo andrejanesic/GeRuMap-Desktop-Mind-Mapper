@@ -2,10 +2,10 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.ActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectexplorerpanel.ProjectExplorerPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.IMapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.MapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
-import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
     private ActionManager actionManager;
     private IMapTree mapTree;
     private MapTreeView mapTreeView;
+    private ProjectExplorerPanel projectExplorerPanel;
 
     private MainFrame() {
     }
@@ -34,6 +35,10 @@ public class MainFrame extends JFrame {
 
         }
         return instance;
+    }
+
+    public ProjectExplorerPanel getProjectExplorerPanel() {
+        return projectExplorerPanel;
     }
 
     public MyMenuBar getMenu() {
@@ -69,21 +74,29 @@ public class MainFrame extends JFrame {
 
         mapTree = new MapTree();
         mapTreeView = mapTree.generateTree(projectExplorer);
+        projectExplorerPanel = new ProjectExplorerPanel(projectExplorer);
 
-        JScrollPane treeScroll = new JScrollPane(mapTreeView, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        JTabbedPane workspace = new JTabbedPane();
-        workspace.setMinimumSize(new Dimension(600, 300));
+        JScrollPane treeScroll = new JScrollPane(
+                mapTreeView,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+        );
+        JScrollPane projectExplorerScroll = new JScrollPane(
+                projectExplorerPanel,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+        );
+
+        projectExplorerScroll.setMinimumSize(new Dimension(600, 300));
         treeScroll.setMinimumSize(new Dimension(70, 300));
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, workspace);
-        this.add(splitPane);
 
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, projectExplorerScroll);
+        this.add(splitPane);
 
         menu = new MyMenuBar();
         toolbar = new Toolbar();
         this.setJMenuBar(menu);
         this.add(toolbar, BorderLayout.NORTH);
-
-
     }
 
     public ActionManager getActionManager() {
