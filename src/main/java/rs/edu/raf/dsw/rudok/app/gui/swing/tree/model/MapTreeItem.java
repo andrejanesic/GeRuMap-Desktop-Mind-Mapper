@@ -86,8 +86,10 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                                         ((IMapNodeComposite.Message) message).getData();
                         if (data.getParent() != host.mapNode) return;
 
-                        host.add(new MapTreeItem(data.getChild()));
-                        MainFrame.getInstance().getMapTree().refreshTree(true);
+                        MapTreeItem itm = new MapTreeItem(data.getChild());
+                        host.add(itm);
+                        MainFrame.getInstance().getMapTree().refreshTree();
+                        MainFrame.getInstance().getMapTree().expandTree(itm);
                         break;
                     }
 

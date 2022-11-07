@@ -18,18 +18,16 @@ public interface IMapTree {
     MapTreeView generateTree(ProjectExplorer projectExplorer);
 
     /**
-     * Refreshes the tree view without expanding to any node.
+     * Refreshes the tree view.
      */
-    default void refreshTree() {
-        refreshTree(false);
-    }
+    void refreshTree();
 
     /**
-     * Refreshes the tree view and expands to the current selected node.
+     * Expands the tree to the given node.
      *
-     * @param expand True to expand, false to simply refresh.
+     * @param toNode Node to expand to.
      */
-    void refreshTree(boolean expand);
+    void expandTree(MapTreeItem toNode);
 
     /**
      * Returns the currently selected {@link MapTreeItem} node.
