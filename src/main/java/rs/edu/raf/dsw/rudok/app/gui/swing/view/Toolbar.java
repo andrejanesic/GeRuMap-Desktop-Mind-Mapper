@@ -16,7 +16,6 @@ public class Toolbar extends JToolBar {
 
         this.setFloatable(false);
 
-        add(MainFrame.getInstance().getActionManager().getNewAction());
         btwInfo.addActionListener(MainFrame.getInstance().getActionManager().getStudentInfoAction());
         btnNew.addActionListener(MainFrame.getInstance().getActionManager().getNewAction());
         btnDelete.addActionListener(MainFrame.getInstance().getActionManager().getDeleteAction());

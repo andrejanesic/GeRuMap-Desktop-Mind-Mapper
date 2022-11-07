@@ -108,7 +108,7 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                                 child = itm;
                             }
                         }
-                        if (child != null) {
+                        if (child == null) {
                             // TODO log error, this should never happen. Structure of both MapTreeItems and IMapNode should be the same
                             throw new RuntimeException(
                                     "MapTreeItem's IMapNode detected removal of children, but no child with removed IMapNode child detected in MapTreeItem"
