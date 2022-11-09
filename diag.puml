@@ -178,8 +178,8 @@ package constants {
 }
 
 interface IConstants {
-~ String FILESYSTEM_LOCAL_CONFIG_FOLDER()
-~ String FILESYSTEM_LOCAL_PROJECTS_FOLDER()
++ String FILESYSTEM_LOCAL_CONFIG_FOLDER()
++ String FILESYSTEM_LOCAL_PROJECTS_FOLDER()
 + String FILESYSTEM_LOCAL_GET_CONFIG_FOLDER()
 + String FILESYSTEM_LOCAL_GET_RES_FOLDER()
 }
@@ -294,8 +294,8 @@ IObserver <|-- IPublisher
 IPublisher <|-- IMapNode
 IPublisher <|-- IAddon
 IPublisher <|-- IAddonManager
-IPublisher <|-- LocalFileSystem
-IPublisher <|-- StandardConfigHandler
+IPublisher <|-- IFileSystem
+IPublisher <|-- IConfigHandler
 
 AppCore -- StandardAddonManager
 AppCore -- StandardConstants
