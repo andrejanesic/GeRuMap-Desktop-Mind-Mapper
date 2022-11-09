@@ -1,0 +1,186 @@
+@startuml
+
+' --- Repository ---
+
+package repository {
+    class IMapNode
+    class IMapNodeComposite
+    class ProjectExplorer
+    class Project
+    class MindMap
+    class Element
+}
+
+abstract class IMapNode {
++ Set<IMapNodeComposite> parents
+- String nodeName
++ Set<IMapNodeComposite> getParents()
++ void setParents(Set<IMapNodeComposite>)
++ String getNodeName()
++ void setNodeName(String)
++ String toString()
++ void addParent(IMapNodeComposite)
++ void removeParent(IMapNodeComposite)
++ void receive(Object)
+}
+abstract class IMapNodeComposite {
+- Set<IMapNode> children
++ Set<IMapNode> getChildren()
++ void setChildren(Set<IMapNode>)
++ void addChild(IMapNode)
++ void removeChild(IMapNode)
++ void receive(Object)
+}
+class ProjectExplorer {
+}
+class Project {
+- String authorName
+- String filepath
++ String getAuthorName()
++ void setAuthorName(String)
++ String getFilepath()
++ void setFilepath(String)
+}
+class MindMap {
+- boolean template
++ boolean isTemplate()
++ void setTemplate(boolean)
+}
+class Element {
+- int posX
+- int posY
+- int color
+- String content
++ int getPosX()
++ void setPosX(int)
++ int getPosY()
++ void setPosY()
++ int getColor()
++ void setColor(int)
++ String getContent()
++ void setContent(String)
+}
+
+' --- Observer ---
+
+package observer {
+    class IPublisher
+    class IObserver
+    class IMessage
+    interface IMessageData
+}
+
+abstract class IPublisher {
+- Set<IObserver> observers
++ Set<IObserver> getObservers()
++ void setObservers(Set<IObserver>)
++ void publish(IMessage)
++ void addObserver(IObserver)
++ void removeObserver(IObserver)
+}
+abstract class IObserver {
+- Set<IPublisher> publishers
++ Set<IPublisher> getPublishers()
++ void setPublishers(Set<IPublisher>)
++ void receive(Object)
++ void addPublisher(IPublisher)
++ void removePublisher(IPublisher)
+}
+abstract class IMessage<S, T> {
+- S status
+- T data
++ S getStatus()
++ T getData()
++ boolean equals(Object)
++ int hashCode()
+}
+interface IMessageData<T> {
+- T sender
++ T getSender()
+}
+
+' --- ApplicationFramework ---
+
+class AppCore {
++ {static} void main(String[])
++ {static} ApplicationFramework getInstance()
+}
+class AppCore.AppCoreSingleton {
+- {static} AppCore INSTANCE
+}
+abstract class ApplicationFramework {
+# IConstants iConstants
+# IConfigHandler iConfigHandler
+# IErrorHandler iErrorHandler
+# IGui iGui
+# ProjectExplorer projectExplorer
+# IFileSystem iFileSystem
++ void initialize(IConstants,IConfigHandler,IErrorHandler,IGui,ProjectExplorer,IFileSystem)
++ IConstants getConstants()
++ IConfigHandler getConfigHandler()
++ IErrorHandler getErrorHandler()
++ IGui getGui()
++ ProjectExplorer getProjectExplorer()
++ IFileSystem getFileSystem()
+}
+
+' --- ConfigHandler ---
+
+package confighandler {
+    interface IConfigHandler
+}
+
+interface IConfigHandler {
++ boolean loadConfig(String)
++ boolean loadConfig()
++ void saveConfig()
++ void resetConfig()
++ void set(String,String)
++ Object get(String)
++ Object get(String,Object)
++ Object getOrDefault(String,Object)
+}
+
+' --- Relations ---
+
+IMapNodeComposite <|-- ProjectExplorer
+ApplicationFramework <|-- AppCore
+AppCore +.. AppCore.AppCoreSingleton
+IMapNode <|-- Element
+IMapNodeComposite <|-- MindMap
+IPublisher <|-- IAddon
+IPublisher <|-- IMapNode
+IMapNode +.. Message
+IMessage <|-- Message
+Message +.. EditedMessageData
+IMessageData <|-- EditedMessageData
+Message +.. ParentChangeMessageData
+IMessageData <|-- ParentChangeMessageData
+IMapNodeComposite <|-- Project
+IConstants <|.. StandardConstants
+IFileSystem +.. Message
+IMessage <|-- Message
+IPublisher <|-- IAddonManager
+IAddonManager +.. Message
+IMessage <|-- Message
+Message +.. AddonInitializedMessageData
+IMessageData <|-- AddonInitializedMessageData
+IConfigHandler <|.. StandardConfigHandler
+IPublisher <|-- StandardConfigHandler
+IGui <|.. GuiSwing
+IConfigHandler +.. Message
+IMessage <|-- Message
+Message +.. ConfigMessageData
+IMessageData <|-- ConfigMessageData
+Message +.. ConfigChangeMessageData
+IMessageData <|-- ConfigChangeMessageData
+IObserver <|-- IPublisher
+IFileSystem <|.. LocalFileSystem
+IPublisher <|-- LocalFileSystem
+IMapNode <|-- IMapNodeComposite
+IMapNodeComposite +.. Message
+IMessage <|-- Message
+Message +.. ChildChangeMessageData
+IMessageData <|-- ChildChangeMessageData
+IAddonManager <|-- StandardAddonManager
+@enduml
