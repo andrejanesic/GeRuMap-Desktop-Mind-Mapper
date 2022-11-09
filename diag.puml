@@ -1,5 +1,34 @@
 @startuml
 
+' --- ApplicationFramework ---
+
+package core {
+    class ApplicationFramework
+}
+
+class AppCore <<Singleton>> {
++ {static} void main(String[])
++ {static} ApplicationFramework getInstance()
+}
+class AppCoreSingleton {
++ {static} AppCore INSTANCE
+}
+abstract class ApplicationFramework {
+# IConstants iConstants
+# IConfigHandler iConfigHandler
+# IErrorHandler iErrorHandler
+# IGui iGui
+# ProjectExplorer projectExplorer
+# IFileSystem iFileSystem
++ void initialize(IConstants,IConfigHandler,IErrorHandler,IGui,ProjectExplorer,IFileSystem)
++ IConstants getConstants()
++ IConfigHandler getConfigHandler()
++ IErrorHandler getErrorHandler()
++ IGui getGui()
++ ProjectExplorer getProjectExplorer()
++ IFileSystem getFileSystem()
+}
+
 ' --- Repository ---
 
 package repository {
@@ -21,7 +50,6 @@ abstract class IMapNode {
 + String toString()
 + void addParent(IMapNodeComposite)
 + void removeParent(IMapNodeComposite)
-+ void receive(Object)
 }
 abstract class IMapNodeComposite {
 - Set<IMapNode> children
@@ -29,7 +57,6 @@ abstract class IMapNodeComposite {
 + void setChildren(Set<IMapNode>)
 + void addChild(IMapNode)
 + void removeChild(IMapNode)
-+ void receive(Object)
 }
 class ProjectExplorer {
 }
@@ -64,13 +91,13 @@ class Element {
 ' --- Observer ---
 
 package observer {
-    class IPublisher
-    class IObserver
-    class IMessage
+    interface IPublisher
+    interface IObserver
+    interface IMessage
     interface IMessageData
 }
 
-abstract class IPublisher {
+interface IPublisher {
 - Set<IObserver> observers
 + Set<IObserver> getObservers()
 + void setObservers(Set<IObserver>)
@@ -78,7 +105,7 @@ abstract class IPublisher {
 + void addObserver(IObserver)
 + void removeObserver(IObserver)
 }
-abstract class IObserver {
+interface IObserver {
 - Set<IPublisher> publishers
 + Set<IPublisher> getPublishers()
 + void setPublishers(Set<IPublisher>)
@@ -86,7 +113,7 @@ abstract class IObserver {
 + void addPublisher(IPublisher)
 + void removePublisher(IPublisher)
 }
-abstract class IMessage<S, T> {
+interface IMessage<S, T> {
 - S status
 - T data
 + S getStatus()
@@ -99,36 +126,74 @@ interface IMessageData<T> {
 + T getSender()
 }
 
-' --- ApplicationFramework ---
-
-class AppCore <<Singleton>> {
-+ {static} void main(String[])
-+ {static} ApplicationFramework getInstance()
-}
-class AppCoreSingleton {
-+ {static} AppCore INSTANCE
-}
-abstract class ApplicationFramework {
-# IConstants iConstants
-# IConfigHandler iConfigHandler
-# IErrorHandler iErrorHandler
-# IGui iGui
-# ProjectExplorer projectExplorer
-# IFileSystem iFileSystem
-+ void initialize(IConstants,IConfigHandler,IErrorHandler,IGui,ProjectExplorer,IFileSystem)
-+ IConstants getConstants()
-+ IConfigHandler getConfigHandler()
-+ IErrorHandler getErrorHandler()
-+ IGui getGui()
-+ ProjectExplorer getProjectExplorer()
-+ IFileSystem getFileSystem()
-}
-
 ' --- Addon ---
 
-' --- ConfigHandler ---
+package addon {
+    interface IAddon
+    interface IAddonMeta
+    interface IAddonManager
+}
+
+interface IAddon {
++ {abstract} void initialize(ApplicationFramework)
++ {abstract} IGuiAddon getGui()
++ {abstract} IAddonMeta getMeta()
+}
+
+interface IAddonMeta {
+~ String getName()
+~ String getVersion()
+~ String getAuthor()
+~ String getWebsite()
+}
+
+interface IAddonManager {
++ {abstract} Set<IAddon> getAddons()
++ {abstract} void setAddons(Set<IAddon>)
++ {abstract} void addAddon(IAddon)
++ {abstract} void removeAddon(IAddon)
++ {abstract} void loadAddons()
++ {abstract} void initializeAddons()
+}
+
+package addon.standard {
+    class StandardAddonManager
+}
+
+class StandardAddonManager {
++ Set<IAddon> getAddons()
++ void setAddons(Set<IAddon>)
++ void addAddon(IAddon)
++ void removeAddon(IAddon)
++ {abstract} void loadAddons()
++ void initializeAddons()
+}
 
 ' --- Constants ---
+
+package constants {
+    interface IConstants
+}
+
+interface IConstants {
++ String FILESYSTEM_LOCAL_CONFIG_FOLDER()
++ String FILESYSTEM_LOCAL_PROJECTS_FOLDER()
++ String FILESYSTEM_LOCAL_GET_CONFIG_FOLDER()
++ String FILESYSTEM_LOCAL_GET_RES_FOLDER()
+}
+
+package constants.standard {
+    class StandardConstants
+}
+
+class StandardConstants {
++ String FILESYSTEM_LOCAL_CONFIG_FOLDER()
++ String FILESYSTEM_LOCAL_PROJECTS_FOLDER()
++ String FILESYSTEM_LOCAL_GET_CONFIG_FOLDER()
++ String FILESYSTEM_LOCAL_GET_RES_FOLDER()
+}
+
+' --- ConfigHandler ---
 
 package confighandler {
     interface IConfigHandler
@@ -145,171 +210,94 @@ interface IConfigHandler {
 + Object getOrDefault(String,Object)
 }
 
+package confighandler.standard {
+    class StandardConfigHandler
+}
+
+class StandardConfigHandler {
+- {static} HashMap<String,String> DEFAULT_CONFIG
+- HashMap<String,String> currentConfig
++ boolean loadConfig(String)
++ void resetConfig()
++ void saveConfig()
++ void set(String,String)
++ Object get(String)
++ Object get(String,Object)
+}
+
 ' --- Filesystem ---
+
+package filesystem {
+    class IFileSystem
+}
+
+interface IFileSystem {
++ void saveConfig(Map<String,String>)
++ Map<String,String> loadConfig(String)
++ void saveProject(Project)
++ Project loadProject(String)
++ Project loadProject()
++ IAddon loadAddon(String)
+}
+
+package filesystem.local {
+    class LocalFileSystem
+}
+
+class LocalFileSystem {
++ void saveConfig(Map<String,String>)
++ Map<String,String> loadConfig(String)
++ void saveProject(Project)
++ Project loadProject(String)
+- boolean eraseDb()
+- boolean setupDb()
+- boolean appendOp()
+- boolean encodeNodeState()
+- boolean decodeNodeState()
+}
 
 ' --- GUI ---
 
 ' --- GUI.Swing? ---
-interface IGui {
-~ void run()
-}
-package GUI.Swing{
 
-    class GuiSwing {
-    + void run()
-    }
-    class MapTreeCellRenderer {
-    + Component getTreeCellRendererComponent(JTree,Object,boolean,boolean,boolean,int,boolean)
-    }
-    class MapTreeItem {
-    - IMapNode mapNode
-    + IMapNode getMapNode()
-    + void setMapNode(IMapNode)
-    + void setName(String)
-    + String toString()
-    }
-    class MyMenuBar {
-    }
-    class ProjectPanel {
-    - JTabbedPane tabs
-    - Project project
-    - List<MindMap> tabIndexes
-    - JLabel nodeName
-    - JLabel authorName
-    - JButton add
-    - JButton edit
-    - JButton delete
-    + void openMindMap(MindMap)
-    + void closeMindMap(MindMap)
-    }
-    class MapTreeCellEditor {
-    - Object clickedOn
-    - JTextField edit
-    + Component getTreeCellEditorComponent(JTree,Object,boolean,boolean,boolean,int)
-    + boolean isCellEditable(EventObject)
-    + void actionPerformed(ActionEvent)
-    }
-    class MainFrame {
-    - {static} ProjectExplorer projectExplorer
-    - {static} MainFrame instance
-    - MyMenuBar menu
-    - Toolbar toolbar
-    - ActionManager actionManager
-    - IMapTree mapTree
-    - MapTreeView mapTreeView
-    - ProjectExplorerPanel projectExplorerPanel
-    + {static} MainFrame getInstance()
-    + ProjectExplorerPanel getProjectExplorerPanel()
-    + MyMenuBar getMenu()
-    + Toolbar getToolbar()
-    + IMapTree getMapTree()
-    + MapTreeView getMapTreeView()
-    - void initialise()
-    + ActionManager getActionManager()
-    }
-    interface IProjectPanel {
-    ~ void openMindMap(MindMap)
-    ~ void closeMindMap(MindMap)
-    }
-    interface IGuiAddon {
-    }
-    class ActionManager {
-    - StudentInfoAction studentInfoAction
-    - NewAction newAction
-    - DeleteAction mapTreeCellDelete
-    - ProjectAuthorAction projectAuthorAction
-    + void initActions()
-    + StudentInfoAction getStudentInfoAction()
-    + NewAction getNewAction()
-    + DeleteAction getDeleteAction()
-    + ProjectAuthorAction getProjectAuthorAction()
-    }
-    class MapTree {
-    - MapTreeItem root
-    - DefaultTreeModel defaultTreeModel
-    - MapTreeView treeView
-    + MapTreeView generateTree(ProjectExplorer)
-    + void refreshTree(boolean)
-    + MapTreeItem getSelectedNode()
-    }
-    class Toolbar {
-    }
-    class MapTreeSelectionListener {
-    + void valueChanged(TreeSelectionEvent)
-    }
-
-    interface IMapTree {
-    ~ MapTreeView generateTree(ProjectExplorer)
-    ~ void refreshTree()
-    ~ void refreshTree(boolean)
-    ~ MapTreeItem getSelectedNode()
-    }
-    class MapTreeView {
-    }
-    class MapTree {
-    - MapTreeItem root
-    - DefaultTreeModel defaultTreeModel
-    - MapTreeView treeView
-    + MapTreeView generateTree(ProjectExplorer)
-    + void refreshTree(boolean)
-    + MapTreeItem getSelectedNode()
-    }
-}
 ' --- Relations ---
 
-IMapNodeComposite <|-- ProjectExplorer
 ApplicationFramework <|-- AppCore
-AppCore +.. AppCore.AppCoreSingleton
-IMapNode <|-- Element
-IMapNodeComposite <|-- MindMap
-IPublisher <|-- IAddon
-IPublisher <|-- IMapNode
-IMapNode +.. Message
-IMessage <|-- Message
-Message +.. EditedMessageData
-IMessageData <|-- EditedMessageData
-Message +.. ParentChangeMessageData
-IMessageData <|-- ParentChangeMessageData
-IMapNodeComposite <|-- Project
-IConstants <|.. StandardConstants
-IFileSystem +.. Message
-IMessage <|-- Message
-IPublisher <|-- IAddonManager
-IAddonManager +.. Message
-IMessage <|-- Message
-Message +.. AddonInitializedMessageData
-IMessageData <|-- AddonInitializedMessageData
-IConfigHandler <|.. StandardConfigHandler
-IPublisher <|-- StandardConfigHandler
-IGui <|.. GuiSwing
-IConfigHandler +.. Message
-IMessage <|-- Message
-Message +.. ConfigMessageData
-IMessageData <|-- ConfigMessageData
-Message +.. ConfigChangeMessageData
-IMessageData <|-- ConfigChangeMessageData
-IObserver <|-- IPublisher
-IFileSystem <|.. LocalFileSystem
-IPublisher <|-- LocalFileSystem
+AppCoreSingleton "1..1" *-- "1..1" AppCore
 IMapNode <|-- IMapNodeComposite
-IMapNodeComposite +.. Message
-IMessage <|-- Message
-Message +.. ChildChangeMessageData
-IMessageData <|-- ChildChangeMessageData
-IAddonManager <|-- StandardAddonManager
-MainFrame o-- MyMenuBar
-MainFrame "1..1" - "1..1" GuiSwing
-GuiSwing o-- AppCore
-MainFrame o-- Toolbar
-MainFrame o-- MapTree
-MapTreeView *-- MapTree
-IMapTree <|.. MapTree
-MapTreeView *-- MapTreeCellEditor
-MapTreeView *-- MapTreeCellRenderer
-MapTreeView *-- MapTreeSelectionListener
-MapTreeItem o-- IMapNode
-MapTree *-- MapTreeItem
-MainFrame o-- ActionManager
-ProjectPanel <|.. IProjectPanel
-MainFrame o-- ProjectPanel
+IMapNode "0..*" --o "0..*" IMapNodeComposite
+IMapNode "0..*" --o "0..*" IMapNode
+IMapNodeComposite "0..*" --o "0..*" IMapNodeComposite
+IMapNodeComposite <|-- ProjectExplorer
+ProjectExplorer "0..*" o-- "0..*" Project
+Project "0..*" o-- "0..*" MindMap
+MindMap "0..*" o-- "0..*" Element
+IMapNodeComposite <|-- Project
+IMapNodeComposite <|-- MindMap
+IMapNode <|-- Element
+
+IAddonManager o-- "0..*" IAddon
+IAddonMeta "1" --* IAddon
+IAddonGui "1" --* IAddon
+IAddonManager <|.. StandardAddonManager
+
+IConstants <|.. StandardConstants
+IConfigHandler <|.. StandardConfigHandler
+
+IGui <|.. GuiSwing
+
+IFileSystem <|.. LocalFileSystem
+
+IObserver <|-- IPublisher
+IPublisher <|-- IMapNode
+IPublisher <|-- IAddon
+IPublisher <|-- IAddonManager
+IPublisher <|-- IFileSystem
+IPublisher <|-- IConfigHandler
+
+AppCore -- StandardAddonManager
+AppCore -- StandardConstants
+AppCore -- LocalFileSystem
+AppCore -- StandardConfigHandler
+
 @enduml
