@@ -50,7 +50,6 @@ abstract class IMapNode {
 + String toString()
 + void addParent(IMapNodeComposite)
 + void removeParent(IMapNodeComposite)
-+ void receive(Object)
 }
 abstract class IMapNodeComposite {
 - Set<IMapNode> children
@@ -58,7 +57,6 @@ abstract class IMapNodeComposite {
 + void setChildren(Set<IMapNode>)
 + void addChild(IMapNode)
 + void removeChild(IMapNode)
-+ void receive(Object)
 }
 class ProjectExplorer {
 }
