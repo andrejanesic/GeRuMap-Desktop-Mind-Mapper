@@ -259,7 +259,76 @@ class LocalFileSystem {
 ' --- GUI ---
 
 ' --- GUI.Swing? ---
+interface IGui {
+~ void run()
+}
+package GUI.Swing{
 
+    class GuiSwing {
+    + void run()
+    }
+    class MapTreeCellRenderer {
+    + Component getTreeCellRendererComponent(JTree,Object,boolean,boolean,boolean,int,boolean)
+    }
+    class MapTreeItem {
+    - IMapNode mapNode
+    }
+    class MyMenuBar {
+    }
+    class ProjectPanel {
+    - JTabbedPane tabs
+    - Project project
+    - List<MindMap> tabIndexes
+    + void openMindMap(MindMap)
+    + void closeMindMap(MindMap)
+    }
+    class MapTreeCellEditor {
+    - Object clickedOn
+    - JTextField edit
+    + Component getTreeCellEditorComponent(JTree,Object,boolean,boolean,boolean,int)
+    + boolean isCellEditable(EventObject)
+    + void actionPerformed(ActionEvent)
+    }
+    class MainFrame {
+    - {static} ProjectExplorer projectExplorer
+    - {static} MainFrame instance
+    - MyMenuBar menu
+    - Toolbar toolbar
+    - ActionManager actionManager
+    - IMapTree mapTree
+    - MapTreeView mapTreeView
+    - ProjectExplorerPanel projectExplorerPanel
+    - void initialise()
+    }
+    interface IProjectPanel {
+    ~ void openMindMap(MindMap)
+    ~ void closeMindMap(MindMap)
+    }
+    interface IGuiAddon {
+    }
+    class ActionManager {
+    }
+    class MapTree {
+    - MapTreeItem root
+    - DefaultTreeModel defaultTreeModel
+    - MapTreeView treeView
+    + MapTreeView generateTree(ProjectExplorer)
+    + void refreshTree(boolean)
+    }
+    class Toolbar {
+    }
+    class MapTreeSelectionListener {
+    + void valueChanged(TreeSelectionEvent)
+    }
+
+    interface IMapTree {
+    ~ MapTreeView generateTree(ProjectExplorer)
+    ~ void refreshTree()
+    ~ void refreshTree(boolean)
+    }
+    class MapTreeView {
+    }
+}
 ' --- Relations ---
 
 ApplicationFramework <|-- AppCore
@@ -299,5 +368,21 @@ AppCore -- StandardAddonManager
 AppCore -- StandardConstants
 AppCore -- LocalFileSystem
 AppCore -- StandardConfigHandler
+
+MainFrame o-- MyMenuBar
+MainFrame "1..1" - "1..1" GuiSwing
+GuiSwing o-- AppCore
+MainFrame o-- Toolbar
+MainFrame o-- MapTree
+MapTreeView *-- MapTree
+IMapTree <|.. MapTree
+MapTreeView *-- MapTreeCellEditor
+MapTreeView *-- MapTreeCellRenderer
+MapTreeView *-- MapTreeSelectionListener
+MapTreeItem o-- IMapNode
+MapTree *-- MapTreeItem
+MainFrame o-- ActionManager
+ProjectPanel <|.. IProjectPanel
+MainFrame o-- ProjectPanel
 
 @enduml
