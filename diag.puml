@@ -150,7 +150,108 @@ interface IConfigHandler {
 ' --- GUI ---
 
 ' --- GUI.Swing? ---
+class GuiSwing {
++ void run()
+}
+class MapTreeCellRenderer {
++ Component getTreeCellRendererComponent(JTree,Object,boolean,boolean,boolean,int,boolean)
+}
+class MapTreeItem {
+- IMapNode mapNode
++ IMapNode getMapNode()
++ void setMapNode(IMapNode)
++ void setName(String)
++ String toString()
+}
+class MyMenuBar {
+}
+class ProjectPanel {
+- JTabbedPane tabs
+- Project project
+- List<MindMap> tabIndexes
+- JLabel nodeName
+- JLabel authorName
+- JButton add
+- JButton edit
+- JButton delete
++ void openMindMap(MindMap)
++ void closeMindMap(MindMap)
+}
+class MapTreeCellEditor {
+- Object clickedOn
+- JTextField edit
++ Component getTreeCellEditorComponent(JTree,Object,boolean,boolean,boolean,int)
++ boolean isCellEditable(EventObject)
++ void actionPerformed(ActionEvent)
+}
+class MainFrame {
+- {static} ProjectExplorer projectExplorer
+- {static} MainFrame instance
+- MyMenuBar menu
+- Toolbar toolbar
+- ActionManager actionManager
+- IMapTree mapTree
+- MapTreeView mapTreeView
+- ProjectExplorerPanel projectExplorerPanel
++ {static} MainFrame getInstance()
++ ProjectExplorerPanel getProjectExplorerPanel()
++ MyMenuBar getMenu()
++ Toolbar getToolbar()
++ IMapTree getMapTree()
++ MapTreeView getMapTreeView()
+- void initialise()
++ ActionManager getActionManager()
+}
+interface IProjectPanel {
+~ void openMindMap(MindMap)
+~ void closeMindMap(MindMap)
+}
+interface IGuiAddon {
+}
+class ActionManager {
+- StudentInfoAction studentInfoAction
+- NewAction newAction
+- DeleteAction mapTreeCellDelete
+- ProjectAuthorAction projectAuthorAction
++ void initActions()
++ StudentInfoAction getStudentInfoAction()
++ NewAction getNewAction()
++ DeleteAction getDeleteAction()
++ ProjectAuthorAction getProjectAuthorAction()
+}
+class MapTree {
+- MapTreeItem root
+- DefaultTreeModel defaultTreeModel
+- MapTreeView treeView
++ MapTreeView generateTree(ProjectExplorer)
++ void refreshTree(boolean)
++ MapTreeItem getSelectedNode()
+}
+interface IGui {
+~ void run()
+}
+class Toolbar {
+}
+class MapTreeSelectionListener {
++ void valueChanged(TreeSelectionEvent)
+}
 
+interface IMapTree {
+~ MapTreeView generateTree(ProjectExplorer)
+~ void refreshTree()
+~ void refreshTree(boolean)
+~ MapTreeItem getSelectedNode()
+}
+class MapTreeView {
+}
+class MapTree {
+- MapTreeItem root
+- DefaultTreeModel defaultTreeModel
+- MapTreeView treeView
++ MapTreeView generateTree(ProjectExplorer)
++ void refreshTree(boolean)
++ MapTreeItem getSelectedNode()
+}
 ' --- Relations ---
 
 IMapNodeComposite <|-- ProjectExplorer
@@ -193,4 +294,16 @@ IMessage <|-- Message
 Message +.. ChildChangeMessageData
 IMessageData <|-- ChildChangeMessageData
 IAddonManager <|-- StandardAddonManager
+MainFrame o-- MyMenuBar
+MainFrame "1..1" - "1..1" GuiSwing
+GuiSwing o-- AppCore
+MainFrame o-- Toolbar
+MainFrame o-- MapTreeView
+MapTreeView *-- MapTree
+IMapTree <|.. MapTree
+MapTreeView *-- MapTreeCellEditor
+MapTreeView *-- MapTreeCellRenderer
+MapTreeView *-- MapTreeSelectionListener
+
+
 @enduml
