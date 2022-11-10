@@ -225,7 +225,7 @@ class StandardConfigHandler {
 + Object get(String,Object)
 }
 
-' --- Filesystem ---
+' --- Serializer ---
 
 package filesystem {
     class ISerializer
