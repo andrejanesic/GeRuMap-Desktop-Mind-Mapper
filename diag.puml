@@ -404,9 +404,9 @@ IPublisher <|-- IAddonManager
 IPublisher <|-- ISerializer
 IPublisher <|-- IConfigHandler
 
-ILogger <|-- StandardLogger
+ILogger <|.. StandardLogger
 
-IMessageGenerator <|-- StandardMessageGenerator
+IMessageGenerator <|.. StandardMessageGenerator
 
 AppCore -- StandardAddonManager
 AppCore -- StandardConstants
