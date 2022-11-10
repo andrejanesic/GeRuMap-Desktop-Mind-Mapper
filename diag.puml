@@ -21,12 +21,6 @@ abstract class ApplicationFramework {
 # ProjectExplorer projectExplorer
 # IFileSystem iFileSystem
 + void initialize(IConstants,IConfigHandler,IErrorHandler,IGui,ProjectExplorer,IFileSystem)
-+ IConstants getConstants()
-+ IConfigHandler getConfigHandler()
-+ IErrorHandler getErrorHandler()
-+ IGui getGui()
-+ ProjectExplorer getProjectExplorer()
-+ IFileSystem getFileSystem()
 }
 
 ' --- Repository ---
@@ -38,6 +32,11 @@ package repository {
     class Project
     class MindMap
     class Element
+    class MapNodeFactory
+    class ProjectExplorerFactory
+    class ProjectFactory
+    class MindMapFactory
+    class ElementFactory
 }
 
 abstract class IMapNode {
@@ -45,9 +44,6 @@ abstract class IMapNode {
 - String nodeName
 + Set<IMapNodeComposite> getParents()
 + void setParents(Set<IMapNodeComposite>)
-+ String getNodeName()
-+ void setNodeName(String)
-+ String toString()
 + void addParent(IMapNodeComposite)
 + void removeParent(IMapNodeComposite)
 }
@@ -58,34 +54,36 @@ abstract class IMapNodeComposite {
 + void addChild(IMapNode)
 + void removeChild(IMapNode)
 }
+abstract class MapNodeFactory{
++ IMapNode getNode()
+{abstract} + createNode()
+}
+class ProjectExplorerFactory{
++ createNode()
+}
+class ProjectFactory{
++ createNode()
+}
+class MindMapFactory{
++ createNode()
+}
+class ElementFactory{
++ createNode()
+}
 class ProjectExplorer {
 }
 class Project {
 - String authorName
 - String filepath
-+ String getAuthorName()
-+ void setAuthorName(String)
-+ String getFilepath()
-+ void setFilepath(String)
 }
 class MindMap {
 - boolean template
-+ boolean isTemplate()
-+ void setTemplate(boolean)
 }
 class Element {
 - int posX
 - int posY
 - int color
 - String content
-+ int getPosX()
-+ void setPosX(int)
-+ int getPosY()
-+ void setPosY()
-+ int getColor()
-+ void setColor(int)
-+ String getContent()
-+ void setContent(String)
 }
 
 ' --- Observer ---
@@ -116,14 +114,9 @@ interface IObserver {
 interface IMessage<S, T> {
 - S status
 - T data
-+ S getStatus()
-+ T getData()
-+ boolean equals(Object)
-+ int hashCode()
 }
 interface IMessageData<T> {
 - T sender
-+ T getSender()
 }
 
 ' --- Addon ---
@@ -376,13 +369,19 @@ MainFrame o-- Toolbar
 MainFrame o-- MapTree
 MapTreeView *-- MapTree
 IMapTree <|.. MapTree
-MapTreeView *-- MapTreeCellEditor
-MapTreeView *-- MapTreeCellRenderer
-MapTreeView *-- MapTreeSelectionListener
+MapTreeView "1..1" *-- "1..1" MapTreeCellEditor
+MapTreeView "1..1" *-- "1..1" MapTreeCellRenderer
+MapTreeView "1..1" *-- "1..1" MapTreeSelectionListener
 MapTreeItem o-- IMapNode
-MapTree *-- MapTreeItem
+MapTree"1..*" *-- "1..*" MapTreeItem
 MainFrame o-- ActionManager
 ProjectPanel <|.. IProjectPanel
 MainFrame o-- ProjectPanel
+
+MapNodeFactory "1..1" *-- "1..1" IMapNode
+ProjectFactory --|> MapNodeFactory
+ProjectExplorerFactory --|> MapNodeFactory
+MindMapFactory --|> MapNodeFactory
+ElementFactory --|> MapNodeFactory
 
 @enduml
