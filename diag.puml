@@ -37,6 +37,7 @@ package repository {
     class ProjectFactory
     class MindMapFactory
     class ElementFactory
+    class MapNodeFactoryUtils
 }
 
 abstract class IMapNode {
@@ -54,21 +55,27 @@ abstract class IMapNodeComposite {
 + void addChild(IMapNode)
 + void removeChild(IMapNode)
 }
+class MapNodeFactoryUtils {
++ {static} MapNodeFactory getElementFactory()
++ {static} MapNodeFactory getMindMapFactory()
++ {static} MapNodeFactory getProjectFactory()
++ {static} MapNodeFactory getProjectExplorerFactory()
+}
 abstract class MapNodeFactory{
 + IMapNode getNode()
-{abstract} + createNode()
+{abstract} + IMapNode createNode()
 }
 class ProjectExplorerFactory{
-+ createNode()
++ IMapNode createNode()
 }
 class ProjectFactory{
-+ createNode()
++ IMapNode createNode()
 }
 class MindMapFactory{
-+ createNode()
++ IMapNode createNode()
 }
 class ElementFactory{
-+ createNode()
++ IMapNode createNode()
 }
 class ProjectExplorer {
 }
@@ -251,11 +258,17 @@ class LocalFileSystem {
 
 ' --- GUI ---
 
-' --- GUI.Swing? ---
-interface IGui {
-~ void run()
+' --- GUI.Swing ---
+package gui {
+    interface IGui {
+    ~ void run()
+    }
 }
 package GUI.Swing{
+
+    interface IAddonGui {
+    + void showGui()
+    }
 
     class GuiSwing {
     + void run()
@@ -296,8 +309,6 @@ package GUI.Swing{
     interface IProjectPanel {
     ~ void openMindMap(MindMap)
     ~ void closeMindMap(MindMap)
-    }
-    interface IGuiAddon {
     }
     class ActionManager {
     }
@@ -383,5 +394,9 @@ ProjectFactory --|> MapNodeFactory
 ProjectExplorerFactory --|> MapNodeFactory
 MindMapFactory --|> MapNodeFactory
 ElementFactory --|> MapNodeFactory
+MapNodeFactoryUtils "1..1" o-- ProjectExplorerFactory
+MapNodeFactoryUtils "1..1" o-- ProjectFactory
+MapNodeFactoryUtils "1..1" o-- MindMapFactory
+MapNodeFactoryUtils "1..1" o-- ElementFactory
 
 @enduml
