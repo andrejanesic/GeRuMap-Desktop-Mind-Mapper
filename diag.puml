@@ -19,8 +19,8 @@ abstract class ApplicationFramework {
 # IErrorHandler iErrorHandler
 # IGui iGui
 # ProjectExplorer projectExplorer
-# IFileSystem iFileSystem
-+ void initialize(IConstants,IConfigHandler,IErrorHandler,IGui,ProjectExplorer,IFileSystem)
+# ISerializer iSerializer
++ void initialize(IConstants,IConfigHandler,IErrorHandler,IGui,ProjectExplorer,ISerializer)
 }
 
 ' --- Repository ---
@@ -228,10 +228,10 @@ class StandardConfigHandler {
 ' --- Filesystem ---
 
 package filesystem {
-    class IFileSystem
+    class ISerializer
 }
 
-interface IFileSystem {
+interface ISerializer {
 + void saveConfig(Map<String,String>)
 + Map<String,String> loadConfig(String)
 + void saveProject(Project)
@@ -241,10 +241,10 @@ interface IFileSystem {
 }
 
 package filesystem.local {
-    class LocalFileSystem
+    class LocalSerializer
 }
 
-class LocalFileSystem {
+class LocalSerializer {
 + void saveConfig(Map<String,String>)
 + Map<String,String> loadConfig(String)
 + void saveProject(Project)
@@ -359,18 +359,18 @@ IConfigHandler <|.. StandardConfigHandler
 
 IGui <|.. GuiSwing
 
-IFileSystem <|.. LocalFileSystem
+ISerializer <|.. LocalSerializer
 
 IObserver <|-- IPublisher
 IPublisher <|-- IMapNode
 IPublisher <|-- IAddon
 IPublisher <|-- IAddonManager
-IPublisher <|-- IFileSystem
+IPublisher <|-- ISerializer
 IPublisher <|-- IConfigHandler
 
 AppCore -- StandardAddonManager
 AppCore -- StandardConstants
-AppCore -- LocalFileSystem
+AppCore -- LocalSerializer
 AppCore -- StandardConfigHandler
 
 MainFrame o-- MyMenuBar
