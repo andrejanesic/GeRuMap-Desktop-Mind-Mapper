@@ -258,12 +258,14 @@ class LocalSerializer {
 
 ' --- GUI ---
 
-' --- GUI.Swing ---
 package gui {
     interface IGui {
     ~ void run()
     }
 }
+
+' --- GUI.Swing ---
+
 package GUI.Swing{
 
     interface IAddonGui {
