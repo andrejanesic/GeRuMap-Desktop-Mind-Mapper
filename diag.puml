@@ -352,6 +352,23 @@ package GUI.Swing{
     class MapTreeView {
     }
 }
+
+' --- MessageGenerator ---
+
+package messagegenerator {
+    interface IMessageGenerator {
+        + void throw(String)
+        + void throw(Exception)
+    }
+}
+
+package messagegenerator.standard {
+    class StandardMessageGenerator {
+        + void throw(String)
+        + void throw(Exception)
+    }
+}
+
 ' --- Relations ---
 
 ApplicationFramework <|-- AppCore
@@ -389,11 +406,14 @@ IPublisher <|-- IConfigHandler
 
 ILogger <|-- StandardLogger
 
+IMessageGenerator <|-- StandardMessageGenerator
+
 AppCore -- StandardAddonManager
 AppCore -- StandardConstants
 AppCore -- LocalSerializer
 AppCore -- StandardConfigHandler
 AppCore -- StandardLogger
+AppCore -- StandardMessageGenerator
 
 MainFrame o-- MyMenuBar
 MainFrame "1..1" - "1..1" GuiSwing
