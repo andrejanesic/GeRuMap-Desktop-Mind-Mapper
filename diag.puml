@@ -256,6 +256,23 @@ class LocalSerializer {
 - boolean decodeNodeState()
 }
 
+' -- Logger ---
+
+package logger {
+    interface ILogger {
+        + void log(String)
+    }
+}
+
+package logger.standard {
+    class StandardLogger {
+        - BufferedReader reader
+        - PrintWriter writer
+        + void log(String)
+        - void writeToIO(String)
+    }
+}
+
 ' --- GUI ---
 
 package gui {
@@ -370,10 +387,13 @@ IPublisher <|-- IAddonManager
 IPublisher <|-- ISerializer
 IPublisher <|-- IConfigHandler
 
+ILogger <|-- StandardLogger
+
 AppCore -- StandardAddonManager
 AppCore -- StandardConstants
 AppCore -- LocalSerializer
 AppCore -- StandardConfigHandler
+AppCore -- StandardLogger
 
 MainFrame o-- MyMenuBar
 MainFrame "1..1" - "1..1" GuiSwing
