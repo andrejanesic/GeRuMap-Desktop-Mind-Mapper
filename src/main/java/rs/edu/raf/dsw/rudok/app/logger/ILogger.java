@@ -16,7 +16,7 @@ public abstract class ILogger extends IPublisher {
      * @param type      Message type: {@link IMessageGenerator.Type}.
      * @param timestamp Timestamp.
      */
-    abstract void log(String content, IMessageGenerator.Type type, String timestamp);
+    public abstract void log(String content, IMessageGenerator.Type type, String timestamp);
 
     /**
      * Watches for messages sent by {@link IMessageGenerator} and logs them.
