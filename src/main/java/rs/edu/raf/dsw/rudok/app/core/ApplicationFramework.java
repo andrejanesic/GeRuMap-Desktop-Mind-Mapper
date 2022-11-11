@@ -4,6 +4,7 @@ import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.constants.IConstants;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
+import rs.edu.raf.dsw.rudok.app.logger.ILogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
@@ -18,6 +19,7 @@ public abstract class ApplicationFramework {
     protected IGui iGui;
     protected ProjectExplorer projectExplorer;
     protected IFileSystem iFileSystem;
+    protected ILogger iLogger;
 
     /**
      * Initializes the app.
@@ -28,14 +30,16 @@ public abstract class ApplicationFramework {
      * @param iGui              Gui handler implementation instance.
      * @param projectExplorer   Repository implementation instance.
      * @param iFileSystem       FileSystem implementation instance.
+     * @param iLogger           Logger implementation instance.
      */
-    public void initialize(IConstants iConstants, IMessageGenerator iMessageGenerator, IConfigHandler iConfigHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
+    public void initialize(IConstants iConstants, IMessageGenerator iMessageGenerator, IConfigHandler iConfigHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem, ILogger iLogger) {
         this.iConstants = iConstants;
         this.iMessageGenerator = iMessageGenerator;
         this.iConfigHandler = iConfigHandler;
         this.iGui = iGui;
         this.projectExplorer = projectExplorer;
         this.iFileSystem = iFileSystem;
+        this.iLogger = iLogger;
     }
 
     /**
@@ -67,5 +71,9 @@ public abstract class ApplicationFramework {
 
     public IFileSystem getFileSystem() {
         return iFileSystem;
+    }
+
+    public ILogger getLogger() {
+        return iLogger;
     }
 }

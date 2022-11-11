@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.constants.standard.StandardConstants;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.local.LocalFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.GuiSwing;
+import rs.edu.raf.dsw.rudok.app.logger.console.file.FileLogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.standard.StandardMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
@@ -20,7 +21,8 @@ public class AppCore extends ApplicationFramework {
                 new StandardConfigHandler(this),
                 new GuiSwing(),
                 new ProjectExplorer("Workspace"),
-                new LocalFileSystem(this)
+                new LocalFileSystem(this),
+                new FileLogger()
         );
     }
 

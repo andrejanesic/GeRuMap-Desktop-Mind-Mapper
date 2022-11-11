@@ -8,6 +8,7 @@ import rs.edu.raf.dsw.rudok.app.constants.IConstants;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
+import rs.edu.raf.dsw.rudok.app.logger.ILogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
@@ -21,11 +22,6 @@ public class TestGuiSwing {
         IGui gui = new GuiSwing();
 
         ApplicationFramework applicationFramework = new ApplicationFramework() {
-            @Override
-            public void initialize(IConstants iConstants, IMessageGenerator iMessageGenerator, IConfigHandler iConfigHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
-                super.initialize(iConstants, iMessageGenerator, iConfigHandler, iGui, projectExplorer, iFileSystem);
-                this.iGui.run();
-            }
         };
 
         applicationFramework.initialize(
@@ -99,6 +95,12 @@ public class TestGuiSwing {
                     @Override
                     public Project loadProject(String name) {
                         return null;
+                    }
+                },
+                new ILogger() {
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
                     }
                 });
     }
