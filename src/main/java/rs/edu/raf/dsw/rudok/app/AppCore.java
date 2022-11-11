@@ -1,11 +1,11 @@
 package rs.edu.raf.dsw.rudok.app;
 
-import rs.edu.raf.dsw.rudok.app.constants.standard.StandardConstants;
 import rs.edu.raf.dsw.rudok.app.confighandler.standard.StandardConfigHandler;
+import rs.edu.raf.dsw.rudok.app.constants.standard.StandardConstants;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
-import rs.edu.raf.dsw.rudok.app.core.IErrorHandler;
 import rs.edu.raf.dsw.rudok.app.filesystem.local.LocalFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.GuiSwing;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.standard.StandardMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 /**
@@ -16,13 +16,8 @@ public class AppCore extends ApplicationFramework {
     private AppCore() {
         this.initialize(
                 new StandardConstants(),
+                new StandardMessageGenerator(),
                 new StandardConfigHandler(this),
-                new IErrorHandler() {
-                    @Override
-                    public int hashCode() {
-                        return super.hashCode();
-                    }
-                },
                 new GuiSwing(),
                 new ProjectExplorer("Workspace"),
                 new LocalFileSystem(this)

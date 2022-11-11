@@ -4,10 +4,11 @@ import org.junit.After;
 import org.junit.Test;
 import rs.edu.raf.dsw.rudok.app.Helper;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
-import rs.edu.raf.dsw.rudok.app.core.*;
-import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.constants.IConstants;
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.gui.IGui;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
@@ -21,8 +22,8 @@ public class TestGuiSwing {
 
         ApplicationFramework applicationFramework = new ApplicationFramework() {
             @Override
-            public void initialize(IConstants iConstants, IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
-                super.initialize(iConstants, iConfigHandler, iErrorHandler, iGui, projectExplorer, iFileSystem);
+            public void initialize(IConstants iConstants, IMessageGenerator iMessageGenerator, IConfigHandler iConfigHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
+                super.initialize(iConstants, iMessageGenerator, iConfigHandler, iGui, projectExplorer, iFileSystem);
                 this.iGui.run();
             }
         };
@@ -37,6 +38,12 @@ public class TestGuiSwing {
                     @Override
                     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
                         return null;
+                    }
+                },
+                new IMessageGenerator() {
+                    @Override
+                    public void send(String content, Type type, String timestamp) {
+
                     }
                 },
                 new IConfigHandler() {
@@ -69,8 +76,6 @@ public class TestGuiSwing {
                     public Object get(String key, Object defaultValue) {
                         return null;
                     }
-                },
-                new IErrorHandler() {
                 },
                 gui,
                 new ProjectExplorer(Helper.randString()) {
