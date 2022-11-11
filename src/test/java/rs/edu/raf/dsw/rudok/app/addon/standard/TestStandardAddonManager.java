@@ -7,9 +7,8 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddonManager;
 import rs.edu.raf.dsw.rudok.app.addon.IAddonMeta;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
-import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.util.Iterator;

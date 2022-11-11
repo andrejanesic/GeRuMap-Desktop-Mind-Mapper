@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import rs.edu.raf.dsw.rudok.app.Helper;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
-import rs.edu.raf.dsw.rudok.app.core.IConstants;
-import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.constants.IConstants;
+import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import java.io.*;
