@@ -30,8 +30,8 @@ public abstract class ApplicationFramework {
      * @param iFileSystem       FileSystem implementation instance.
      */
     public void initialize(IConstants iConstants, IMessageGenerator iMessageGenerator, IConfigHandler iConfigHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
-        this.iMessageGenerator = iMessageGenerator;
         this.iConstants = iConstants;
+        this.iMessageGenerator = iMessageGenerator;
         this.iConfigHandler = iConfigHandler;
         this.iGui = iGui;
         this.projectExplorer = projectExplorer;
