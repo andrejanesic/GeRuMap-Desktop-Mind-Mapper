@@ -9,29 +9,22 @@ import java.util.Set;
  */
 public class Project extends IMapNodeComposite {
 
-    private String projectName;
     private String authorName;
     private String filepath;
 
     /**
      * Default constructor.
      *
-     * @param projectName Project name.
-     * @param authorName  Project author.
-     * @param filepath    Filepath to the project.
+     * @param nodeName   Project name.
      */
-    public Project(String projectName, String authorName, String filepath) {
-        this.projectName = projectName;
+    public Project(String nodeName) {
+        super(nodeName);
+    }
+
+    public Project(String nodeName, String authorName, String filepath) {
+        super(nodeName);
         this.authorName = authorName;
         this.filepath = filepath;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
     }
 
     public String getAuthorName() {

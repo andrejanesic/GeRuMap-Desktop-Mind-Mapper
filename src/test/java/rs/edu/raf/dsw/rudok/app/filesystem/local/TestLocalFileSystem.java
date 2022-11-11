@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import rs.edu.raf.dsw.rudok.app.Helper;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IConstants;
 import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
@@ -57,6 +58,9 @@ public class TestLocalFileSystem {
 
     public static class TestIMapNodeComposite extends IMapNodeComposite {
 
+        public TestIMapNodeComposite(String nodeName) {
+            super(nodeName);
+        }
     }
 
     /**
@@ -73,7 +77,7 @@ public class TestLocalFileSystem {
         // if initial node
         switch (depth) {
             case 4:
-                root = new ProjectExplorer();
+                root = new ProjectExplorer(Helper.randString());
                 break;
             case 3:
                 String projectName = null, authorName = null, filepath = null;
@@ -101,10 +105,10 @@ public class TestLocalFileSystem {
                 root = new Project(projectName, authorName, filepath);
                 break;
             case 2:
-                root = new MindMap(new Random().nextBoolean());
+                root = new MindMap(new Random().nextBoolean(), Helper.randString());
                 break;
             case 1:
-                return new Element();
+                return new Element(Helper.randString());
         }
 
         int children = new Random().nextInt(3) + 1;
@@ -225,7 +229,7 @@ public class TestLocalFileSystem {
 
         Project cmp = fs.loadProject(root.getFilepath());
 
-        Assert.assertEquals(root.getProjectName(), cmp.getProjectName());
+        Assert.assertEquals(root.getNodeName(), cmp.getNodeName());
         Assert.assertEquals(root.getFilepath(), cmp.getFilepath());
         Assert.assertEquals(root.getAuthorName(), cmp.getAuthorName());
 

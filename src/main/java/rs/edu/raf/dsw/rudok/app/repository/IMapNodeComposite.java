@@ -17,6 +17,10 @@ public abstract class IMapNodeComposite extends IMapNode {
      */
     private Set<IMapNode> children = new HashSet<>();
 
+    public IMapNodeComposite(String nodeName) {
+        super(nodeName);
+    }
+
     public Set<IMapNode> getChildren() {
         return children;
     }
@@ -40,7 +44,8 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.children.add(child);
 
         this.addObserver(child);
-        this.publish(new Message(Message.Type.CHILD_ADDED, new Message.ChildChangeMessageData(this, child)));
+        this.publish(new Message(Message.Type.CHILD_ADDED,
+                new Message.ChildChangeMessageData(this, this, child)));
     }
 
     /**
@@ -54,8 +59,10 @@ public abstract class IMapNodeComposite extends IMapNode {
         this.children.remove(child);
 
         this.removeObserver(child);
-        this.publish(new Message(Message.Type.CHILD_REMOVED, new Message.ChildChangeMessageData(this, child)));
+        this.publish(new Message(Message.Type.CHILD_REMOVED,
+                new Message.ChildChangeMessageData(this, this, child)));
     }
+
 
     @Override
     public void receive(Object message) {
@@ -71,6 +78,26 @@ public abstract class IMapNodeComposite extends IMapNode {
                 case PARENT_REMOVED:
                     this.removeChild(((IMapNode.Message.ParentChangeMessageData) ((IMapNode.Message) message).getData()).getChild());
                     return;
+            }
+        }
+
+        if (message instanceof Message) {
+
+            switch (((Message) message).getStatus()) {
+
+                case CHILD_ADDED:
+                case CHILD_REMOVED: {
+                    Message.ChildChangeMessageData data = (Message.ChildChangeMessageData)
+                            ((Message) message).getData();
+                    if (data.getChild().equals(this)) {
+                        if (((Message) message).getStatus().equals(Message.Type.CHILD_ADDED)) {
+                            this.addParent(data.getParent());
+                        } else {
+                            this.removeParent(data.getParent());
+                        }
+                    }
+                    break;
+                }
             }
         }
     }
@@ -97,12 +124,13 @@ public abstract class IMapNodeComposite extends IMapNode {
         /**
          * For messages about changes on its children.
          */
-        public static class ChildChangeMessageData implements IMessageData {
+        public static class ChildChangeMessageData extends IMessageData<IMapNodeComposite> {
 
             private final IMapNodeComposite parent;
             private final IMapNode child;
 
-            public ChildChangeMessageData(IMapNodeComposite parent, IMapNode child) {
+            public ChildChangeMessageData(IMapNodeComposite sender, IMapNodeComposite parent, IMapNode child) {
+                super(sender);
                 this.parent = parent;
                 this.child = child;
             }

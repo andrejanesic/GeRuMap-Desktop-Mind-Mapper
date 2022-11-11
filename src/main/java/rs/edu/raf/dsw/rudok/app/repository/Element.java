@@ -4,6 +4,10 @@ import java.util.Set;
 
 public class Element extends IMapNode {
 
+    public Element(String nodeName) {
+        super(nodeName);
+    }
+
     @Override
     public void setParents(Set<IMapNodeComposite> parents) {
         for (IMapNode parent : parents) {

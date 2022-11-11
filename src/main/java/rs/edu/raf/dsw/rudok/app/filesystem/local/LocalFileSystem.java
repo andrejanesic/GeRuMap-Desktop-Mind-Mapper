@@ -50,12 +50,14 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
      * Int-codes representing the schema for each node.
      */
     private enum ATTR_SCHEMA {
-        PROJECT_PROJECTNAME,
+        PROJECT_NAME,
         PROJECT_AUTHORNAME,
         PROJECT_FILEPATH,
         PROJECT_CHILDREN,
         MINDMAP_TEMPLATE,
+        MINDMAP_NAME,
         MINDMAP_CHILDREN,
+        ELEMENT_NAME,
         ELEMENT_EMPTY,
         // TODO add other attributes here
     }
@@ -478,7 +480,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
                 if (attrs.length == 0) {
                     attrs = new ATTR_SCHEMA[]{
-                            ATTR_SCHEMA.PROJECT_PROJECTNAME,
+                            ATTR_SCHEMA.PROJECT_NAME,
                             ATTR_SCHEMA.PROJECT_AUTHORNAME,
                             ATTR_SCHEMA.PROJECT_FILEPATH,
                             ATTR_SCHEMA.PROJECT_CHILDREN,
@@ -493,8 +495,8 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     dos.write((byte) attrs[i].ordinal());
 
                     switch (attrs[i]) {
-                        case PROJECT_PROJECTNAME:
-                            dos.writeUTF(p.getProjectName());
+                        case PROJECT_NAME:
+                            dos.writeUTF(p.getNodeName());
                             break;
                         case PROJECT_AUTHORNAME:
                             dos.writeUTF(p.getAuthorName());
@@ -541,6 +543,9 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                         case MINDMAP_TEMPLATE:
                             dos.writeBoolean(m.isTemplate());
                             break;
+                        case MINDMAP_NAME:
+                            dos.writeUTF(m.getNodeName());
+                            break;
                         case MINDMAP_CHILDREN:
                             dos.writeInt(m.getChildren().size());
 
@@ -577,7 +582,9 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     dos.write((byte) attrs[i].ordinal());
 
                     switch (attrs[i]) {
-                        // TODO add element attributes here
+                        case ELEMENT_NAME:
+                            dos.writeUTF(e.getNodeName());
+                            break;
 
                         default:
                             break;
@@ -615,9 +622,11 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
             // Possible values to be read from schema for each delta
             String
-                    project_projectName = null,
+                    project_name = null,
                     project_authorName = null,
-                    project_filePath = null;
+                    project_filePath = null,
+                    mindmap_name = null,
+                    element_name = null;
             Boolean
                     mindmap_template = null;
             List<Integer>
@@ -632,14 +641,14 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                 ATTR_SCHEMA schema = ATTR_SCHEMA.values()[dis.readUnsignedByte()];
 
                 switch (schema) {
-                    case PROJECT_PROJECTNAME: {
+                    case PROJECT_NAME: {
                         if (type > -1 && type != 0) {
                             // Type already inferred from another attribute, so invalid schema!
                             return false;
                         }
 
                         type = 0;
-                        project_projectName = dis.readUTF();
+                        project_name = dis.readUTF();
                         break;
                     }
 
@@ -693,6 +702,17 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                         break;
                     }
 
+                    case MINDMAP_NAME: {
+                        if (type > -1 && type != 1) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 1;
+                        mindmap_name = dis.readUTF();
+                        break;
+                    }
+
                     case MINDMAP_CHILDREN: {
                         // TODO this will fail if children are not loaded yet!
 
@@ -707,6 +727,17 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                         for (int j = 0; j < numChildren; j++) {
                             mindmap_children.add(dis.readInt());
                         }
+                        break;
+                    }
+
+                    case ELEMENT_NAME: {
+                        if (type > -1 && type != 2) {
+                            // Type already inferred from another attribute, so invalid schema!
+                            return false;
+                        }
+
+                        type = 1;
+                        element_name = dis.readUTF();
                         break;
                     }
 
@@ -733,14 +764,14 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     Project p = (Project) nodes.getOrDefault(nodeId, null);
                     if (p == null) {
                         p = new Project(
-                                project_projectName,
+                                project_name,
                                 project_authorName,
                                 project_filePath
                         );
                         nodes.put(nodeId, p);
                     }
-                    if (project_projectName != null) {
-                        p.setProjectName(project_projectName);
+                    if (project_name != null) {
+                        p.setNodeName(project_name);
                     }
                     if (project_authorName != null) {
                         p.setAuthorName(project_authorName);
@@ -778,12 +809,16 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     MindMap m = (MindMap) nodes.getOrDefault(nodeId, null);
                     if (m == null) {
                         m = new MindMap(
-                                Boolean.TRUE.equals(mindmap_template)
+                                Boolean.TRUE.equals(mindmap_template),
+                                mindmap_name
                         );
                         nodes.put(nodeId, m);
                     }
                     if (mindmap_template != null) {
                         m.setTemplate(Boolean.TRUE.equals(mindmap_template));
+                    }
+                    if (mindmap_name != null) {
+                        m.setNodeName(mindmap_name);
                     }
                     if (mindmap_children != null) {
                         // Remove all children
@@ -814,11 +849,13 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     // If Element schema
                     Element e = (Element) nodes.getOrDefault(nodeId, null);
                     if (e == null) {
-                        e = new Element();
+                        e = new Element(element_name);
                         nodes.put(nodeId, e);
-                    } else {
-                        // TODO update values here
                     }
+                    if (element_name != null) {
+                        e.setNodeName(element_name);
+                    }
+
                     break;
                 }
 

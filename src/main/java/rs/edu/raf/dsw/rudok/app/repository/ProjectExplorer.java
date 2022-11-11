@@ -4,9 +4,9 @@ package rs.edu.raf.dsw.rudok.app.repository;
 import java.util.Set;
 
 public class ProjectExplorer extends IMapNodeComposite{
-    public ProjectExplorer() {
+    public ProjectExplorer(String nodeName) {
+        super(nodeName);
     }
-
 
     @Override
     public void setChildren(Set<IMapNode> children) {

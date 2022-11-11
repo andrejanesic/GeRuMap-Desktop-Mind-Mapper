@@ -4,8 +4,6 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.addon.IAddonManager;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 
-import java.io.File;
-
 /**
  * Default implementation of the Addon Manager. Loads add-ons into
  */
@@ -27,7 +25,8 @@ public class StandardAddonManager extends IAddonManager {
             IAddon addon = getApplicationFramework().getFileSystem().loadAddon(classname);
             addAddon(addon);
 
-            publish(new IAddonManager.Message(Message.Type.ADDON_INITIALIZED, new Message.AddonInitializedMessageData(addon)));
+            publish(new IAddonManager.Message(Message.Type.ADDON_INITIALIZED,
+                    new Message.AddonInitializedMessageData(this, addon)));
         }
     }
 }

@@ -13,26 +13,24 @@ import java.util.Map;
 public class StandardConfigHandler extends IPublisher implements IConfigHandler {
 
     /**
-     * App core reference.
-     */
-    private ApplicationFramework applicationFramework;
-
-    public StandardConfigHandler(ApplicationFramework applicationFramework) {
-        this.applicationFramework = applicationFramework;
-    }
-
-    /**
-     * Holds all current config properties.
-     */
-    private HashMap<String, String> config = new HashMap<>();
-
-    /**
      * Default (fallback) config properties.
      */
     private static final HashMap<String, String> DEFAULT_CONFIG = new HashMap<String, String>() {{
         put("config", "default");
         put("language", "English");
     }};
+    /**
+     * App core reference.
+     */
+    private ApplicationFramework applicationFramework;
+    /**
+     * Holds all current config properties.
+     */
+    private HashMap<String, String> config = new HashMap<>();
+
+    public StandardConfigHandler(ApplicationFramework applicationFramework) {
+        this.applicationFramework = applicationFramework;
+    }
 
     @Override
     public boolean loadConfig(String name) {
@@ -68,7 +66,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     public void set(String key, String val) {
         config.put(key, val);
 
-        this.publish(new IConfigHandler.Message(Message.Type.CONFIG_UPDATED, new Message.ConfigChangeMessageData(key, val)));
+        this.publish(new IConfigHandler.Message(Message.Type.CONFIG_UPDATED,
+                new Message.ConfigChangeMessageData(this, key, val)));
     }
 
     @Override

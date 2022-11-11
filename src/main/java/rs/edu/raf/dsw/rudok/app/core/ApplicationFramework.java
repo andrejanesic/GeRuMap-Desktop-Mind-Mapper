@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
+import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 /**
  * The "glue" together between all components.
@@ -11,26 +12,33 @@ public abstract class ApplicationFramework {
     protected IConfigHandler iConfigHandler;
     protected IErrorHandler iErrorHandler;
     protected IGui iGui;
-    protected IRepository iRepository;
+    protected ProjectExplorer projectExplorer;
     protected IFileSystem iFileSystem;
 
     /**
      * Initializes the app.
      *
-     * @param iConstants     Environment/app constants.
-     * @param iConfigHandler Config handler implementation instance.
-     * @param iErrorHandler  Error handler implementation instance.
-     * @param iGui           Gui handler implementation instance.
-     * @param iRepository    Repository implementation instance.
-     * @param iFileSystem    FileSystem implementation instance.
+     * @param iConstants      Environment/app constants.
+     * @param iConfigHandler  Config handler implementation instance.
+     * @param iErrorHandler   Error handler implementation instance.
+     * @param iGui            Gui handler implementation instance.
+     * @param projectExplorer Repository implementation instance.
+     * @param iFileSystem     FileSystem implementation instance.
      */
-    public void initialize(IConstants iConstants, IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, IRepository iRepository, IFileSystem iFileSystem) {
+    public void initialize(IConstants iConstants, IConfigHandler iConfigHandler, IErrorHandler iErrorHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
         this.iConstants = iConstants;
         this.iConfigHandler = iConfigHandler;
         this.iErrorHandler = iErrorHandler;
         this.iGui = iGui;
-        this.iRepository = iRepository;
+        this.projectExplorer = projectExplorer;
         this.iFileSystem = iFileSystem;
+    }
+
+    /**
+     * Runs the application.
+     */
+    public void run() {
+        this.iGui.run();
     }
 
     public IConstants getConstants() {
@@ -49,8 +57,8 @@ public abstract class ApplicationFramework {
         return iGui;
     }
 
-    public IRepository getRepository() {
-        return iRepository;
+    public ProjectExplorer getProjectExplorer() {
+        return projectExplorer;
     }
 
     public IFileSystem getFileSystem() {

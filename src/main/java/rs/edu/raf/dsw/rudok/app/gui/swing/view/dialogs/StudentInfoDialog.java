@@ -8,6 +8,7 @@ public class StudentInfoDialog extends JDialog {
         super(owner, title, modal);
 
         this.setSize(350,200);
+
         this.setLocationRelativeTo(owner);
 
         JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
