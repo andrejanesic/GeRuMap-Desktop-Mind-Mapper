@@ -25,6 +25,9 @@ public class OpenProjectAction extends IAction {
             Project child = AppCore.getInstance().getFileSystem().loadProject(file.getAbsolutePath());
             if (child != null) {
                 parent.addChild(child);
+            } else {
+                // TODO throw err here
+                JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not load project");
             }
         }
     }
