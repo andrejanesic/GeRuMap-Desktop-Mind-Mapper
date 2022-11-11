@@ -1,6 +1,6 @@
 package rs.edu.raf.dsw.rudok.app;
 
-import rs.edu.raf.dsw.rudok.app.addon.constants.standard.StandardConstants;
+import rs.edu.raf.dsw.rudok.app.constants.standard.StandardConstants;
 import rs.edu.raf.dsw.rudok.app.confighandler.standard.StandardConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.core.IErrorHandler;

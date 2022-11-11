@@ -1,7 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
-import rs.edu.raf.dsw.rudok.app.core.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
@@ -404,10 +404,12 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
      * @return The fully qualified filepath.
      */
     private String parseProjectFilepath(Project project, boolean backup) {
-        return applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() +
-                "/" +
-                project.getFilepath() +
-                (backup ? ".bak" : "");
+        String t = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER();
+        if (!t.endsWith("/")) {
+            t = t + "/";
+        }
+        t = t + project.getFilepath();
+        return t + (backup ? ".bak" : "");
     }
 
     /**

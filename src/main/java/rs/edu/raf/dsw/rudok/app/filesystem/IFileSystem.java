@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.core;
+package rs.edu.raf.dsw.rudok.app.filesystem;
 
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;

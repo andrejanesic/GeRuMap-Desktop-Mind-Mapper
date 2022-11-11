@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.core;
 
+import rs.edu.raf.dsw.rudok.app.constants.IConstants;
+import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 

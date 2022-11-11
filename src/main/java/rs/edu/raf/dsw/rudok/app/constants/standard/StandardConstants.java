@@ -1,6 +1,6 @@
-package rs.edu.raf.dsw.rudok.app.addon.constants.standard;
+package rs.edu.raf.dsw.rudok.app.constants.standard;
 
-import rs.edu.raf.dsw.rudok.app.core.IConstants;
+import rs.edu.raf.dsw.rudok.app.constants.IConstants;
 
 public class StandardConstants implements IConstants {
 
