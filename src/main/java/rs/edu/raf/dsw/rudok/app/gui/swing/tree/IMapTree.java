@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions.ITreeActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
@@ -36,4 +37,10 @@ public interface IMapTree {
      */
     MapTreeItem getSelectedNode();
 
+    /**
+     * {@link ITreeActionManager} of the tree.
+     *
+     * @return {@link ITreeActionManager}.
+     */
+    ITreeActionManager getTreeActionManager();
 }

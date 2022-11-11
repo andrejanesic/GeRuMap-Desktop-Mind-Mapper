@@ -3,6 +3,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 import javax.swing.*;
 
 public class MainMenuBar extends JMenuBar {
+
     public MainMenuBar() {
 
         // TODO add multi-lingual support
@@ -43,8 +44,18 @@ public class MainMenuBar extends JMenuBar {
         this.add(edit);
         this.add(help);
 
-        editNew.addActionListener(MainFrame.getInstance().getActionManager().getNewAction());
-        editDelete.addActionListener(MainFrame.getInstance().getActionManager().getDeleteAction());
+        fileNew.addActionListener(MainFrame.getInstance().getActionManager().getNewProjectAction());
+        fileOpen.addActionListener(MainFrame.getInstance().getActionManager().getOpenProjectAction());
+        fileClose.addActionListener(MainFrame.getInstance().getActionManager().getCloseProjectAction());
+        fileQuit.addActionListener(MainFrame.getInstance().getActionManager().getQuitAction());
+
+        editUndo.addActionListener(MainFrame.getInstance().getActionManager().getUndoAction());
+        editRedo.addActionListener(MainFrame.getInstance().getActionManager().getRedoAction());
+        editNew.addActionListener(MainFrame.getInstance().getMapTree().getTreeActionManager().getTreeNewAction());
+        editDelete.addActionListener(MainFrame.getInstance().getMapTree().getTreeActionManager().getTreeDeleteAction());
+        editPreferences.addActionListener(MainFrame.getInstance().getActionManager().getOpenPreferencesAction());
+
         helpAuthor.addActionListener(MainFrame.getInstance().getActionManager().getProjectAuthorAction());
     }
+
 }

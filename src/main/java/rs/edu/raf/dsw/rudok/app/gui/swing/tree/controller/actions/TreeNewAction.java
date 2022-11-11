@@ -1,19 +1,18 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
  * Handles the creation of a new project, mind map or element.
  */
-public class NewAction extends AbstractAction {
+public class TreeNewAction extends ITreeAction {
 
-    public NewAction() {
+    public TreeNewAction() {
         // TODO add interactive detail
     }
 
@@ -35,7 +34,6 @@ public class NewAction extends AbstractAction {
                 String filepath = editProjectDialog.getFilepath();
                 Project child = new Project(nodeName, authorName, filepath);
                 ((ProjectExplorer) parent).addChild(child);
-                child.addParent((ProjectExplorer) parent);
                 return;
             }
 

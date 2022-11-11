@@ -1,6 +1,8 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.MapTreeClickListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions.ITreeActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.listeners.MapTreeClickListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions.TreeActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
@@ -14,6 +16,7 @@ import java.util.List;
 
 public class MapTree extends IObserver implements IMapTree {
 
+    private static final ITreeActionManager treeActionManager = new TreeActionManager();
     private MapTreeItem root;
     private DefaultTreeModel defaultTreeModel;
     private MapTreeView treeView;
@@ -79,5 +82,10 @@ public class MapTree extends IObserver implements IMapTree {
     @Override
     public MapTreeItem getSelectedNode() {
         return (MapTreeItem) treeView.getLastSelectedPathComponent();
+    }
+
+    @Override
+    public ITreeActionManager getTreeActionManager() {
+        return treeActionManager;
     }
 }

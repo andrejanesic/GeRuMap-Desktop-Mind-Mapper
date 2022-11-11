@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.controller.actions;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
@@ -7,10 +7,9 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.ProjectAuthorDialog;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ProjectAuthorAction extends AbstractAction {
+public class ProjectAuthorAction extends IAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {

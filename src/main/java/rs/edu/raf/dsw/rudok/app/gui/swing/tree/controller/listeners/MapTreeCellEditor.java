@@ -1,9 +1,8 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.listeners;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
-import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;

@@ -2,9 +2,8 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
-public class MyWindowListener implements WindowListener {
+public class WindowListener implements java.awt.event.WindowListener {
     @Override
     public void windowOpened(WindowEvent e) {
 

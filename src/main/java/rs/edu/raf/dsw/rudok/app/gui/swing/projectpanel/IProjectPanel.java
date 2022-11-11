@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller.IProjectActionManager;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
@@ -28,4 +29,11 @@ public interface IProjectPanel {
      * @return {@link Project}.
      */
     Project getProject();
+
+    /**
+     * {@link IProjectActionManager} of the panel.
+     *
+     * @return {@link IProjectActionManager}.
+     */
+    IProjectActionManager getProjectActionManager();
 }

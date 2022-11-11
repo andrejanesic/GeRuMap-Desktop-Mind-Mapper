@@ -11,7 +11,7 @@ public class EditProjectAction extends IProjectAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Project project = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getProject();
-        EditProjectDialog editProjectDialog = new EditProjectDialog(project, MainFrame.getInstance(), "Project author modification", true);
+        EditProjectDialog editProjectDialog = new EditProjectDialog(project, MainFrame.getInstance(), "Edit project", true);
         editProjectDialog.setVisible(true);
         String nodeName = editProjectDialog.getNodeName();
         String authorName = editProjectDialog.getAuthorName();

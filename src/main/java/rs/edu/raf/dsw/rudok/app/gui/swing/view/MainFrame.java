@@ -1,7 +1,8 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.controller.ActionManager;
-import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.MyWindowListener;
+import rs.edu.raf.dsw.rudok.app.gui.swing.controller.actions.ActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.controller.actions.IActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.WindowListener;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectexplorerpanel.ProjectExplorerPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.IMapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.MapTree;
@@ -20,7 +21,7 @@ public class MainFrame extends JFrame {
     private static MainFrame instance = null;
     private MainMenuBar menu;
     private Toolbar toolbar;
-    private ActionManager actionManager;
+    private IActionManager actionManager;
     private IMapTree mapTree;
     private MapTreeView mapTreeView;
     private ProjectExplorerPanel projectExplorerPanel;
@@ -70,7 +71,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        this.addWindowListener(new MyWindowListener());
+        this.addWindowListener(new WindowListener());
 
         mapTree = new MapTree();
         mapTreeView = mapTree.generateTree(projectExplorer);
@@ -99,7 +100,7 @@ public class MainFrame extends JFrame {
         this.add(toolbar, BorderLayout.NORTH);
     }
 
-    public ActionManager getActionManager() {
+    public IActionManager getActionManager() {
         return actionManager;
     }
 }
