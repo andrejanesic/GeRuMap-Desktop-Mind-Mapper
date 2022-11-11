@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 
     private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
     private static MainFrame instance = null;
-    private MyMenuBar menu;
+    private MainMenuBar menu;
     private Toolbar toolbar;
     private ActionManager actionManager;
     private IMapTree mapTree;
@@ -41,7 +41,7 @@ public class MainFrame extends JFrame {
         return projectExplorerPanel;
     }
 
-    public MyMenuBar getMenu() {
+    public MainMenuBar getMenu() {
         return menu;
     }
 
@@ -93,7 +93,7 @@ public class MainFrame extends JFrame {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScroll, projectExplorerScroll);
         this.add(splitPane);
 
-        menu = new MyMenuBar();
+        menu = new MainMenuBar();
         toolbar = new Toolbar();
         this.setJMenuBar(menu);
         this.add(toolbar, BorderLayout.NORTH);
