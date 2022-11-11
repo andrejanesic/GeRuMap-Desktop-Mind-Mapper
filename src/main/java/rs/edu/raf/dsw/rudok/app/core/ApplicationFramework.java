@@ -32,8 +32,12 @@ public abstract class ApplicationFramework {
         this.iGui = iGui;
         this.projectExplorer = projectExplorer;
         this.iFileSystem = iFileSystem;
+    }
 
-        // TODO other setup
+    /**
+     * Runs the application.
+     */
+    public void run() {
         this.iGui.run();
     }
 

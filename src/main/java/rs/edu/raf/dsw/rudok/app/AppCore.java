@@ -1,7 +1,12 @@
 package rs.edu.raf.dsw.rudok.app;
 
+import rs.edu.raf.dsw.rudok.app.addon.constants.standard.StandardConstants;
+import rs.edu.raf.dsw.rudok.app.confighandler.standard.StandardConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
+import rs.edu.raf.dsw.rudok.app.core.IErrorHandler;
+import rs.edu.raf.dsw.rudok.app.filesystem.local.LocalFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.GuiSwing;
+import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 /**
  * Main application class.
@@ -9,12 +14,23 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.GuiSwing;
 public class AppCore extends ApplicationFramework {
 
     private AppCore() {
-
+        this.initialize(
+                new StandardConstants(),
+                new StandardConfigHandler(this),
+                new IErrorHandler() {
+                    @Override
+                    public int hashCode() {
+                        return super.hashCode();
+                    }
+                },
+                new GuiSwing(),
+                new ProjectExplorer("Workspace"),
+                new LocalFileSystem(this)
+        );
     }
 
     public static void main(String[] args) {
-        GuiSwing gui = new GuiSwing();
-        gui.run();
+        AppCoreSingleton.INSTANCE.run();
     }
 
     public static ApplicationFramework getInstance() {

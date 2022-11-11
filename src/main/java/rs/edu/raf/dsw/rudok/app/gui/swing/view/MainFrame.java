@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.view;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.actions.ActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.actions.IActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.controller.listeners.WindowListener;
@@ -7,7 +9,6 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.projectexplorerpanel.ProjectExplorerPa
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.IMapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.MapTree;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.view.MapTreeView;
-import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +18,8 @@ import java.awt.*;
  */
 public class MainFrame extends JFrame {
 
-    private static final ProjectExplorer projectExplorer = new ProjectExplorer("Project Explorer");
     private static MainFrame instance = null;
+    private final ApplicationFramework applicationFramework = AppCore.getInstance();
     private MainMenuBar menu;
     private Toolbar toolbar;
     private IActionManager actionManager;
@@ -74,8 +75,8 @@ public class MainFrame extends JFrame {
         this.addWindowListener(new WindowListener());
 
         mapTree = new MapTree();
-        mapTreeView = mapTree.generateTree(projectExplorer);
-        projectExplorerPanel = new ProjectExplorerPanel(projectExplorer);
+        mapTreeView = mapTree.generateTree(applicationFramework.getProjectExplorer());
+        projectExplorerPanel = new ProjectExplorerPanel(applicationFramework.getProjectExplorer());
 
         JScrollPane treeScroll = new JScrollPane(
                 mapTreeView,
