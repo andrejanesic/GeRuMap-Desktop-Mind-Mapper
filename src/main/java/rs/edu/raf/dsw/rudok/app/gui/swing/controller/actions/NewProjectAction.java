@@ -17,13 +17,10 @@ public class NewProjectAction extends IAction {
     public void actionPerformed(ActionEvent e) {
         EditProjectDialog editProjectDialog = new EditProjectDialog(null, MainFrame.getInstance(), "Create a project", true);
         editProjectDialog.setVisible(true);
+        if (!editProjectDialog.isConfirmed()) return;
         String nodeName = editProjectDialog.getNodeName();
         String authorName = editProjectDialog.getAuthorName();
         String filepath = editProjectDialog.getFilepath();
-        if (nodeName.length() == 0 || authorName.length() == 0 || filepath.length() == 0) {
-            // TODO throw err
-            return;
-        }
         Project child = new Project(nodeName, authorName, filepath);
         ProjectExplorer parent = AppCore.getInstance().getProjectExplorer();
         parent.addChild(child);

@@ -29,6 +29,7 @@ public class TreeNewAction extends ITreeAction {
                 // TODO how do we set the project filepath for this?
                 EditProjectDialog editProjectDialog = new EditProjectDialog(null, MainFrame.getInstance(), "Create a project", true);
                 editProjectDialog.setVisible(true);
+                if (!editProjectDialog.isConfirmed()) return;
                 String nodeName = editProjectDialog.getNodeName();
                 String authorName = editProjectDialog.getAuthorName();
                 String filepath = editProjectDialog.getFilepath();
