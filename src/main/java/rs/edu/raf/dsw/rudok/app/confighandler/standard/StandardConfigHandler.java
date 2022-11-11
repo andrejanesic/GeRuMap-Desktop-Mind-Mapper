@@ -1,7 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
-import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
+import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.util.HashMap;

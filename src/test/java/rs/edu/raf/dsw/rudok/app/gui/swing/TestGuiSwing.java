@@ -3,11 +3,11 @@ package rs.edu.raf.dsw.rudok.app.gui.swing;
 import org.junit.After;
 import org.junit.Test;
 import rs.edu.raf.dsw.rudok.app.Helper;
+import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.*;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.constants.IConstants;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 

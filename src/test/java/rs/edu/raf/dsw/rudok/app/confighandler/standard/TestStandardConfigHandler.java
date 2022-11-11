@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
-import rs.edu.raf.dsw.rudok.app.core.IConfigHandler;
+import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 

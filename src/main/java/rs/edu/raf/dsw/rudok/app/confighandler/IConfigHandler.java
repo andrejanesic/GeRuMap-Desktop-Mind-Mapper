@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.core;
+package rs.edu.raf.dsw.rudok.app.confighandler;
 
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
