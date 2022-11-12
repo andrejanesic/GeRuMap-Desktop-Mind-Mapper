@@ -4,7 +4,6 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.io.File;
@@ -57,6 +56,13 @@ public abstract class IFileSystem extends IPublisher {
     }
 
     /**
+     * Deletes the passed {@link Project} from file system.
+     *
+     * @return True if successfully deleted, false otherwise.
+     */
+    public abstract boolean deleteProject(Project p);
+
+    /**
      * Loads an add-on based on class name.
      *
      * @param classname Add-on class name.
@@ -82,6 +88,10 @@ public abstract class IFileSystem extends IPublisher {
      */
     static final class Message extends IMessage<Message.Type, IMessageData> {
 
+        public Message(Type status, IMessageData data) {
+            super(status, data);
+        }
+
         public enum Type {
             // When a config is saved
             CONFIG_SAVED,
@@ -93,10 +103,6 @@ public abstract class IFileSystem extends IPublisher {
             PROJECT_LOADED,
             // When an addon is loaded
             ADDON_LOADED,
-        }
-
-        public Message(Type status, IMessageData data) {
-            super(status, data);
         }
     }
 }

@@ -121,6 +121,11 @@ public class TestStandardAddonManager {
                     }
 
                     @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         try {
                             return TestAddon.class.getConstructor().newInstance();
@@ -209,6 +214,11 @@ public class TestStandardAddonManager {
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
                     }
 
                     @Override

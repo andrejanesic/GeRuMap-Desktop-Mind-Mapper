@@ -43,6 +43,11 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -84,6 +89,11 @@ public class TestStandardConfigHandler {
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
                     }
 
                     @Override
@@ -133,6 +143,11 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -171,6 +186,11 @@ public class TestStandardConfigHandler {
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
                     }
 
                     @Override
@@ -218,6 +238,11 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -259,6 +284,11 @@ public class TestStandardConfigHandler {
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
                     }
 
                     @Override

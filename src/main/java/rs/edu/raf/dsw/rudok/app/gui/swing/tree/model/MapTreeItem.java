@@ -102,12 +102,15 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                                         ((IMapNodeComposite.Message) message).getData();
                         if (data.getParent() != host.mapNode) return;
 
+                        MapTreeItem last = null;
                         MapTreeItem child = null;
+                        MapTreeItem t = null;
                         Iterator<TreeNode> iterator = host.children.iterator();
                         while (iterator.hasNext()) {
-                            MapTreeItem itm = (MapTreeItem) iterator.next();
-                            if (itm.mapNode == data.getChild()) {
-                                child = itm;
+                            last = t;
+                            t = (MapTreeItem) iterator.next();
+                            if (t.mapNode == data.getChild()) {
+                                child = t;
                             }
                         }
                         if (child == null) {
@@ -118,6 +121,7 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                         }
                         host.remove(child);
                         MainFrame.getInstance().getMapTree().refreshTree();
+                        MainFrame.getInstance().getMapTree().expandTree(last == null ? host : last);
                         break;
                     }
 

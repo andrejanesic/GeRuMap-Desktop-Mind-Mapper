@@ -100,6 +100,11 @@ public class TestGuiSwing {
                     public Project loadProject(String filepath) {
                         return null;
                     }
+
+                    @Override
+                    public boolean deleteProject(Project p) {
+                        return false;
+                    }
                 });
     }
 

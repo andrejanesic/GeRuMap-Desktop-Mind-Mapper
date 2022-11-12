@@ -20,7 +20,8 @@ public class DeleteProjectAction extends IProjectAction {
                 JOptionPane.WARNING_MESSAGE
         );
         if (result == 0) {
-            // AppCore.getInstance().getProjectExplorer().removeChild(project);
+            AppCore.getInstance().getProjectExplorer().removeChild(project);
+            AppCore.getInstance().getFileSystem().deleteProject(project);
         }
     }
 }

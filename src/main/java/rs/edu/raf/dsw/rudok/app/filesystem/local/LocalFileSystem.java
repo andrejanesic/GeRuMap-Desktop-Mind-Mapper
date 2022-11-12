@@ -183,6 +183,16 @@ public class LocalFileSystem extends IFileSystem {
         return null;
     }
 
+    @Override
+    public boolean deleteProject(Project p) {
+        try {
+            return new File(p.getFilepath()).delete();
+        } catch (Exception e) {
+            // TODO log exception
+            return false;
+        }
+    }
+
     /**
      * Listens for changes to subscriber objects.<br><br>
      * Messages regarding
@@ -608,7 +618,7 @@ public class LocalFileSystem extends IFileSystem {
 
                 if (attrs.length == 0) {
                     attrs = new ATTR_SCHEMA[]{
-                            ATTR_SCHEMA.ELEMENT_EMPTY,
+                            ATTR_SCHEMA.ELEMENT_NAME,
                     };
                 }
 
@@ -778,17 +788,6 @@ public class LocalFileSystem extends IFileSystem {
                         element_name = dis.readUTF();
                         break;
                     }
-
-                    case ELEMENT_EMPTY: {
-                        if (type > -1 && type != 2) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 2;
-                        // TODO add values to read here in the future
-                        break;
-                    }
                 }
 
                 i--;
@@ -927,7 +926,6 @@ public class LocalFileSystem extends IFileSystem {
         MINDMAP_NAME,
         MINDMAP_CHILDREN,
         ELEMENT_NAME,
-        ELEMENT_EMPTY,
         // TODO add other attributes here
     }
 }
