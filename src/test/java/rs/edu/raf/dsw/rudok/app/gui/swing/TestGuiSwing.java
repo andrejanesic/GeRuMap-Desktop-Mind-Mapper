@@ -100,6 +100,7 @@ public class TestGuiSwing {
                     @Override
                     public boolean deleteProject(Project p) {
                         return false;
+                    }
                 },
                 new ILogger() {
                     @Override
