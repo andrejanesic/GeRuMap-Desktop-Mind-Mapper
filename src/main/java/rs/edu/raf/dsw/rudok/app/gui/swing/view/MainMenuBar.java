@@ -55,7 +55,7 @@ public class MainMenuBar extends JMenuBar {
         editDelete.addActionListener(MainFrame.getInstance().getMapTree().getTreeActionManager().getTreeDeleteAction());
         editPreferences.addActionListener(MainFrame.getInstance().getActionManager().getOpenPreferencesAction());
 
-        helpAuthor.addActionListener(MainFrame.getInstance().getActionManager().getProjectAuthorAction());
+        helpAuthor.addActionListener(MainFrame.getInstance().getActionManager().getStudentInfoAction());
     }
 
 }

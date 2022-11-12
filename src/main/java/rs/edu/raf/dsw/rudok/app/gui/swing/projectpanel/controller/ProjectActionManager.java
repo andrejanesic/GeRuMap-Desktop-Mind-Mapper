@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller;
 
 public class ProjectActionManager implements IProjectActionManager {
 
+    private AddProjectAction addProjectAction;
     private EditProjectAction editProjectAction;
     private DeleteProjectAction deleteProjectAction;
 
@@ -10,8 +11,14 @@ public class ProjectActionManager implements IProjectActionManager {
     }
 
     public void initActions() {
+        addProjectAction = new AddProjectAction();
         editProjectAction = new EditProjectAction();
         deleteProjectAction = new DeleteProjectAction();
+    }
+
+    @Override
+    public AddProjectAction getAddProjectAction() {
+        return addProjectAction;
     }
 
     @Override

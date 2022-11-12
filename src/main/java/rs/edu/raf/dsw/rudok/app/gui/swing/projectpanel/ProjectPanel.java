@@ -3,7 +3,6 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.MindMapPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller.IProjectActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller.ProjectActionManager;
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
@@ -17,17 +16,15 @@ import java.util.List;
 
 public class ProjectPanel extends JPanel implements IProjectPanel {
 
+    private static final IProjectActionManager projectActionManager = new ProjectActionManager();
     private final JTabbedPane tabs;
     private Project project;
     private List<MindMap> tabIndexes = new ArrayList<>();
-
     private JLabel nodeName;
     private JLabel authorName;
     private JButton add;
     private JButton edit;
     private JButton delete;
-
-    private static final IProjectActionManager projectActionManager = new ProjectActionManager();
 
     public ProjectPanel(Project project) {
         super(new BorderLayout());
@@ -52,7 +49,7 @@ public class ProjectPanel extends JPanel implements IProjectPanel {
         JPanel actions = new JPanel(new FlowLayout());
 
         add = new JButton("Add Mind map");
-        add.addActionListener(MainFrame.getInstance().getMapTree().getTreeActionManager().getTreeNewAction());
+        add.addActionListener(projectActionManager.getAddProjectAction());
 
         edit = new JButton("Edit Project");
         edit.addActionListener(projectActionManager.getEditProjectAction());
