@@ -20,6 +20,7 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     private static final HashMap<String, String> DEFAULT_CONFIG = new HashMap<String, String>() {{
         put("config", "default");
         put("language", "English");
+        put("autosave", "true");
     }};
 
     /**
