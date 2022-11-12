@@ -1,5 +1,10 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.controller.actions;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.repository.Project;
+import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
+
 import java.awt.event.ActionEvent;
 
 /**
@@ -9,6 +14,8 @@ public class CloseProjectAction extends IAction{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        Project selected = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getProject();
+        ProjectExplorer root = AppCore.getInstance().getProjectExplorer();
+        root.removeChild(selected);
     }
 }
