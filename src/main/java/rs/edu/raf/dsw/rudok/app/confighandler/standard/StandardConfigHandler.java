@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
@@ -42,7 +43,7 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
             this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
         } catch (Exception e) {
-            // TODO call error handler component
+            AppCore.getInstance().getMessageGenerator().error("Failed to load configuration " + name);
             return false;
         }
         return true;

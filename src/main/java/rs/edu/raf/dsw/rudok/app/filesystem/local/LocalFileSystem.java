@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.repository.*;
@@ -68,7 +69,7 @@ public class LocalFileSystem extends IFileSystem {
             oos.close();
             fos.close();
         } catch (Exception e) {
-            // TODO to error component
+            AppCore.getInstance().getMessageGenerator().error("Failed to save configuration");
         }
     }
 
@@ -97,7 +98,7 @@ public class LocalFileSystem extends IFileSystem {
 
             return obj;
         } catch (Exception e) {
-            // TODO to error component
+            AppCore.getInstance().getMessageGenerator().error("Failed to load configuration " + name);
             return null;
         }
     }
@@ -111,7 +112,7 @@ public class LocalFileSystem extends IFileSystem {
     @Override
     public void saveProject(Project project) {
         if (!eraseDb(project, false) || !setupDb(project, false)) {
-            // TODO log to error handler, cannot append
+            AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
             return;
         }
 
@@ -133,7 +134,7 @@ public class LocalFileSystem extends IFileSystem {
             eraseDb(project, true);
 
         } catch (IOException e) {
-            // TODO log to error handler
+            AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
         }
     }
 
@@ -153,7 +154,7 @@ public class LocalFileSystem extends IFileSystem {
             while (dis.available() > 0) {
                 if (!decodeNodeState(dis, nodes)) {
                     // TODO invalid operation or programmatic error in parsing
-                    // TODO log error
+                    AppCore.getInstance().getMessageGenerator().error("Failed to decode project file " + filepath);
                     return null;
                 }
             }
@@ -177,7 +178,7 @@ public class LocalFileSystem extends IFileSystem {
             return project;
 
         } catch (IOException e) {
-            // TODO log error
+            AppCore.getInstance().getMessageGenerator().error("Failed to load project from " + filepath);
             // e.printStackTrace();
         }
         return null;
@@ -188,7 +189,7 @@ public class LocalFileSystem extends IFileSystem {
         try {
             return new File(p.getFilepath()).delete();
         } catch (Exception e) {
-            // TODO log exception
+            AppCore.getInstance().getMessageGenerator().error("Failed to delete project " + p.getNodeName());
             return false;
         }
     }
@@ -347,7 +348,7 @@ public class LocalFileSystem extends IFileSystem {
             while (iterator.hasNext()) {
                 IMapNode child = iterator.next();
                 if (!recreateOperations(dos, child)) {
-                    // TODO log error
+                    AppCore.getInstance().getMessageGenerator().error("Failed to recreate project tree");
                     return false;
                 }
             }
@@ -368,7 +369,7 @@ public class LocalFileSystem extends IFileSystem {
             Files.deleteIfExists(Paths.get(fileName));
             return true;
         } catch (IOException e) {
-            // TODO send to error handler
+            AppCore.getInstance().getMessageGenerator().error("Failed to erase project database " + fileName);
             return false;
         }
     }
@@ -380,15 +381,14 @@ public class LocalFileSystem extends IFileSystem {
      * @param backup  Whether to make this into a backup DB or not.
      */
     private boolean setupDb(Project project, boolean backup) {
+        String fileName = this.parseProjectFilepath(project, backup);
         try {
-            String fileName = this.parseProjectFilepath(project, backup);
-
             Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER()));
 
             new File(fileName).createNewFile();
             return true;
         } catch (IOException e) {
-            // TODO send to error handler
+            AppCore.getInstance().getMessageGenerator().error("Failed to setup project database at " + fileName);
             e.printStackTrace();
             return false;
         }
@@ -407,7 +407,7 @@ public class LocalFileSystem extends IFileSystem {
 
         // Ensure deltas DB is available
         if (!setupDb(project, backup)) {
-            // TODO log to error handler
+            AppCore.getInstance().getMessageGenerator().error("Project database unavailable");
             return false;
         }
 
@@ -426,7 +426,7 @@ public class LocalFileSystem extends IFileSystem {
             fos.close();
             return true;
         } catch (IOException e) {
-            // TODO log to error handler
+            AppCore.getInstance().getMessageGenerator().error("Failed to write to project database: " + e.getMessage());
             return false;
         }
     }
@@ -494,7 +494,7 @@ public class LocalFileSystem extends IFileSystem {
         }
 
         // Should never be reached
-        // TODO log error
+        AppCore.getInstance().getMessageGenerator().warning("App encountered unreachable state");
         return null;
     }
 
@@ -648,7 +648,7 @@ public class LocalFileSystem extends IFileSystem {
             return false;
 
         } catch (Exception e) {
-            // TODO log error in writing
+            AppCore.getInstance().getMessageGenerator().error("Error writing to project database: " + e.getMessage());
             return false;
         }
     }
@@ -909,7 +909,7 @@ public class LocalFileSystem extends IFileSystem {
 
             return true;
         } catch (Exception e) {
-            // TODO log error, bad schema
+            AppCore.getInstance().getMessageGenerator().warning("Corrupted project file");
             return false;
         }
     }

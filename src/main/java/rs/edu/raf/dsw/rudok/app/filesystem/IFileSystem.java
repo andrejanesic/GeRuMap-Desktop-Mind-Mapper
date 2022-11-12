@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.filesystem;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
@@ -78,7 +79,7 @@ public abstract class IFileSystem extends IPublisher {
             Class<?> cls = cl.loadClass(classname);
             return (IAddon) cls.getConstructor().newInstance();
         } catch (Exception e) {
-            // TODO call error handler here
+            AppCore.getInstance().getMessageGenerator().error("Failed to load addon from " + classname);
         }
         return null;
     }

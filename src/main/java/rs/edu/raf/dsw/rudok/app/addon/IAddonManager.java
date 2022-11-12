@@ -1,6 +1,8 @@
 package rs.edu.raf.dsw.rudok.app.addon;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
@@ -56,7 +58,7 @@ public abstract class IAddonManager extends IPublisher {
             try {
                 iterator.next().initialize(applicationFramework);
             } catch (Exception e) {
-                // TODO call error handler here
+                AppCore.getInstance().getMessageGenerator().error("Failed to initialize component");
             }
         }
     }

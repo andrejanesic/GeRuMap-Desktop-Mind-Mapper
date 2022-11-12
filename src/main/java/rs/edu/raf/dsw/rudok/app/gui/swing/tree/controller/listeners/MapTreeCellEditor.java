@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.listeners;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
@@ -53,7 +54,7 @@ public class MapTreeCellEditor extends DefaultTreeCellEditor implements ActionLi
             return;
 
         if (!e.getActionCommand().matches("^[a-zA-Z0-9-_.& ]+$")) {
-            // TODO log error, invalid name string
+            AppCore.getInstance().getMessageGenerator().error("Invalid name specified: " + e.getActionCommand());
             return;
         }
 
