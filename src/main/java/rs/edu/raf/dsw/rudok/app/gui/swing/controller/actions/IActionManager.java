@@ -25,4 +25,8 @@ public interface IActionManager {
     RedoAction getRedoAction();
 
     OpenPreferencesAction getOpenPreferencesAction();
+
+    SaveProjectAction getSaveProjectAction();
+
+    SaveProjectAction getSaveAllProjectsAction();
 }

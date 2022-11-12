@@ -59,6 +59,11 @@ public class TestGuiSwing {
                     }
 
                     @Override
+                    public void createConfig(String name) {
+
+                    }
+
+                    @Override
                     public void set(String key, String val) {
 
                     }

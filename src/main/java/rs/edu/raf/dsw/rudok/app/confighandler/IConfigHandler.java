@@ -36,6 +36,13 @@ public interface IConfigHandler {
     void resetConfig();
 
     /**
+     * Sets up a new configuration in program and in memory.
+     *
+     * @param name New configuration name.
+     */
+    void createConfig(String name);
+
+    /**
      * Sets the configuration value for the given key.
      *
      * @param key Config key.

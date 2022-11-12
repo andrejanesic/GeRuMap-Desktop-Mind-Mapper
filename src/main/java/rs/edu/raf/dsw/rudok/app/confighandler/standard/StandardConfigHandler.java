@@ -1,14 +1,15 @@
 package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
-import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <h1>Standard config handler</h1>
  * Standard (default) implementation of the IConfigHandler component.
  */
 public class StandardConfigHandler extends IPublisher implements IConfigHandler {
@@ -19,11 +20,14 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
     private static final HashMap<String, String> DEFAULT_CONFIG = new HashMap<String, String>() {{
         put("config", "default");
         put("language", "English");
+        put("autosave", "true");
     }};
+
     /**
      * App core reference.
      */
     private ApplicationFramework applicationFramework;
+
     /**
      * Holds all current config properties.
      */
@@ -39,7 +43,7 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
         if (configRaw == null) return false;
 
         try {
-            config = (HashMap<String, String>) configRaw;
+            config = new HashMap<>(configRaw);
 
             this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
         } catch (Exception e) {
@@ -51,7 +55,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
     @Override
     public void resetConfig() {
-        config = DEFAULT_CONFIG;
+        config = new HashMap<>(DEFAULT_CONFIG);
+        saveConfig();
 
         this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
     }
@@ -81,5 +86,15 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
         String val = config.get(key);
         if (val == null) return defaultValue;
         return val;
+    }
+
+    @Override
+    public void createConfig(String name) {
+        HashMap<String, String> newConfig = new HashMap<>(DEFAULT_CONFIG);
+        newConfig.put("config", name);
+        config = newConfig;
+
+        this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
+        saveConfig();
     }
 }

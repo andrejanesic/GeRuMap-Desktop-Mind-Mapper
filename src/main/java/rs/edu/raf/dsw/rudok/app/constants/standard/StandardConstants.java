@@ -6,7 +6,7 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
-        return "config/";
+        return System.getProperty("user.dir") + "/config/";
     }
 
     @Override

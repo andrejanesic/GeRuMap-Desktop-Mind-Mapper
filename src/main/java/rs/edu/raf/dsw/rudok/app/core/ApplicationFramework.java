@@ -46,15 +46,16 @@ public abstract class ApplicationFramework {
         this.iLogger = iLogger;
 
         // Wire observers
-        IPublisherGlobal.addObserverGlobal(IMapNode.Message.class, iFileSystem);
-        IPublisherGlobal.addObserverGlobal(IMapNodeComposite.Message.class, iFileSystem);
+        IPublisherGlobal.addObserverGlobal(IMapNode.Message.class, this.iFileSystem);
+        IPublisherGlobal.addObserverGlobal(IMapNodeComposite.Message.class, this.iFileSystem);
     }
 
     /**
      * Runs the application.
      */
     public void run() {
-        this.iGui.run();
+        iConfigHandler.loadConfig();
+        iGui.run();
     }
 
     public IConstants getConstants() {
