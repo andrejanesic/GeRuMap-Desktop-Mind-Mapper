@@ -1,14 +1,15 @@
 package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
-import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
+import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * <h1>Standard config handler</h1>
  * Standard (default) implementation of the IConfigHandler component.
  */
 public class StandardConfigHandler extends IPublisher implements IConfigHandler {
@@ -20,10 +21,12 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
         put("config", "default");
         put("language", "English");
     }};
+
     /**
      * App core reference.
      */
     private ApplicationFramework applicationFramework;
+
     /**
      * Holds all current config properties.
      */
@@ -81,5 +84,15 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
         String val = config.get(key);
         if (val == null) return defaultValue;
         return val;
+    }
+
+    @Override
+    public void createConfig(String name) {
+        HashMap<String, String> newConfig = new HashMap<>(DEFAULT_CONFIG);
+        newConfig.put("config", name);
+        config = newConfig;
+
+        this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
+        saveConfig();
     }
 }
