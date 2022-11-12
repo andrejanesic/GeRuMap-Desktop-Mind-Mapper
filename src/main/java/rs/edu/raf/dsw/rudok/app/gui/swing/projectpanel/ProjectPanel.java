@@ -12,6 +12,7 @@ import rs.edu.raf.dsw.rudok.app.repository.Project;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ProjectPanel extends JPanel implements IProjectPanel {
@@ -66,6 +67,12 @@ public class ProjectPanel extends JPanel implements IProjectPanel {
         topPanel.add(metaInfo, BorderLayout.WEST);
         topPanel.add(actions, BorderLayout.EAST);
         add(topPanel, BorderLayout.PAGE_START);
+
+        // Recursive paint on initialization
+        for (Iterator<IMapNode> it = project.getChildren().iterator(); it.hasNext(); ) {
+            MindMap c = (MindMap) it.next();
+            openMindMap(c);
+        }
     }
 
     @Override
