@@ -43,7 +43,7 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
         if (configRaw == null) return false;
 
         try {
-            config = (HashMap<String, String>) configRaw;
+            config = new HashMap<>(configRaw);
 
             this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
         } catch (Exception e) {
@@ -55,7 +55,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
     @Override
     public void resetConfig() {
-        config = DEFAULT_CONFIG;
+        config = new HashMap<>(DEFAULT_CONFIG);
+        saveConfig();
 
         this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
     }

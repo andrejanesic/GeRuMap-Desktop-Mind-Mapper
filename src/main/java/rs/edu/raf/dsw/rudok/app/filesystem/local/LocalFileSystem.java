@@ -53,8 +53,12 @@ public class LocalFileSystem extends IFileSystem {
     @Override
     public void saveConfig(Map<String, String> config) {
         try {
+            if (config.getOrDefault("config", null) == null) {
+                AppCore.getInstance().getMessageGenerator().error("Config name cannot be empty");
+                return;
+            }
             String filePath = applicationFramework.getConstants().FILESYSTEM_LOCAL_CONFIG_FOLDER() +
-                    config.getOrDefault("config", "default") +
+                    config.get("config") +
                     ".ser";
             Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_CONFIG_FOLDER()));
 
@@ -81,8 +85,7 @@ public class LocalFileSystem extends IFileSystem {
          */
 
         String filePath = applicationFramework.getConstants().FILESYSTEM_LOCAL_CONFIG_FOLDER() +
-                name +
-                ".ser";
+                name + (name.endsWith(".ser") ? "" : ".ser");
 
         try {
             // open output streams
