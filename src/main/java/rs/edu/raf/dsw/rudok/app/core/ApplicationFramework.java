@@ -5,6 +5,9 @@ import rs.edu.raf.dsw.rudok.app.constants.IConstants;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.observer.IPublisherGlobal;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
 /**
@@ -30,12 +33,18 @@ public abstract class ApplicationFramework {
      * @param iFileSystem       FileSystem implementation instance.
      */
     public void initialize(IConstants iConstants, IMessageGenerator iMessageGenerator, IConfigHandler iConfigHandler, IGui iGui, ProjectExplorer projectExplorer, IFileSystem iFileSystem) {
+
+        // Init all components
         this.iConstants = iConstants;
         this.iMessageGenerator = iMessageGenerator;
         this.iConfigHandler = iConfigHandler;
         this.iGui = iGui;
         this.projectExplorer = projectExplorer;
         this.iFileSystem = iFileSystem;
+
+        // Wire observers
+        IPublisherGlobal.addObserverGlobal(IMapNode.Message.class, iFileSystem);
+        IPublisherGlobal.addObserverGlobal(IMapNodeComposite.Message.class, iFileSystem);
     }
 
     /**

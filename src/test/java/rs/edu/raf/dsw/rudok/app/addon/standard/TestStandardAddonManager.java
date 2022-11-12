@@ -116,7 +116,7 @@ public class TestStandardAddonManager {
                     }
 
                     @Override
-                    public Project loadProject(String name) {
+                    public Project loadProject(String filepath) {
                         return null;
                     }
 
@@ -207,7 +207,7 @@ public class TestStandardAddonManager {
                     }
 
                     @Override
-                    public Project loadProject(String name) {
+                    public Project loadProject(String filepath) {
                         return null;
                     }
 

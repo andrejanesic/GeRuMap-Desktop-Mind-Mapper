@@ -11,7 +11,7 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
-        return "projects/";
+        return "";
     }
 
 

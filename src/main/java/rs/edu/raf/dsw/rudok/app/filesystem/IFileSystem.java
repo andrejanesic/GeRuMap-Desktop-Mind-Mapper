@@ -3,6 +3,7 @@ package rs.edu.raf.dsw.rudok.app.filesystem;
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
+import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
@@ -14,14 +15,14 @@ import java.util.Map;
 /**
  * FileSystem component specification.
  */
-public interface IFileSystem {
+public abstract class IFileSystem extends IPublisher {
 
     /**
      * Saves the config map.
      *
      * @param config Serializable object.
      */
-    void saveConfig(Map<String, String> config);
+    public abstract void saveConfig(Map<String, String> config);
 
     /**
      * Loads a serializable object from the given path. In case of error returns null.
@@ -29,29 +30,29 @@ public interface IFileSystem {
      * @param name Relative path to load the object from.
      * @return The serializable object or null if error.
      */
-    Map<String, String> loadConfig(String name);
+    public abstract Map<String, String> loadConfig(String name);
 
     /**
      * Saves the project and its subtree.
      *
      * @param project Project to save.
      */
-    void saveProject(Project project);
+    public abstract void saveProject(Project project);
 
     /**
-     * Loads the project under "name".
+     * Loads the project from the given filepath.
      *
-     * @param name Project name.
+     * @param filepath Project filepath.
      * @return Returns project as an IMapNodeComposite if successful, null otherwise.
      */
-    Project loadProject(String name);
+    public abstract Project loadProject(String filepath);
 
     /**
      * Loads the most recent project.
      *
      * @return Returns project as an IMapNodeComposite if successful, null otherwise.
      */
-    default Project loadProject() {
+    public Project loadProject() {
         return loadProject("default");
     }
 
@@ -61,7 +62,7 @@ public interface IFileSystem {
      * @param classname Add-on class name.
      * @return Addon.
      */
-    default IAddon loadAddon(String classname) {
+    public IAddon loadAddon(String classname) {
         File f = new File("./add-ons");
         try {
             URL url = f.toURI().toURL();
@@ -79,7 +80,7 @@ public interface IFileSystem {
     /**
      * Messages broadcasted by IFileSystem sub-classes.
      */
-    final class Message extends IMessage<Message.Type, IMessageData> {
+    static final class Message extends IMessage<Message.Type, IMessageData> {
 
         public enum Type {
             // When a config is saved

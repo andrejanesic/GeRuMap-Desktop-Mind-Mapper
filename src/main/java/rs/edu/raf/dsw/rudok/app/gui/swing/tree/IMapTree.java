@@ -38,6 +38,13 @@ public interface IMapTree {
     MapTreeItem getSelectedNode();
 
     /**
+     * Returns the root {@link MapTreeItem} node.
+     *
+     * @return Root {@link MapTreeItem} node.
+     */
+    MapTreeItem getRoot();
+
+    /**
      * {@link ITreeActionManager} of the tree.
      *
      * @return {@link ITreeActionManager}.

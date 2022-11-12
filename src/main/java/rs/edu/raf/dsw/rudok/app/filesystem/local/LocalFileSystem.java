@@ -2,7 +2,6 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
-import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
@@ -42,25 +41,9 @@ import java.util.*;
  * are added to a parent. Thus, each time a node is added to a parent and it has no more than 1 parent at the time of
  * reading, the node type and current values are written.
  */
-public class LocalFileSystem extends IPublisher implements IFileSystem {
+public class LocalFileSystem extends IFileSystem {
 
     private final ApplicationFramework applicationFramework;
-
-    /**
-     * Int-codes representing the schema for each node.
-     */
-    private enum ATTR_SCHEMA {
-        PROJECT_NAME,
-        PROJECT_AUTHORNAME,
-        PROJECT_FILEPATH,
-        PROJECT_CHILDREN,
-        MINDMAP_TEMPLATE,
-        MINDMAP_NAME,
-        MINDMAP_CHILDREN,
-        ELEMENT_NAME,
-        ELEMENT_EMPTY,
-        // TODO add other attributes here
-    }
 
     public LocalFileSystem(ApplicationFramework applicationFramework) {
         this.applicationFramework = applicationFramework;
@@ -155,10 +138,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
     }
 
     @Override
-    public Project loadProject(String name) {
-        String filepath = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER() +
-                "/" +
-                name;
+    public Project loadProject(String filepath) {
         Project project = null;
 
         try {
@@ -220,12 +200,8 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             ChildChangeMessageData data = (ChildChangeMessageData)
                     ((IMapNodeComposite.Message) message).getData();
 
-            // Child because we want to avoid getting the "root-est" ProjectExplorer
+            // Child because we want to avoid getting the "root-est" ProjectExplorer; if null, getChild() is a Project
             Set<Project> projects = getProjects(data.getChild());
-            if (projects == null) {
-                // TODO log error
-                return;
-            }
 
             Iterator<Project> iterator = projects.iterator();
             while (iterator.hasNext()) {
@@ -235,15 +211,27 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
 
                     case CHILD_ADDED: {
                         if (data.getChild() instanceof Project) {
+                            // New project added
                             appendOp(p, true, data.getChild());
+
+                            // TODO disable if auto-save disabled
+                            saveProject((Project) data.getChild());
+
                         } else if (data.getChild() instanceof MindMap) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
+
+                            // TODO disable if auto-save disabled
+                            saveProject(p);
+
                         } else if (data.getChild() instanceof Element) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
+
+                            // TODO disable if auto-save disabled
+                            saveProject(p);
                         }
                         break;
                     }
@@ -251,14 +239,23 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     case CHILD_REMOVED: {
                         if (data.getChild() instanceof Project) {
                             // TODO Check if nothing should be done here (project was removed from workspace, potentially deleted)
+                            saveProject(p);
+
                         } else if (data.getChild() instanceof MindMap) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
+
+                            // TODO disable if auto-save disabled
+                            saveProject(p);
+
                         } else if (data.getChild() instanceof Element) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
+
+                            // TODO disable if auto-save disabled
+                            saveProject(p);
                         }
                         break;
                     }
@@ -268,16 +265,56 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
         } else if (message instanceof IMapNode.Message) {
             switch (((IMapNode.Message) message).getStatus()) {
 
-                case EDITED:
-                    // TODO call op_encode_Value
-                    // TODO right now changes to actual node values are not being backed up, only the structure is. Node values have to be backed up, but we can't access them!
+                case EDITED: {
+                    IMapNode sender = (IMapNode) ((IMapNode.Message) message).getData().getSender();
+                    String key = ((IMapNode.Message.EditedMessageData) ((IMapNode.Message) message).getData()).getKey();
+
+                    // Child because we want to avoid getting the "root-est" ProjectExplorer; if null, getChild() is a Project
+                    Set<Project> projects = getProjects(sender);
+
+                    // For each project the sender is child of, encode op for the specific change
+                    Iterator<Project> iterator = projects.iterator();
+                    while (iterator.hasNext()) {
+                        Project p = iterator.next();
+
+                        if (sender instanceof Project) {
+
+                            if (key.equals("nodeName")) {
+                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_NAME});
+                            } else if (key.equals("authorName")) {
+                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_AUTHORNAME});
+                            } else if (key.equals("filepath")) {
+                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_FILEPATH});
+                            } else {
+                                throw new RuntimeException("Should never be reached");
+                            }
+
+                        } else if (sender instanceof MindMap) {
+
+                            if (key.equals("nodeName")) {
+                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_NAME});
+                            } else if (key.equals("template")) {
+                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_TEMPLATE});
+                            } else {
+                                throw new RuntimeException("Should never be reached");
+                            }
+
+                        } else if (sender instanceof Element) {
+                            appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.ELEMENT_NAME});
+                        }
+
+                        // TODO disable if auto-save disabled
+                        saveProject(p);
+                    }
                     break;
+                }
 
                 case PARENT_ADDED:
                 case PARENT_REMOVED:
-                default:
+                default: {
                     // Ignore because we listen for changes in the parent.
                     break;
+                }
             }
         }
     }
@@ -405,9 +442,6 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
      */
     private String parseProjectFilepath(Project project, boolean backup) {
         String t = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER();
-        if (!t.endsWith("/")) {
-            t = t + "/";
-        }
         t = t + project.getFilepath();
         return t + (backup ? ".bak" : "");
     }
@@ -446,6 +480,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                     s.add((Project) nestedIterator.next());
                 }
             }
+            return s;
         }
 
         // Should never be reached
@@ -530,6 +565,7 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                 if (attrs.length == 0) {
                     attrs = new ATTR_SCHEMA[]{
                             ATTR_SCHEMA.MINDMAP_TEMPLATE,
+                            ATTR_SCHEMA.MINDMAP_NAME,
                             ATTR_SCHEMA.MINDMAP_CHILDREN,
                     };
                 }
@@ -785,10 +821,13 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                         // Remove all children
                         Iterator<IMapNode> iterator = p.getChildren().iterator();
                         while (iterator.hasNext()) {
-                            p.removeChild(iterator.next());
+                            IMapNode c = iterator.next();
+                            iterator.remove();
+                            p.removeChild(c);
                         }
 
-                        for (int k = 0; k < project_children.size(); k++) {
+                        int s = project_children.size();
+                        for (int k = 0; k < s; k++) {
                             IMapNode child = nodes.getOrDefault(project_children.get(k), null);
                             if (child == null) {
                                 // TODO this is a programmatic error as children are not yet initialized
@@ -826,10 +865,13 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
                         // Remove all children
                         Iterator<IMapNode> iterator = m.getChildren().iterator();
                         while (iterator.hasNext()) {
-                            m.removeChild(iterator.next());
+                            IMapNode c = iterator.next();
+                            iterator.remove();
+                            m.removeChild(c);
                         }
 
-                        for (int k = 0; k < mindmap_children.size(); k++) {
+                        int s = mindmap_children.size();
+                        for (int k = 0; k < s; k++) {
                             IMapNode child = nodes.getOrDefault(mindmap_children.get(k), null);
                             if (child == null) {
                                 // TODO this is a programmatic error as children are not yet initialized
@@ -871,5 +913,21 @@ public class LocalFileSystem extends IPublisher implements IFileSystem {
             // TODO log error, bad schema
             return false;
         }
+    }
+
+    /**
+     * Int-codes representing the schema for each node.
+     */
+    private enum ATTR_SCHEMA {
+        PROJECT_NAME,
+        PROJECT_AUTHORNAME,
+        PROJECT_FILEPATH,
+        PROJECT_CHILDREN,
+        MINDMAP_TEMPLATE,
+        MINDMAP_NAME,
+        MINDMAP_CHILDREN,
+        ELEMENT_NAME,
+        ELEMENT_EMPTY,
+        // TODO add other attributes here
     }
 }

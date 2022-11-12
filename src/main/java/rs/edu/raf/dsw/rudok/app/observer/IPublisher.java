@@ -7,7 +7,9 @@ import java.util.Set;
 /**
  * Publisher for observer design pattern. Extends IObserver to allow for publisher-observer classes.
  */
-public abstract class IPublisher extends IObserver {
+public abstract class IPublisher extends IPublisherGlobal {
+
+    private Set<IObserver> observers = new HashSet<>();
 
     public Set<IObserver> getObservers() {
         return observers;
@@ -17,14 +19,15 @@ public abstract class IPublisher extends IObserver {
         this.observers = observers;
     }
 
-    private Set<IObserver> observers = new HashSet<>();
-
     /**
      * Updates all subscribed observers.
+     *
      * @param message Message.
      */
     public void publish(IMessage message) {
-        Iterator<IObserver> iterator = observers.iterator();
+        Set<IObserver> all = new HashSet<>(IPublisherGlobal.getObserversGlobal(message.getClass()));
+        all.addAll(observers);
+        Iterator<IObserver> iterator = all.iterator();
         while (iterator.hasNext()) {
             IObserver observer = iterator.next();
             observer.receive(message);
@@ -33,6 +36,7 @@ public abstract class IPublisher extends IObserver {
 
     /**
      * Adds a new observer.
+     *
      * @param observer
      */
     public void addObserver(IObserver observer) {
@@ -44,6 +48,7 @@ public abstract class IPublisher extends IObserver {
 
     /**
      * Removes an observer.
+     *
      * @param observer
      */
     public void removeObserver(IObserver observer) {

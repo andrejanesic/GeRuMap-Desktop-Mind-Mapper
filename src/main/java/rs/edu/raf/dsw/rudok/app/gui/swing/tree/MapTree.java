@@ -17,6 +17,7 @@ import java.util.List;
 public class MapTree extends IObserver implements IMapTree {
 
     private static final ITreeActionManager treeActionManager = new TreeActionManager();
+    private MapTreeItem root;
     private MapTreeView treeView;
 
     @Override
@@ -32,7 +33,7 @@ public class MapTree extends IObserver implements IMapTree {
 //        });
 
         // Generate tree
-        MapTreeItem root = new MapTreeItem(projectExplorer);
+        root = new MapTreeItem(projectExplorer);
         DefaultTreeModel defaultTreeModel = new DefaultTreeModel(root);
         treeView = new MapTreeView(defaultTreeModel);
         treeView.addMouseListener(new MapTreeClickListener());
@@ -81,6 +82,11 @@ public class MapTree extends IObserver implements IMapTree {
     @Override
     public MapTreeItem getSelectedNode() {
         return (MapTreeItem) treeView.getLastSelectedPathComponent();
+    }
+
+    @Override
+    public MapTreeItem getRoot() {
+        return root;
     }
 
     @Override

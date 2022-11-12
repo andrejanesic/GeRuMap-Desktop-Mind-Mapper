@@ -19,9 +19,9 @@ public class TreeDeleteAction extends ITreeAction {
             }
 
             if (selectedMapNode instanceof Project) {
-                IMapNode node = ((Project) selectedMapNode).getParents().iterator().next();
-                ProjectExplorer parent = (ProjectExplorer) node;
-                parent.removeChild(selectedMapNode);
+                ProjectExplorer parent = (ProjectExplorer) (selectedMapNode).getParents().iterator().next();
+                Project child = (Project) selectedMapNode;
+                parent.removeChild(child);
             }
 
 

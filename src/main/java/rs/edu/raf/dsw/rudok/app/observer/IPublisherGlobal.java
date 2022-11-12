@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class IPublisherGlobal extends IObserver {
 
-    private static Map<Class, Set<IObserver>> observers = new HashMap<>();
+    private static final Map<Class, Set<IObserver>> observers = new HashMap<>();
 
     /**
      * Returns the global observers for the given message type.

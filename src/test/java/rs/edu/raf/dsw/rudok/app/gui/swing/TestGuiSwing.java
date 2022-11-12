@@ -97,7 +97,7 @@ public class TestGuiSwing {
                     }
 
                     @Override
-                    public Project loadProject(String name) {
+                    public Project loadProject(String filepath) {
                         return null;
                     }
                 });

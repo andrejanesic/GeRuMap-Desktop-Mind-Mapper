@@ -7,6 +7,7 @@ import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
@@ -86,8 +87,7 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                                         ((IMapNodeComposite.Message) message).getData();
                         if (data.getParent() != host.mapNode) return;
 
-                        MapTreeItem itm = new MapTreeItem(data.getChild());
-                        host.add(itm);
+                        MapTreeItem itm = addRecursively(host, data.getChild());
                         MainFrame.getInstance().getMapTree().refreshTree();
                         MainFrame.getInstance().getMapTree().expandTree(itm);
                         break;
@@ -126,6 +126,46 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                     }
                 }
             }
+        }
+
+        /**
+         * Checks whether the passed {@link MapTreeItem} node contains a {@link IMapNode}.
+         *
+         * @param parent {@link MapTreeItem} parent node.
+         * @param node   {@link IMapNode} child node.
+         * @return Found MapTreeItem node, or null.
+         */
+        private MapTreeItem containsNode(MapTreeItem parent, IMapNode node) {
+            Enumeration<TreeNode> it = parent.children();
+            while (it.hasMoreElements()) {
+                TreeNode tn = it.nextElement();
+                if (((MapTreeItem) tn).mapNode.equals(node)) {
+                    return ((MapTreeItem) tn);
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Add children recursively.
+         *
+         * @param parent Tree node.
+         * @param node   Repository node.
+         */
+        private MapTreeItem addRecursively(MapTreeItem parent, IMapNode node) {
+            MapTreeItem subParent = containsNode(parent, node);
+            if (subParent == null) {
+                subParent = new MapTreeItem(node);
+                parent.add(subParent);
+            }
+            if (node instanceof IMapNodeComposite) {
+                IMapNodeComposite root = (IMapNodeComposite) node;
+                Iterator<IMapNode> it = root.getChildren().iterator();
+                while (it.hasNext()) {
+                    addRecursively(subParent, it.next());
+                }
+            }
+            return subParent;
         }
     }
 }
