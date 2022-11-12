@@ -139,6 +139,8 @@ public class LocalFileSystem extends IFileSystem {
         } catch (IOException e) {
             AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
         }
+
+        AppCore.getInstance().getMessageGenerator().log("Project " + project.getNodeName() + " saved.");
     }
 
     @Override
@@ -228,24 +230,33 @@ public class LocalFileSystem extends IFileSystem {
                             // New project added
                             appendOp(p, true, data.getChild());
 
-                            // TODO disable if auto-save disabled
-                            saveProject((Project) data.getChild());
+                            if (Boolean.parseBoolean(
+                                    String.valueOf(AppCore.getInstance().getConfigHandler()
+                                            .get("autosave", false)))) {
+                                saveProject((Project) data.getChild());
+                            }
 
                         } else if (data.getChild() instanceof MindMap) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
 
-                            // TODO disable if auto-save disabled
-                            saveProject(p);
+                            if (Boolean.parseBoolean(
+                                    String.valueOf(AppCore.getInstance().getConfigHandler()
+                                            .get("autosave", false)))) {
+                                saveProject(p);
+                            }
 
                         } else if (data.getChild() instanceof Element) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
 
-                            // TODO disable if auto-save disabled
-                            saveProject(p);
+                            if (Boolean.parseBoolean(
+                                    String.valueOf(AppCore.getInstance().getConfigHandler()
+                                            .get("autosave", false)))) {
+                                saveProject(p);
+                            }
                         }
                         break;
                     }
@@ -253,23 +264,33 @@ public class LocalFileSystem extends IFileSystem {
                     case CHILD_REMOVED: {
                         if (data.getChild() instanceof Project) {
                             // TODO Check if nothing should be done here (project was removed from workspace, potentially deleted)
-                            saveProject(p);
+                            if (Boolean.parseBoolean(
+                                    String.valueOf(AppCore.getInstance().getConfigHandler()
+                                            .get("autosave", false)))) {
+                                saveProject(p);
+                            }
 
                         } else if (data.getChild() instanceof MindMap) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
 
-                            // TODO disable if auto-save disabled
-                            saveProject(p);
+                            if (Boolean.parseBoolean(
+                                    String.valueOf(AppCore.getInstance().getConfigHandler()
+                                            .get("autosave", false)))) {
+                                saveProject(p);
+                            }
 
                         } else if (data.getChild() instanceof Element) {
                             appendOp(p, true, data.getChild());
                             appendOp(p, true, data.getParent(),
                                     new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
 
-                            // TODO disable if auto-save disabled
-                            saveProject(p);
+                            if (Boolean.parseBoolean(
+                                    String.valueOf(AppCore.getInstance().getConfigHandler()
+                                            .get("autosave", false)))) {
+                                saveProject(p);
+                            }
                         }
                         break;
                     }
@@ -317,8 +338,11 @@ public class LocalFileSystem extends IFileSystem {
                             appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.ELEMENT_NAME});
                         }
 
-                        // TODO disable if auto-save disabled
-                        saveProject(p);
+                        if (Boolean.parseBoolean(
+                                String.valueOf(AppCore.getInstance().getConfigHandler()
+                                        .get("autosave", false)))) {
+                            saveProject(p);
+                        }
                     }
                     break;
                 }
