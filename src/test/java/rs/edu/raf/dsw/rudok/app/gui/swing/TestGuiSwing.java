@@ -76,7 +76,8 @@ public class TestGuiSwing {
                 gui,
                 new ProjectExplorer(Helper.randString()) {
                 },
-                new IFileSystem() {
+                new IFileSystem()
+                {
                     @Override
                     public void saveConfig(Map<String, String> config) {
 
@@ -100,6 +101,11 @@ public class TestGuiSwing {
                     @Override
                     public boolean deleteProject(Project p) {
                         return false;
+                    }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
                     }
                 },
                 new ILogger() {

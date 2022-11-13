@@ -18,8 +18,8 @@ public class EditProjectDialog extends JDialog {
     public EditProjectDialog(Project project, Frame owner, String title, boolean modal) {
         super(owner, title, modal);
 
-        this.setSize(new Dimension(500, 400));
-        this.setMinimumSize(new Dimension(500, 400));
+        this.setSize(new Dimension(500, 450));
+        this.setMinimumSize(new Dimension(500, 450));
         this.setLayout(new BorderLayout());
         this.setLocationRelativeTo(owner);
 

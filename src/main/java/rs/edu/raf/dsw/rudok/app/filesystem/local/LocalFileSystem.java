@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
@@ -190,6 +191,17 @@ public class LocalFileSystem extends IFileSystem {
         } catch (Exception e) {
             // TODO log exception
             return false;
+        }
+    }
+
+    @Override
+    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+        try{
+            FileWriter fileWriter = new FileWriter("/logfile.txt");
+            fileWriter.write(content + type + timestamp);
+            fileWriter.close();
+        }catch (Exception e){
+            System.out.println(e);
         }
     }
 

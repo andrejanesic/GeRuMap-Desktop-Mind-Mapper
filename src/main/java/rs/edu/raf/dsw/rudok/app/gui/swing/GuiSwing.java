@@ -3,7 +3,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 
-public class GuiSwing implements IGui {
+public class GuiSwing extends IGui {
 
     @Override
     public void run() {

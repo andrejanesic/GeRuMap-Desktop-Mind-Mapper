@@ -31,7 +31,7 @@ public class OpenProjectAction extends IAction {
                 parent.addChild(child);
                 MainFrame.getInstance().getMapTree().refreshTree();
             } else {
-                // TODO throw err here
+                AppCore.getInstance().getMessageGenerator().error("Could not load project");
                 JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not load project");
             }
         }

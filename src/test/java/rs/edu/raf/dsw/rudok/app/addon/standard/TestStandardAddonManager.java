@@ -9,6 +9,7 @@ import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.util.Iterator;
@@ -133,6 +134,11 @@ public class TestStandardAddonManager {
                             return null;
                         }
                     }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
+                    }
                 };
             }
         };
@@ -195,6 +201,10 @@ public class TestStandardAddonManager {
             @Override
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
+                    }
 
                     @Override
                     public void saveConfig(Map<String, String> config) {

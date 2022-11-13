@@ -1,14 +1,30 @@
 package rs.edu.raf.dsw.rudok.app.gui;
+import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
+
+import javax.swing.*;
 
 /**
  * GUI component specification.
  */
-public interface IGui {
+public abstract class IGui extends IPublisher {
 
     /**
      * Runs the GUI.
      */
-    void run();
+    public abstract void run();
 
+    @Override
+    public void receive(Object message) {
+        super.receive(message);
 
+        if (message instanceof IMessageGenerator.Message) {
+            IMessageGenerator.Message m = (IMessageGenerator.Message) message;
+            assert (m.getStatus().equals(IMessageGenerator.Message.Type.Message));
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), m.getData().getContent() + m.getData().getType() + m.getData().getTimestamp());
+        }
+    }
 }
