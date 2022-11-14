@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -14,9 +15,13 @@ public class CloseProjectAction extends IAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Project selected = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getProject();
-        if (selected == null) return;
-        ProjectExplorer root = AppCore.getInstance().getProjectExplorer();
-        root.removeChild(selected);
+        try{
+            Project selected = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getProject();
+            ProjectExplorer root = AppCore.getInstance().getProjectExplorer();
+            root.removeChild(selected);
+        }catch (Exception exception){
+            AppCore.getInstance().getMessageGenerator().error("No project to close");
+            JOptionPane.showMessageDialog(MainFrame.getInstance(),"No project to close");
+        }
     }
 }
