@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
 
@@ -17,6 +18,7 @@ public abstract class IGui extends IPublisher {
      */
     public abstract void run();
 
+    public abstract void showDialog(IMessage message, String messageText);
     @Override
     public void receive(Object message) {
         super.receive(message);
@@ -24,7 +26,7 @@ public abstract class IGui extends IPublisher {
         if (message instanceof IMessageGenerator.Message) {
             IMessageGenerator.Message m = (IMessageGenerator.Message) message;
             assert (m.getStatus().equals(IMessageGenerator.Message.Type.Message));
-            JOptionPane.showMessageDialog(MainFrame.getInstance(), m.getData().getContent() + m.getData().getType() + m.getData().getTimestamp());
         }
+
     }
 }

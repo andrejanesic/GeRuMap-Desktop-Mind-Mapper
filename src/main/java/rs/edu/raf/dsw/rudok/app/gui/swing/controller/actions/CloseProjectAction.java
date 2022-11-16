@@ -21,7 +21,7 @@ public class CloseProjectAction extends IAction {
             root.removeChild(selected);
         }catch (Exception exception){
             AppCore.getInstance().getMessageGenerator().error("No project to close");
-            JOptionPane.showMessageDialog(MainFrame.getInstance(),"No project to close");
+            //AppCore.getInstance().getGui().showDialog(,"No project to close");
         }
     }
 }

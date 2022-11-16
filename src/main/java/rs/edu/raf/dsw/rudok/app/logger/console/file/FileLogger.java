@@ -3,6 +3,7 @@ package rs.edu.raf.dsw.rudok.app.logger.console.file;
 import rs.edu.raf.dsw.rudok.app.logger.console.ConsoleLogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.nio.file.Path;
 
@@ -17,8 +18,9 @@ public class FileLogger extends ConsoleLogger {
         super.log(content, type, timestamp);
         try{
             FileWriter fileWriter = new FileWriter("/logfile.txt");
-            fileWriter.write(content + type + timestamp);
-            fileWriter.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(content + type + timestamp);
+            bufferedWriter.close();
         }catch (Exception e){
             System.out.println(e);
         }

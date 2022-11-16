@@ -70,6 +70,7 @@ public abstract class IMessageGenerator extends IPublisher {
         ERROR,
     }
 
+
     /**
      * Message wrapper for {@link IMessage} observer data.
      */

@@ -198,8 +198,9 @@ public class LocalFileSystem extends IFileSystem {
     public void log(String content, IMessageGenerator.Type type, String timestamp) {
         try{
             FileWriter fileWriter = new FileWriter("/logfile.txt");
-            fileWriter.write(content + type + timestamp);
-            fileWriter.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(content + type + timestamp);
+            bufferedWriter.close();
         }catch (Exception e){
             System.out.println(e);
         }
