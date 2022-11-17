@@ -14,10 +14,6 @@ import java.awt.event.ActionEvent;
  */
 public class TreeNewAction extends ITreeAction {
 
-    public TreeNewAction() {
-        putValue(SMALL_ICON, loadIcon("/images/plus.png"));
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (MainFrame.getInstance().getMapTree().getSelectedNode() != null) {
