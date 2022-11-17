@@ -14,5 +14,8 @@ public class StandardConstants implements IConstants {
         return "";
     }
 
-
+    @Override
+    public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
+        return System.getProperty("user.dir") + "/logs/";
+    }
 }

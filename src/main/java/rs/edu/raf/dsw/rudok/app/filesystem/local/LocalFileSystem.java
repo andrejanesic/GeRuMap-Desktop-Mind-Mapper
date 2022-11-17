@@ -3,13 +3,15 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
-import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 // TODO local file saving will have to be expanded once more metadata is added for projects, etc.
@@ -201,13 +203,17 @@ public class LocalFileSystem extends IFileSystem {
     }
 
     @Override
-    public void log(String content, IMessageGenerator.Type type, String timestamp) {
-        try{
-            FileWriter fileWriter = new FileWriter("/logfile.txt");
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(content + type + timestamp);
-            bufferedWriter.close();
-        }catch (Exception e){
+    public void log(String line) {
+        try {
+            String logPath = AppCore.getInstance().getConstants().FILESYSTEM_LOCAL_LOGS_FOLDER() +
+                    "log-" +
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now()) +
+                    ".txt";
+            Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_LOGS_FOLDER()));
+            FileOutputStream fos = new FileOutputStream(logPath, true);
+            fos.write(line.getBytes(StandardCharsets.UTF_8));
+            fos.close();
+        } catch (Exception e) {
             System.out.println(e);
         }
     }

@@ -142,6 +142,11 @@ public class TestLocalFileSystem {
                     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
                         return null;
                     }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
+                        return null;
+                    }
                 };
             }
         };
@@ -176,6 +181,11 @@ public class TestLocalFileSystem {
 
                     @Override
                     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
+                        return null;
+                    }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
                         return null;
                     }
                 };
@@ -215,6 +225,11 @@ public class TestLocalFileSystem {
                     @Override
                     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
                         return temporaryFolder.getRoot().getAbsolutePath();
+                    }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
+                        return null;
                     }
                 };
             }

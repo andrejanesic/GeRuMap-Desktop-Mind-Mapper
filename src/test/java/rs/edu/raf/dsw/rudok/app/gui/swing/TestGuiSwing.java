@@ -35,6 +35,11 @@ public class TestGuiSwing {
                     public String FILESYSTEM_LOCAL_PROJECTS_FOLDER() {
                         return null;
                     }
+
+                    @Override
+                    public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
+                        return null;
+                    }
                 },
                 new IMessageGenerator() {
                     @Override
@@ -109,7 +114,7 @@ public class TestGuiSwing {
                     }
 
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
                 },

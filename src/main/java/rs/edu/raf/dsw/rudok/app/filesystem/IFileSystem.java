@@ -2,7 +2,6 @@ package rs.edu.raf.dsw.rudok.app.filesystem;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
-import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
@@ -85,7 +84,12 @@ public abstract class IFileSystem extends IPublisher {
         return null;
     }
 
-    public abstract void log(String content, IMessageGenerator.Type type, String timestamp);
+    /**
+     * Logs a line to the logfile on the file system of implementation.
+     *
+     * @param line Message content.
+     */
+    public abstract void log(String line);
 
     /**
      * Messages broadcasted by IFileSystem sub-classes.

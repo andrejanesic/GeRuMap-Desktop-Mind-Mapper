@@ -54,7 +54,7 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
                 };
@@ -76,7 +76,7 @@ public class TestStandardConfigHandler {
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
 
@@ -164,7 +164,7 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
                 };
@@ -215,7 +215,7 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
                 };
@@ -269,7 +269,7 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
                 };
@@ -323,7 +323,7 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+                    public void log(String line) {
 
                     }
                 };
