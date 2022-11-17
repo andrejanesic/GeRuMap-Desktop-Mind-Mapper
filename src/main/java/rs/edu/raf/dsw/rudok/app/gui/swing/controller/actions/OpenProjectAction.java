@@ -32,7 +32,6 @@ public class OpenProjectAction extends IAction {
                 MainFrame.getInstance().getMapTree().refreshTree();
             } else {
                 AppCore.getInstance().getMessageGenerator().error("Could not load project");
-                JOptionPane.showMessageDialog(MainFrame.getInstance(), "Could not load project");
             }
         }
     }

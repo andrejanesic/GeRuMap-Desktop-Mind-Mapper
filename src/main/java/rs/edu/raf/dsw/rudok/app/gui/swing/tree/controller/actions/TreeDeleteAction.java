@@ -18,7 +18,6 @@ public class TreeDeleteAction extends ITreeAction {
 
             if (selectedMapNode instanceof ProjectExplorer) {
                 AppCore.getInstance().getMessageGenerator().error("You can not delete project explorer");
-                JOptionPane.showMessageDialog(MainFrame.getInstance(),"You can not delete project explorer");
             }
 
             if (selectedMapNode instanceof Project) {

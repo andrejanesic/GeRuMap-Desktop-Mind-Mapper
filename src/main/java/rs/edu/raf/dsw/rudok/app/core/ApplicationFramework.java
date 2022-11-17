@@ -49,8 +49,8 @@ public abstract class ApplicationFramework {
         IPublisherGlobal.addObserverGlobal(IMapNode.Message.class, this.iFileSystem);
         IPublisherGlobal.addObserverGlobal(IMapNodeComposite.Message.class, this.iFileSystem);
 
-        this.iGui.addObserver(this.iMessageGenerator);
-        this.iLogger.addObserver(this.iMessageGenerator);
+        this.iMessageGenerator.addObserver(this.iGui);
+        this.iMessageGenerator.addObserver(this.iLogger);
     }
 
     /**

@@ -160,7 +160,7 @@ public class LocalFileSystem extends IFileSystem {
             while (dis.available() > 0) {
                 if (!decodeNodeState(dis, nodes)) {
                     // TODO invalid operation or programmatic error in parsing
-                    AppCore.getInstance().getMessageGenerator().error("Failed to decode project file " + filepath);
+                    // AppCore.getInstance().getMessageGenerator().error("Failed to decode project file " + filepath);
                     return null;
                 }
             }
@@ -195,7 +195,7 @@ public class LocalFileSystem extends IFileSystem {
         try {
             return new File(p.getFilepath()).delete();
         } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to delete project " + p.getNodeName());
+            // AppCore.getInstance().getMessageGenerator().error("Failed to delete project " + p.getNodeName());
             return false;
         }
     }
@@ -222,6 +222,7 @@ public class LocalFileSystem extends IFileSystem {
     public void receive(Object message) {
 
         // TODO execute on a separate thread
+        // TODO this should be ignored on all messages from projects and/or its subelements of a project currently being loaded!
 
         // If message from IMapNodeComposite
         if (message instanceof IMapNodeComposite.Message) {
@@ -388,7 +389,7 @@ public class LocalFileSystem extends IFileSystem {
             while (iterator.hasNext()) {
                 IMapNode child = iterator.next();
                 if (!recreateOperations(dos, child)) {
-                    AppCore.getInstance().getMessageGenerator().error("Failed to recreate project tree");
+                    // AppCore.getInstance().getMessageGenerator().error("Failed to recreate project tree");
                     return false;
                 }
             }
@@ -409,7 +410,7 @@ public class LocalFileSystem extends IFileSystem {
             Files.deleteIfExists(Paths.get(fileName));
             return true;
         } catch (IOException e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to erase project database " + fileName);
+            // AppCore.getInstance().getMessageGenerator().error("Failed to erase project database " + fileName);
             return false;
         }
     }
@@ -428,7 +429,7 @@ public class LocalFileSystem extends IFileSystem {
             new File(fileName).createNewFile();
             return true;
         } catch (IOException e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to setup project database at " + fileName);
+            // AppCore.getInstance().getMessageGenerator().error("Failed to setup project database at " + fileName);
             e.printStackTrace();
             return false;
         }
@@ -447,7 +448,7 @@ public class LocalFileSystem extends IFileSystem {
 
         // Ensure deltas DB is available
         if (!setupDb(project, backup)) {
-            AppCore.getInstance().getMessageGenerator().error("Project database unavailable");
+            // AppCore.getInstance().getMessageGenerator().error("Project database unavailable");
             return false;
         }
 
@@ -466,7 +467,7 @@ public class LocalFileSystem extends IFileSystem {
             fos.close();
             return true;
         } catch (IOException e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to write to project database: " + e.getMessage());
+            // AppCore.getInstance().getMessageGenerator().error("Failed to write to project database: " + e.getMessage());
             return false;
         }
     }
@@ -688,7 +689,7 @@ public class LocalFileSystem extends IFileSystem {
             return false;
 
         } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().error("Error writing to project database: " + e.getMessage());
+            // AppCore.getInstance().getMessageGenerator().error("Error writing to project database: " + e.getMessage());
             return false;
         }
     }
@@ -949,7 +950,7 @@ public class LocalFileSystem extends IFileSystem {
 
             return true;
         } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().warning("Corrupted project file");
+            // AppCore.getInstance().getMessageGenerator().warning("Corrupted project file");
             return false;
         }
     }
