@@ -8,6 +8,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.GuiSwing;
 import rs.edu.raf.dsw.rudok.app.logger.console.file.FileLogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.standard.StandardMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
+import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 /**
  * Main application class.
@@ -20,7 +21,7 @@ public class AppCore extends ApplicationFramework {
                 new StandardMessageGenerator(),
                 new StandardConfigHandler(this),
                 new GuiSwing(),
-                new ProjectExplorer("Workspace"),
+                (ProjectExplorer) MapNodeFactoryUtils.getFactory(null).createNode(),
                 new LocalFileSystem(this),
                 new FileLogger()
         );

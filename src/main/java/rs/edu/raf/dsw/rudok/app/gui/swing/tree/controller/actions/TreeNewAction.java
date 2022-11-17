@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditMindMapDialog;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
+import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 import java.awt.event.ActionEvent;
 
@@ -34,8 +35,16 @@ public class TreeNewAction extends ITreeAction {
                 String nodeName = editProjectDialog.getNodeName();
                 String authorName = editProjectDialog.getAuthorName();
                 String filepath = editProjectDialog.getFilepath();
-                Project child = new Project(nodeName, authorName, filepath);
-                ((ProjectExplorer) parent).addChild(child);
+
+                // Project child = new Project(nodeName, authorName, filepath);
+                // ((ProjectExplorer) parent).addChild(child);
+
+                // Project spec required the use of factory pattern - however the method above may be more streamlined.
+                Project child = (Project) MapNodeFactoryUtils.getFactory(((ProjectExplorer) parent)).createNode();
+                child.setNodeName(nodeName);
+                child.setAuthorName(authorName);
+                child.setFilepath(filepath);
+
                 return;
             }
 
@@ -46,9 +55,14 @@ public class TreeNewAction extends ITreeAction {
                 if (d.getResult() == null) return;
                 switch (d.getResult()) {
                     case CONFIRMED: {
-                        MindMap child = new MindMap(d.getIsTemplate(), d.getNodeName());
-                        ((Project) parent).addChild(child);
-                        child.addParent((Project) parent);
+                        // MindMap child = new MindMap(d.getIsTemplate(), d.getNodeName());
+                        // ((Project) parent).addChild(child);
+
+                        // Project spec required the use of factory pattern - however the method above may be more streamlined.
+                        MindMap child = (MindMap) MapNodeFactoryUtils.getFactory((Project) parent).createNode();
+                        child.setNodeName(d.getNodeName());
+                        child.setTemplate(d.getIsTemplate());
+
                         if (d.getTemplate() != null) {
                             MindMap template = d.getTemplate();
                             child.copyTemplate(template);
@@ -65,9 +79,7 @@ public class TreeNewAction extends ITreeAction {
 
             // new element added
             if (parent instanceof MindMap) {
-                Element child = new Element("New element");
-                ((MindMap) parent).addChild(child);
-                child.addParent((MindMap) parent);
+                MapNodeFactoryUtils.getFactory((IMapNodeComposite) parent).createNode();
                 return;
             }
 

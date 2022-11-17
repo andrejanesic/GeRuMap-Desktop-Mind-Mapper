@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.repository;
 
+import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -55,8 +57,8 @@ public class MindMap extends IMapNodeComposite {
         Iterator<IMapNode> iterator = template.getChildren().iterator();
         while (iterator.hasNext()) {
             Element e = (Element) iterator.next();
-            Element eCopy = new Element(e.getNodeName());
-            this.addChild(eCopy);
+            Element eCopy = (Element) MapNodeFactoryUtils.getFactory(this).createNode();
+            eCopy.setNodeName(e.getNodeName());
         }
     }
 }

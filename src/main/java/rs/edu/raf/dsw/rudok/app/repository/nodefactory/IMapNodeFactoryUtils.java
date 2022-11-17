@@ -6,7 +6,7 @@ import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite;
  * <h1>Node Factory Utils</h1>
  * Returns the factory for creating a child {@link rs.edu.raf.dsw.rudok.app.repository.IMapNode} on the given parent.
  */
-public interface IMapNodeFactoryUtils {
+public abstract class IMapNodeFactoryUtils {
 
     /**
      * Returns an {@link IMapNodeFactory} for creating children on the given parent.
@@ -14,5 +14,7 @@ public interface IMapNodeFactoryUtils {
      * @param parent Parent node.
      * @return {@link IMapNodeFactory}.
      */
-    IMapNodeFactory getFactory(IMapNodeComposite parent);
+    public static IMapNodeFactory getFactory(IMapNodeComposite parent) {
+        throw new RuntimeException("Method not implemented!");
+    }
 }

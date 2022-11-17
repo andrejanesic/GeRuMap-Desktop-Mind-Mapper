@@ -4,6 +4,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditMindMapDialog;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
+import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 import java.awt.event.ActionEvent;
 
@@ -20,11 +21,17 @@ public class AddProjectAction extends IProjectAction {
         if (d.getResult() == null) return;
         switch (d.getResult()) {
             case CONFIRMED: {
-                MindMap c = new MindMap(d.getIsTemplate(), d.getNodeName());
-                p.addChild(c);
+                // MindMap c = new MindMap(d.getIsTemplate(), d.getNodeName());
+                // p.addChild(c);
+
+                // Project spec required the use of factory pattern - however the method above may be more streamlined.
+                MindMap child = (MindMap) MapNodeFactoryUtils.getFactory(p).createNode();
+                child.setNodeName(d.getNodeName());
+                child.setTemplate(d.getIsTemplate());
+
                 if (d.getTemplate() != null) {
                     MindMap template = d.getTemplate();
-                    c.copyTemplate(template);
+                    child.copyTemplate(template);
                 }
                 break;
             }

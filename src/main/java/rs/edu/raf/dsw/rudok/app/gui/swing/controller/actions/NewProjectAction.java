@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
+import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 import java.awt.event.ActionEvent;
 
@@ -21,9 +22,16 @@ public class NewProjectAction extends IAction {
         String nodeName = editProjectDialog.getNodeName();
         String authorName = editProjectDialog.getAuthorName();
         String filepath = editProjectDialog.getFilepath();
-        Project child = new Project(nodeName, authorName, filepath);
+
+        // Project child = new Project(nodeName, authorName, filepath);
+        // parent.addChild(child);
+
+        // Project spec required the use of factory pattern - however the method above may be more streamlined.
         ProjectExplorer parent = AppCore.getInstance().getProjectExplorer();
-        parent.addChild(child);
+        Project child = (Project) MapNodeFactoryUtils.getFactory(parent).createNode();
+        child.setNodeName(nodeName);
+        child.setAuthorName(authorName);
+        child.setFilepath(filepath);
     }
 
 }

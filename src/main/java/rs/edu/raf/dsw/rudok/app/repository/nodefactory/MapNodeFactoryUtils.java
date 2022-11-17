@@ -5,10 +5,9 @@ import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
-public class MapNodeFactoryUtils implements IMapNodeFactoryUtils {
+public class MapNodeFactoryUtils extends IMapNodeFactoryUtils {
 
-    @Override
-    public IMapNodeFactory getFactory(IMapNodeComposite parent) {
+    public static IMapNodeFactory getFactory(IMapNodeComposite parent) {
 
         if (parent == null) return new ProjectExplorerFactory();
 
