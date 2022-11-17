@@ -33,6 +33,14 @@ public class Project extends IMapNodeComposite {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+        this.publish(new IMapNode.Message(
+                IMapNode.Message.Type.EDITED,
+                new IMapNode.Message.EditedMessageData(
+                        this,
+                        "authorName",
+                        authorName
+                )
+        ));
     }
 
     public String getFilepath() {
@@ -41,6 +49,14 @@ public class Project extends IMapNodeComposite {
 
     public void setFilepath(String filepath) {
         this.filepath = filepath;
+        this.publish(new IMapNode.Message(
+                IMapNode.Message.Type.EDITED,
+                new IMapNode.Message.EditedMessageData(
+                        this,
+                        "filepath",
+                        filepath
+                )
+        ));
     }
 
     @Override
