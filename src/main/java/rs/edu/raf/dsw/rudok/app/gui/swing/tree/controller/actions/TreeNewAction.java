@@ -49,6 +49,10 @@ public class TreeNewAction extends ITreeAction {
                         MindMap child = new MindMap(d.getIsTemplate(), d.getNodeName());
                         ((Project) parent).addChild(child);
                         child.addParent((Project) parent);
+                        if (d.getTemplate() != null) {
+                            MindMap template = d.getTemplate();
+                            child.copyTemplate(template);
+                        }
                         break;
                     }
                     case CANCELED:

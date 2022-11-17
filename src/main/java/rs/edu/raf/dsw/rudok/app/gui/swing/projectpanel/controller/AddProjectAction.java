@@ -22,6 +22,10 @@ public class AddProjectAction extends IProjectAction {
             case CONFIRMED: {
                 MindMap c = new MindMap(d.getIsTemplate(), d.getNodeName());
                 p.addChild(c);
+                if (d.getTemplate() != null) {
+                    MindMap template = d.getTemplate();
+                    c.copyTemplate(template);
+                }
                 break;
             }
             case CANCELED:

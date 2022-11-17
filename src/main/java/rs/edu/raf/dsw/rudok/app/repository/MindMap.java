@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.repository;
 
+import java.util.Iterator;
 import java.util.Set;
 
 public class MindMap extends IMapNodeComposite {
@@ -43,5 +44,19 @@ public class MindMap extends IMapNodeComposite {
     @Override
     public void addChild(IMapNode child) {
         if (child instanceof Element) super.addChild(child);
+    }
+
+    /**
+     * Copies the children and settings from the given template.
+     *
+     * @param template {@link MindMap} template.
+     */
+    public void copyTemplate(MindMap template) {
+        Iterator<IMapNode> iterator = template.getChildren().iterator();
+        while (iterator.hasNext()) {
+            Element e = (Element) iterator.next();
+            Element eCopy = new Element(e.getNodeName());
+            this.addChild(eCopy);
+        }
     }
 }
