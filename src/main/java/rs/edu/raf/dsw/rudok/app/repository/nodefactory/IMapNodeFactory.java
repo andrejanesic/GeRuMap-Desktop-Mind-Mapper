@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.observer.nodefactory;
+package rs.edu.raf.dsw.rudok.app.repository.nodefactory;
 
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 
