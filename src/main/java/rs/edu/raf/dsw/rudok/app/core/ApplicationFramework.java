@@ -48,6 +48,9 @@ public abstract class ApplicationFramework {
         // Wire observers
         IPublisherGlobal.addObserverGlobal(IMapNode.Message.class, this.iFileSystem);
         IPublisherGlobal.addObserverGlobal(IMapNodeComposite.Message.class, this.iFileSystem);
+
+        this.iGui.addObserver(this.iMessageGenerator);
+        this.iLogger.addObserver(this.iMessageGenerator);
     }
 
     /**

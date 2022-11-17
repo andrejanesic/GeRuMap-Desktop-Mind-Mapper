@@ -11,6 +11,6 @@ public class ConsoleLogger extends ILogger {
 
     @Override
     public void log(String content, IMessageGenerator.Type type, String timestamp) {
-        // TODO
+        System.out.println(content + type + timestamp);
     }
 }

@@ -14,4 +14,5 @@ public class StandardMessageGenerator extends IMessageGenerator {
                 this, type, content, timestamp
         )));
     }
+
 }

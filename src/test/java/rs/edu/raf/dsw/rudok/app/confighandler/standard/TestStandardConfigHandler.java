@@ -6,6 +6,7 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.util.HashMap;
@@ -51,6 +52,11 @@ public class TestStandardConfigHandler {
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
+                    }
                 };
             }
         });
@@ -69,6 +75,11 @@ public class TestStandardConfigHandler {
             @Override
             public IFileSystem getFileSystem() {
                 return new IFileSystem() {
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
+                    }
+
                     @Override
                     public void saveConfig(Map<String, String> config) {
 
@@ -151,6 +162,11 @@ public class TestStandardConfigHandler {
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
+                    }
                 };
             }
         });
@@ -196,6 +212,11 @@ public class TestStandardConfigHandler {
                     @Override
                     public IAddon loadAddon(String classname) {
                         return null;
+                    }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
                     }
                 };
             }
@@ -246,6 +267,11 @@ public class TestStandardConfigHandler {
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
+                    }
                 };
             }
         });
@@ -294,6 +320,11 @@ public class TestStandardConfigHandler {
                     @Override
                     public IAddon loadAddon(String classname) {
                         return null;
+                    }
+
+                    @Override
+                    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+
                     }
                 };
             }

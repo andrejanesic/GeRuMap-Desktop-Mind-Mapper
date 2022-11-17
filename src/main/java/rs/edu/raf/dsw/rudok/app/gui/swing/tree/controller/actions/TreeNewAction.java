@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -13,7 +14,7 @@ import java.awt.event.ActionEvent;
 public class TreeNewAction extends ITreeAction {
 
     public TreeNewAction() {
-        // TODO add interactive detail
+        putValue(SMALL_ICON,loadIcon("/images/plus.png"));
     }
 
     @Override

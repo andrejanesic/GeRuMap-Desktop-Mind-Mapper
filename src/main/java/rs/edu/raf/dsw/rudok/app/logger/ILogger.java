@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.logger;
 
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.observer.IObserver;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 
 /**

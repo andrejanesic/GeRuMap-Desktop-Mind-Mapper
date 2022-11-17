@@ -3,6 +3,7 @@ package rs.edu.raf.dsw.rudok.app.filesystem.local;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
+import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
@@ -196,6 +197,18 @@ public class LocalFileSystem extends IFileSystem {
         } catch (Exception e) {
             AppCore.getInstance().getMessageGenerator().error("Failed to delete project " + p.getNodeName());
             return false;
+        }
+    }
+
+    @Override
+    public void log(String content, IMessageGenerator.Type type, String timestamp) {
+        try{
+            FileWriter fileWriter = new FileWriter("/logfile.txt");
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(content + type + timestamp);
+            bufferedWriter.close();
+        }catch (Exception e){
+            System.out.println(e);
         }
     }
 
