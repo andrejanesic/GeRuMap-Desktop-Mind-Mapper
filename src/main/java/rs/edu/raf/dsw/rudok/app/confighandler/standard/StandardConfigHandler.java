@@ -47,7 +47,8 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
             this.publish(new IConfigHandler.Message(Message.Type.CONFIG_LOADED, new Message.ConfigMessageData(this)));
         } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to load configuration " + name);
+            // TODO exclude on app start/create new config so no error pops up here
+            // AppCore.getInstance().getMessageGenerator().error("Failed to load configuration " + name);
             return false;
         }
         return true;

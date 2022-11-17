@@ -76,7 +76,8 @@ public class LocalFileSystem extends IFileSystem {
             oos.close();
             fos.close();
         } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to save configuration");
+            // TODO exclude on app start/create new config so no error pops up here
+            // AppCore.getInstance().getMessageGenerator().error("Failed to save configuration");
         }
     }
 
@@ -104,7 +105,8 @@ public class LocalFileSystem extends IFileSystem {
 
             return obj;
         } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to load configuration " + name);
+            // TODO exclude on app start/create new config so no error pops up here
+            // AppCore.getInstance().getMessageGenerator().error("Failed to load configuration " + name);
             return null;
         }
     }
