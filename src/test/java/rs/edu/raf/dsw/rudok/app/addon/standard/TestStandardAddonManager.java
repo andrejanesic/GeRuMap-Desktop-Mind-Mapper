@@ -78,6 +78,11 @@ public class TestStandardAddonManager {
                     }
 
                     @Override
+                    public void createConfig(String name) {
+
+                    }
+
+                    @Override
                     public void set(String key, String val) {
 
                     }
@@ -175,6 +180,11 @@ public class TestStandardAddonManager {
 
                     @Override
                     public void resetConfig() {
+
+                    }
+
+                    @Override
+                    public void createConfig(String name) {
 
                     }
 

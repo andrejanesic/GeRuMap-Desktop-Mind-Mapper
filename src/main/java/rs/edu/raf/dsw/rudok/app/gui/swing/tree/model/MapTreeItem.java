@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.model;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.observer.IObserver;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
@@ -114,8 +115,8 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                             }
                         }
                         if (child == null) {
-                            // TODO log error, this should never happen. Structure of both MapTreeItems and IMapNode should be the same
-                            throw new RuntimeException(
+                            // This should never happen. Structure of both MapTreeItems and IMapNode should be the same
+                            AppCore.getInstance().getMessageGenerator().warning(
                                     "MapTreeItem's IMapNode detected removal of children, but no child with removed IMapNode child detected in MapTreeItem"
                             );
                         }

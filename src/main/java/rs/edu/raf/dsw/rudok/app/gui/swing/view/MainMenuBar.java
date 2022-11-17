@@ -12,6 +12,8 @@ public class MainMenuBar extends JMenuBar {
         JMenuItem fileNew = new JMenuItem("New project");
         JMenuItem fileOpen = new JMenuItem("Open project");
         JMenuItem fileClose = new JMenuItem("Close project");
+        JMenuItem fileSave = new JMenuItem("Save project");
+        JMenuItem fileSaveAll = new JMenuItem("Save all projects");
         JMenuItem fileQuit = new JMenuItem("Exit");
 
         JMenu edit = new JMenu("Edit");
@@ -25,6 +27,9 @@ public class MainMenuBar extends JMenuBar {
         JMenuItem helpAuthor = new JMenuItem("Project authors");
 
         file.add(fileNew);
+        file.add(fileSave);
+        file.add(fileSaveAll);
+        file.addSeparator();
         file.add(fileOpen);
         file.add(fileClose);
         file.addSeparator();
@@ -45,6 +50,8 @@ public class MainMenuBar extends JMenuBar {
         this.add(help);
 
         fileNew.addActionListener(MainFrame.getInstance().getActionManager().getNewProjectAction());
+        fileSave.addActionListener(MainFrame.getInstance().getActionManager().getSaveProjectAction());
+        fileSaveAll.addActionListener(MainFrame.getInstance().getActionManager().getSaveAllProjectsAction());
         fileOpen.addActionListener(MainFrame.getInstance().getActionManager().getOpenProjectAction());
         fileClose.addActionListener(MainFrame.getInstance().getActionManager().getCloseProjectAction());
         fileQuit.addActionListener(MainFrame.getInstance().getActionManager().getQuitAction());

@@ -16,6 +16,8 @@ public class ActionManager implements IActionManager {
     private UndoAction undoAction;
     private RedoAction redoAction;
     private OpenPreferencesAction openPreferencesAction;
+    private SaveProjectAction saveProjectAction;
+    private SaveProjectAction saveAllProjectsAction;
 
     public ActionManager() {
         initActions();
@@ -33,6 +35,8 @@ public class ActionManager implements IActionManager {
         undoAction = new UndoAction();
         redoAction = new RedoAction();
         openPreferencesAction = new OpenPreferencesAction();
+        saveProjectAction = new SaveProjectAction(false);
+        saveAllProjectsAction = new SaveProjectAction(true);
     }
 
     @Override
@@ -88,5 +92,15 @@ public class ActionManager implements IActionManager {
     @Override
     public OpenPreferencesAction getOpenPreferencesAction() {
         return openPreferencesAction;
+    }
+
+    @Override
+    public SaveProjectAction getSaveProjectAction() {
+        return saveProjectAction;
+    }
+
+    @Override
+    public SaveProjectAction getSaveAllProjectsAction() {
+        return saveAllProjectsAction;
     }
 }
