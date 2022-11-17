@@ -116,7 +116,7 @@ public class LocalFileSystem extends IFileSystem {
     @Override
     public void saveProject(Project project) {
         if (!eraseDb(project, false) || !setupDb(project, false)) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
+            // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
             return;
         }
 
@@ -138,7 +138,7 @@ public class LocalFileSystem extends IFileSystem {
             eraseDb(project, true);
 
         } catch (IOException e) {
-            AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
+            // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
         }
 
         AppCore.getInstance().getMessageGenerator().log("Project " + project.getNodeName() + " saved.");

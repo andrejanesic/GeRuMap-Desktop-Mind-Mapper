@@ -2,10 +2,10 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditMindMapDialog;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 public class TreeNewAction extends ITreeAction {
 
     public TreeNewAction() {
-        putValue(SMALL_ICON,loadIcon("/images/plus.png"));
+        putValue(SMALL_ICON, loadIcon("/images/plus.png"));
     }
 
     @Override
@@ -41,9 +41,21 @@ public class TreeNewAction extends ITreeAction {
 
             // new mindmap added
             if (parent instanceof Project) {
-                MindMap child = new MindMap(false, "New mind map");
-                ((Project) parent).addChild(child);
-                child.addParent((Project) parent);
+                EditMindMapDialog d = new EditMindMapDialog((Project) parent, null);
+                d.setVisible(true);
+                if (d.getResult() == null) return;
+                switch (d.getResult()) {
+                    case CONFIRMED: {
+                        MindMap child = new MindMap(d.getIsTemplate(), d.getNodeName());
+                        ((Project) parent).addChild(child);
+                        child.addParent((Project) parent);
+                        break;
+                    }
+                    case CANCELED:
+                    default: {
+                        break;
+                    }
+                }
                 return;
             }
 
