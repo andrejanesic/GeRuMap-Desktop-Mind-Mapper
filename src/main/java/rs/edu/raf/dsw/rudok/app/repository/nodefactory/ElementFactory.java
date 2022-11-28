@@ -22,11 +22,11 @@ public class ElementFactory extends IMapNodeFactory {
     @Override
     public IMapNode createNode() {
         if (getParent() == null) {
-            return new Element("New element " + ++CHILD_ID);
+            return new Element("New element " + ++CHILD_ID,0);
         }
 
         try {
-            Element element = new Element("New element " + ++CHILD_ID);
+            Element element = new Element("New element " + ++CHILD_ID,0);
             getParent().addChild(element);
             return element;
         } catch (ClassCastException e) {
