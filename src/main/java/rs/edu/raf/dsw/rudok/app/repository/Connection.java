@@ -9,4 +9,12 @@ public class Connection extends Element{
         this.from = from;
         this.to = to;
     }
+
+    public Topic getFrom() {
+        return from;
+    }
+
+    public Topic getTo() {
+        return to;
+    }
 }

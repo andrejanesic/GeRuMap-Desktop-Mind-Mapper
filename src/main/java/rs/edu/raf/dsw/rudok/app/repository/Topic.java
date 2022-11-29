@@ -10,4 +10,17 @@ public class Topic extends Element{
         this.size = size;
         this.x = x;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
 }
