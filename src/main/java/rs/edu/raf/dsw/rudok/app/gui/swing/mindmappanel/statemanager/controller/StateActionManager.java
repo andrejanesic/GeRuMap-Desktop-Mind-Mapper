@@ -1,7 +1,10 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
+
 public class StateActionManager implements IStateActionManager {
 
+    private final IMindMapPanel mindMapPanel;
     private IStateAction startAddTopicStateAction;
     private IStateAction startDeleteElementStateAction;
     private IStateAction startDrawConnectionStateAction;
@@ -9,17 +12,18 @@ public class StateActionManager implements IStateActionManager {
     private IStateAction startSelectTopicStateAction;
     private IStateAction startZoomStateAction;
 
-    public StateActionManager() {
+    public StateActionManager(IMindMapPanel mindMapPanel) {
+        this.mindMapPanel = mindMapPanel;
         initActions();
     }
 
     public void initActions() {
-        startAddTopicStateAction = new StartAddTopicStateAction();
-        startDeleteElementStateAction = new StartDeleteElementStateAction();
-        startDrawConnectionStateAction = new StartDrawConnectionStateAction();
-        startMoveTopicStateAction = new StartMoveTopicStateAction();
-        startSelectTopicStateAction = new StartSelectTopicStateAction();
-        startZoomStateAction = new StartZoomStateAction();
+        startAddTopicStateAction = new StartAddTopicStateAction(mindMapPanel.getStateManager());
+        startDeleteElementStateAction = new StartDeleteElementStateAction(mindMapPanel.getStateManager());
+        startDrawConnectionStateAction = new StartDrawConnectionStateAction(mindMapPanel.getStateManager());
+        startMoveTopicStateAction = new StartMoveTopicStateAction(mindMapPanel.getStateManager());
+        startSelectTopicStateAction = new StartSelectTopicStateAction(mindMapPanel.getStateManager());
+        startZoomStateAction = new StartZoomStateAction(mindMapPanel.getStateManager());
     }
 
     @Override

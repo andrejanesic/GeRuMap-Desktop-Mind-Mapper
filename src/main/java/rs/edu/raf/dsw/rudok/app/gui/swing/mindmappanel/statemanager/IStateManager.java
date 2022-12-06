@@ -22,6 +22,16 @@ public interface IStateManager {
     void setSelectTopic();
 
     /**
+     * Sets the state of moving topics.
+     */
+    void setMoveTopic();
+
+    /**
+     * Sets the state of zooming on the map.
+     */
+    void setZoom();
+
+    /**
      * Sets the state of drawing a new connection.
      */
     void setDrawConnection();
@@ -33,6 +43,7 @@ public interface IStateManager {
 
     /**
      * Current app {@link IState}.
+     *
      * @return Current app {@link IState}.
      */
     IState getState();

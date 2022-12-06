@@ -27,7 +27,7 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
         super(new BorderLayout());
         this.mindMap = mindMap;
         stateManager = new StateManager();
-        stateActionManager = new StateActionManager();
+        stateActionManager = new StateActionManager(this);
 
         JToolBar toolbar = new MindMapToolbar(this);
         add(toolbar, BorderLayout.PAGE_START);
@@ -36,6 +36,11 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
     @Override
     public IStateActionManager getStateActionManager() {
         return stateActionManager;
+    }
+
+    @Override
+    public IStateManager getStateManager() {
+        return stateManager;
     }
 
     @Override
