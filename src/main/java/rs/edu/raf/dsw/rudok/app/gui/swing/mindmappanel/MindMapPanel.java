@@ -1,6 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.view.MapView;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.controller.IMapViewController;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.controller.MapViewController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.StateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
@@ -34,7 +35,8 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
         stateActionManager = new StateActionManager(this);
 
         // Add map visualizer
-        JPanel mapView = new MapView(mindMap);
+        IMapViewController mapViewController = new MapViewController(this);
+        JPanel mapView = mapViewController.getView();
         add(mapView, BorderLayout.CENTER);
 
         // Add toolbar

@@ -7,7 +7,7 @@ import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 /**
  * Controller for {@link MapView}.
  */
-public class MapViewController {
+public class MapViewController implements IMapViewController {
 
     private final IMindMapPanel mindMapPanel;
     private final MindMap mindMap;
@@ -17,5 +17,11 @@ public class MapViewController {
         this.mindMapPanel = mindMapPanel;
         mindMap = mindMapPanel.getMindMap();
         view = new MapView(mindMap);
+        view.addMouseListener(new InteractionListener(mindMapPanel));
+    }
+
+    @Override
+    public MapView getView() {
+        return view;
     }
 }
