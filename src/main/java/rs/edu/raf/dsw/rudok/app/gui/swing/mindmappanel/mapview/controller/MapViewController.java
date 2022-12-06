@@ -1,7 +1,7 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.map.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.controller;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
-import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.map.view.MapView;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.view.MapView;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
 /**

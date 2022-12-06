@@ -1,6 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.map.view.MapView;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.view.MapView;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.StateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
