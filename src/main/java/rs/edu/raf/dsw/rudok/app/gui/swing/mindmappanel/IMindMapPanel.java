@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
 /**
  * The GUI interface of mind maps.
@@ -9,11 +10,11 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.I
 public interface IMindMapPanel {
 
     /**
-     * Returns the {@link IStateActionManager} for this {@link IMindMapPanel} instance.
+     * Returns the {@link MindMap} associated with this panel.
      *
-     * @return {@link IStateActionManager} for this {@link IMindMapPanel} instance.
+     * @return {@link MindMap} associated with this panel.
      */
-    IStateActionManager getStateActionManager();
+    MindMap getMindMap();
 
     /**
      * Returns the {@link IStateManager} for this {@link IMindMapPanel} instance.
@@ -21,6 +22,13 @@ public interface IMindMapPanel {
      * @return {@link IStateManager} for this {@link IMindMapPanel} instance.
      */
     IStateManager getStateManager();
+
+    /**
+     * Returns the {@link IStateActionManager} for this {@link IMindMapPanel} instance.
+     *
+     * @return {@link IStateActionManager} for this {@link IMindMapPanel} instance.
+     */
+    IStateActionManager getStateActionManager();
 
     /**
      * Starts add topic state.
