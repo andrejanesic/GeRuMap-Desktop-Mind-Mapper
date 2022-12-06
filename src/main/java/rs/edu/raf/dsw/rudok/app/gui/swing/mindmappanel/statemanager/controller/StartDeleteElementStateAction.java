@@ -6,7 +6,7 @@ public class StartDeleteElementStateAction extends IStateAction {
 
     public StartDeleteElementStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Delete");
+        super("/images/eraser.png", "Delete");
     }
 
     @Override

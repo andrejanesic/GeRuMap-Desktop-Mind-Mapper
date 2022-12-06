@@ -18,14 +18,14 @@ public class MapTreeCellRenderer extends DefaultTreeCellRenderer {
         URL imageURL = null;
 
         if (((MapTreeItem)value).getMapNode() instanceof ProjectExplorer) {
-            imageURL = getClass().getResource("/images/iconmonstr-folder-29-16.png");
+            imageURL = getClass().getResource("/images/folder-closed.png");
         }
         else if (((MapTreeItem)value).getMapNode() instanceof Project) {
-            imageURL = getClass().getResource("/images/iconmonstr-folder-open-thin-16.png");
+            imageURL = getClass().getResource("/images/folder-open.png");
         }else if (((MapTreeItem)value).getMapNode() instanceof MindMap) {
-            imageURL = getClass().getResource("/images/iconmonstr-map-thin-16.png");
+            imageURL = getClass().getResource("/images/map.png");
         }else if (((MapTreeItem)value).getMapNode() instanceof Element) {
-            imageURL = getClass().getResource("/images/iconmonstr-idea-12-16.png");
+            imageURL = getClass().getResource("/images/idea.png");
         }
 
         Icon icon = null;

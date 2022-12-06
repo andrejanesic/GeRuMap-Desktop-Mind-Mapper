@@ -6,7 +6,7 @@ public class StartSelectTopicStateAction extends IStateAction {
 
     public StartSelectTopicStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Select");
+        super("/images/select.png", "Select");
     }
 
     @Override

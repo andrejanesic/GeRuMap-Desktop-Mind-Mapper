@@ -6,7 +6,7 @@ public class StartDrawConnectionStateAction extends IStateAction {
 
     public StartDrawConnectionStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Connect");
+        super("/images/link.png", "Connect");
     }
 
     @Override

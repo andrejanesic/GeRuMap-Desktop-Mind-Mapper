@@ -6,7 +6,7 @@ public class StartAddTopicStateAction extends IStateAction {
 
     public StartAddTopicStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Add");
+        super("/images/plus.png", "Add");
     }
 
     @Override

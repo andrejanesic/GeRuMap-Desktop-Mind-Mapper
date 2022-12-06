@@ -6,7 +6,7 @@ public class StartZoomStateAction extends IStateAction {
 
     public StartZoomStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Zoom");
+        super("/images/zoom.png", "Zoom");
     }
 
     @Override

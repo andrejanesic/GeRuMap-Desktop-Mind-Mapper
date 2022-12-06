@@ -6,7 +6,7 @@ public class StartMoveTopicStateAction extends IStateAction {
 
     public StartMoveTopicStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Move");
+        super("/images/move.png", "Move");
     }
 
     @Override

@@ -2,6 +2,8 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.StateManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.StateActionManager;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
 import javax.swing.*;
@@ -19,10 +21,21 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
      */
     private final IStateManager stateManager;
 
+    private final IStateActionManager stateActionManager;
+
     public MindMapPanel(MindMap mindMap) {
         super(new BorderLayout());
         this.mindMap = mindMap;
-        this.stateManager = new StateManager();
+        stateManager = new StateManager();
+        stateActionManager = new StateActionManager();
+
+        JToolBar toolbar = new MindMapToolbar(this);
+        add(toolbar, BorderLayout.PAGE_START);
+    }
+
+    @Override
+    public IStateActionManager getStateActionManager() {
+        return stateActionManager;
     }
 
     @Override
