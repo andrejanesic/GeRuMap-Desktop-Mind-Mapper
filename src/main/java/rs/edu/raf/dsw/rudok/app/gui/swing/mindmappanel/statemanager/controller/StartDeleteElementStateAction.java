@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 
 public class StartDeleteElementStateAction extends IStateAction {
 
-    public StartDeleteElementStateAction(int shortcut, String iconPath, String name) {
-        super(shortcut, iconPath, name);
+    public StartDeleteElementStateAction() {
+        // TODO define icon path
+        super("TODO define icon path", "Delete");
     }
 
     @Override

@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 
 public class StartDrawConnectionStateAction extends IStateAction {
 
-    public StartDrawConnectionStateAction(int shortcut, String iconPath, String name) {
-        super(shortcut, iconPath, name);
+    public StartDrawConnectionStateAction() {
+        // TODO define icon path
+        super("TODO define icon path", "Connect");
     }
 
     @Override

@@ -6,9 +6,10 @@ import java.awt.event.KeyEvent;
 
 public abstract class IStateAction extends AbstractAction {
 
-    public IStateAction(int shortcut, String iconPath, String name) {
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                shortcut, ActionEvent.CTRL_MASK));
+    public IStateAction(String iconPath, String name) {
+        // TODO add back in
+        // putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+        //         shortcut, ActionEvent.CTRL_MASK));
         // putValue(SMALL_ICON, loadIcon("images/" + iconPath));
         putValue(NAME, name);
         putValue(SHORT_DESCRIPTION, name);

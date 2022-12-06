@@ -2,7 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
 
-public class StateDrawConnection implements IState {
+public class StateMoveTopic implements IState {
     @Override
     public void migrate(Object... params) {
 

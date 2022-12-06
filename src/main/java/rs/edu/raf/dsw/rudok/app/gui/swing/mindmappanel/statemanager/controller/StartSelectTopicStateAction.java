@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 
 public class StartSelectTopicStateAction extends IStateAction {
 
-    public StartSelectTopicStateAction(int shortcut, String iconPath, String name) {
-        super(shortcut, iconPath, name);
+    public StartSelectTopicStateAction() {
+        // TODO define icon path
+        super("TODO define icon path", "Select");
     }
 
     @Override

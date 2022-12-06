@@ -2,11 +2,11 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller;
 
 import java.awt.event.ActionEvent;
 
-public class StartAddTopicStateAction extends IStateAction {
+public class StartMoveTopicStateAction extends IStateAction {
 
-    public StartAddTopicStateAction() {
+    public StartMoveTopicStateAction() {
         // TODO define icon path
-        super("TODO define icon path", "Add");
+        super("TODO define icon path", "Move");
     }
 
     @Override
