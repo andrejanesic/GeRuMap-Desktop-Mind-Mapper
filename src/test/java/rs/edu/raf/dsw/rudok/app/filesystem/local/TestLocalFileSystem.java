@@ -108,7 +108,7 @@ public class TestLocalFileSystem {
                 root = new MindMap(new Random().nextBoolean(), Helper.randString());
                 break;
             case 1:
-                return new Element(Helper.randString(),0);
+                return new Element(Helper.randString(),0, 0);
         }
 
         int children = new Random().nextInt(3) + 1;
