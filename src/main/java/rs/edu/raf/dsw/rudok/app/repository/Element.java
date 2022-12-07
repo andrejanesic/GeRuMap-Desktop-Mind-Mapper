@@ -1,11 +1,15 @@
 package rs.edu.raf.dsw.rudok.app.repository;
 
+import java.awt.*;
 import java.util.Set;
 
 public class Element extends IMapNode {
 
-    public Element(String nodeName) {
+    private int stroke = 2;
+    private int color;
+    public Element(String nodeName,int color) {
         super(nodeName);
+        this.color = color;
     }
 
     @Override
