@@ -10,8 +10,8 @@ public class Connection extends Element {
      */
     private Topic from, to;
 
-    public Connection(String nodeName, int color, Topic from, Topic to) {
-        super(nodeName, color);
+    public Connection(String nodeName, int stroke, int color, Topic from, Topic to) {
+        super(nodeName, stroke, color);
         this.from = from;
         this.to = to;
     }

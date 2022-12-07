@@ -5,11 +5,45 @@ import java.util.Set;
 
 public class Element extends IMapNode {
 
-    private int stroke = 2;
+    private int stroke;
     private int color;
-    public Element(String nodeName,int color) {
+
+    public Element(String nodeName, int stroke, int color) {
         super(nodeName);
+        this.stroke = stroke;
         this.color = color;
+    }
+
+    public int getStroke() {
+        return stroke;
+    }
+
+    public void setStroke(int stroke) {
+        this.stroke = stroke;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "stroke",
+                        stroke
+                )
+        ));
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "color",
+                        color
+                )
+        ));
     }
 
     @Override

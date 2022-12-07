@@ -7,8 +7,8 @@ public class Topic extends Element {
 
     private int width, height, x, y;
 
-    public Topic(String nodeName, int color, int size, int x, int y, int w, int h) {
-        super(nodeName, color);
+    public Topic(String nodeName, int stroke, int color, int x, int y, int w, int h) {
+        super(nodeName, stroke, color);
         this.x = x;
         this.y = y;
         this.width = w;

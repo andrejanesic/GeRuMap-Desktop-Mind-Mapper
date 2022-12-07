@@ -20,7 +20,7 @@ public class MindMapFactory extends IMapNodeFactory {
     }
 
     @Override
-    public IMapNode createNode() {
+    public IMapNode createNode(Object... params) {
         if (getParent() == null) {
             return new MindMap(false, "New mind map " + ++CHILD_ID);
         }
