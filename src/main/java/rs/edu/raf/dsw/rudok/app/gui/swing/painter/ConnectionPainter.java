@@ -7,18 +7,20 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
 
-public class ConnectionPainter extends ElementPainter{
-    @Override
-    public void draw(Graphics g, Element e) {
-        Connection c = (Connection)e;
-        g.drawLine(c.getFrom().getX(),c.getFrom().getY(),c.getTo().getX(),c.getTo().getY());
+public class ConnectionPainter extends ElementPainter {
+
+    public ConnectionPainter(Element element) {
+        super(element);
     }
 
     @Override
-    public boolean elementAt(List<Shape> list,int x,int y) {
-        for(Shape s:list){
-            if(s.contains(x,y)) return true;
-        }
+    public void draw(Graphics g) {
+        Connection c = (Connection) getElement();
+        g.drawLine(c.getFrom().getX(), c.getFrom().getY(), c.getTo().getX(), c.getTo().getY());
+    }
+
+    @Override
+    public boolean elementAt(List<Shape> list) {
         return false;
     }
 }

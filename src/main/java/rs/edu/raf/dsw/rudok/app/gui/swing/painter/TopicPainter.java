@@ -7,18 +7,31 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
 
-public class TopicPainter extends ElementPainter{
-    @Override
-    public void draw(Graphics g, Element e) {
-        Topic topic = (Topic)e;
-        g.drawString(e.getNodeName(), topic.getX(), topic.getY());
-        ((Graphics2D)g).draw(new Ellipse2D.Float(topic.getX(), topic.getY(),e.getNodeName().length()+10,g.getFont().getSize2D()+10));
+public class TopicPainter extends ElementPainter {
+
+    public TopicPainter(Element element) {
+        super(element);
     }
 
     @Override
-    public boolean elementAt(List<Shape> list,int x,int y) {
-        for(Shape s:list){
-            if(s.contains(x,y)) return true;
+    public void draw(Graphics g) {
+        Topic topic = (Topic) getElement();
+        g.drawString(topic.getNodeName(), topic.getX(), topic.getY());
+        ((Graphics2D) g).draw(new Ellipse2D.Float(
+                topic.getX(),
+                topic.getY(),
+                topic.getNodeName().length() + topic.getWidth() / 2.0f,
+                g.getFont().getSize2D() + 10 + topic.getHeight() / 2.0f
+        ));
+    }
+
+    @Override
+    public boolean elementAt(List<Shape> list) {
+        for (Shape s : list) {
+            if (s.contains(
+                    ((Topic) getElement()).getX(),
+                    ((Topic) getElement()).getY()
+            )) return true;
         }
         return false;
     }
