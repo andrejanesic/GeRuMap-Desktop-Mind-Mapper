@@ -16,7 +16,7 @@ public class Toolbar extends JToolBar {
 
         try {
             Image plusImg = ImageIO.read(getClass().getResource("/images/plus.png"));
-            Image delImg = ImageIO.read(getClass().getResource("/images/iconmonstr-trash-can-lined-24.png"));
+            Image delImg = ImageIO.read(getClass().getResource("/images/bin.png"));
             btnNew.setIcon(new ImageIcon(plusImg));
             btnDelete.setIcon(new ImageIcon(delImg));
         } catch (Exception ex) {
