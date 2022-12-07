@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
+import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
 /**
@@ -53,19 +54,22 @@ public interface IMindMapPanel {
     /**
      * Performs the state migration for a mouse click event.
      *
-     * @param x Mouse click X coordinate.
-     * @param y Mouse click Y coordinate.
+     * @param target Target of mouse click.
+     * @param x      Mouse click X coordinate.
+     * @param y      Mouse click Y coordinate.
      */
-    void mouseClickStateMigrate(int x, int y);
+    void mouseClickStateMigrate(Element target, int x, int y);
 
 
     /**
      * Performs the state migration for a mouse draw.
      *
-     * @param x1 Mouse draw start X coordinate.
-     * @param y1 Mouse draw start Y coordinate.
-     * @param x2 Mouse draw end X coordinate.
-     * @param y2 Mouse draw end Y coordinate.
+     * @param target1 First target of mouse draw.
+     * @param target2 Second target of mouse draw.
+     * @param x1      Mouse draw start X coordinate.
+     * @param y1      Mouse draw start Y coordinate.
+     * @param x2      Mouse draw end X coordinate.
+     * @param y2      Mouse draw end Y coordinate.
      */
-    void mouseDrawStateMigrate(int x1, int y1, int x2, int y2);
+    void mouseDrawStateMigrate(Element target1, Element target2, int x1, int y1, int x2, int y2);
 }

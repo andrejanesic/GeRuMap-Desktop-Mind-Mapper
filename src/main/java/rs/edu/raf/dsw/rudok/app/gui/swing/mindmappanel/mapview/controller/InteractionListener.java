@@ -23,7 +23,7 @@ public class InteractionListener implements MouseListener {
         // TODO check if element pressed; if not, get x, y coordinates
         int x = 0, y = 0;
         Element selected = null;
-        mindMapPanel.getStateManager().getState().migrate(selected, x, y);
+        mindMapPanel.mouseClickStateMigrate(selected, x, y);
     }
 
     @Override
