@@ -1,18 +1,74 @@
 package rs.edu.raf.dsw.rudok.app.repository;
 
-public class Topic extends Element{
+/**
+ * Represents a topic/"bubble" in the {@link MindMap}.
+ */
+public class Topic extends Element {
 
-    private int size;
-    private int x,y;
+    private int width, height, x, y;
 
-    public Topic(String nodeName,int color,int size,int x,int y) {
-        super(nodeName,color);
-        this.size = size;
+    public Topic(String nodeName, int color, int size, int x, int y, int w, int h) {
+        super(nodeName, color);
         this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
     }
 
-    public int getSize() {
-        return size;
+    public void setWidth(int width) {
+        this.width = width;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "width",
+                        width
+                )
+        ));
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "height",
+                        height
+                )
+        ));
+    }
+
+    public void setX(int x) {
+        this.x = x;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "x",
+                        x
+                )
+        ));
+    }
+
+    public void setY(int y) {
+        this.y = y;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "y",
+                        y
+                )
+        ));
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public int getX() {
@@ -22,5 +78,4 @@ public class Topic extends Element{
     public int getY() {
         return y;
     }
-
 }
