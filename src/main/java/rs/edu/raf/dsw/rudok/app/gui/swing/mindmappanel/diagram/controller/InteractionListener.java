@@ -1,4 +1,4 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 
 /**
  * Custom listener for interactions with the
- * {@link rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.mapview.view.MapView}.
+ * {@link rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.view.IDiagramView}.
  */
 public class InteractionListener implements MouseListener {
 
