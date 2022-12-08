@@ -9,6 +9,7 @@ import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -21,6 +22,8 @@ public class DiagramFramework extends JPanel {
      * The {@link MindMap} to be painted.
      */
     private final MindMap parent;
+    private static ArrayList<Shape> shapes,selectedShapes;
+
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
@@ -34,8 +37,15 @@ public class DiagramFramework extends JPanel {
         while (it.hasNext()) {
             Element e = (Element) it.next();
             ElementPainter ep = ElementPainterFactory.getPainter(e);
-            //System.out.println(((Topic)e).getX()+ " " + ((Topic)e).getY() + " " + parent.getChildren());
             ep.draw(g2d);
         }
+    }
+
+    public static ArrayList<Shape> getShapes() {
+        return shapes;
+    }
+
+    public static ArrayList<Shape> getSelectedShapes() {
+        return selectedShapes;
     }
 }

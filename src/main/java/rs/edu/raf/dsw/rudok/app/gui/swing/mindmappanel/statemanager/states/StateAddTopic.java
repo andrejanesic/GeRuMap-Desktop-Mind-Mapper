@@ -17,8 +17,8 @@ public class StateAddTopic implements IState {
                     .createNode(ElementFactory.Type.Topic,
                             (int) params[2],
                             (int) params[3],
-                            10, // TODO customization
-                            10  // TODO customization
+                            0, // TODO customization
+                            0  // TODO customization
                     );
         } catch (Exception e) {
             System.out.println(e);
