@@ -1,8 +1,10 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.painter;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.List;
@@ -16,13 +18,14 @@ public class TopicPainter extends ElementPainter {
     @Override
     public void draw(Graphics g) {
         Topic topic = (Topic) getElement();
-        g.drawString(topic.getNodeName(), topic.getX(), topic.getY());
+        g.drawString(topic.getNodeName(), topic.getX() + 10, topic.getY()+20);
         ((Graphics2D) g).draw(new Ellipse2D.Float(
-                topic.getX(),
-                topic.getY(),
-                topic.getNodeName().length() + topic.getWidth() / 2.0f,
-                g.getFont().getSize2D() + 10 + topic.getHeight() / 2.0f
+                (float) topic.getX(),
+                (float) topic.getY(),
+                topic.getNodeName().length()*7,
+                g.getFont().getSize2D() + 20
         ));
+        System.out.println(topic.getNodeName().length());
     }
 
     @Override

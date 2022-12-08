@@ -5,6 +5,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.painter.ElementPainterFactory;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
+import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class DiagramFramework extends JPanel {
         while (it.hasNext()) {
             Element e = (Element) it.next();
             ElementPainter ep = ElementPainterFactory.getPainter(e);
+            //System.out.println(((Topic)e).getX()+ " " + ((Topic)e).getY() + " " + parent.getChildren());
             ep.draw(g2d);
         }
     }

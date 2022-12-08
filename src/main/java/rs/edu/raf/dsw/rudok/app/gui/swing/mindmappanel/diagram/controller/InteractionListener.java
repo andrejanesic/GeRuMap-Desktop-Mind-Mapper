@@ -21,9 +21,8 @@ public class InteractionListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         // TODO check if element pressed; if not, get x, y coordinates
-        int x = 0, y = 0;
         Element selected = null;
-        mindMapPanel.mouseClickStateMigrate(selected, x, y);
+        mindMapPanel.mouseClickStateMigrate(selected, e.getX(), e.getY());
     }
 
     @Override
