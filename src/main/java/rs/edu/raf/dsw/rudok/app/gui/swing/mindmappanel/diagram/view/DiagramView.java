@@ -2,7 +2,6 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.view;
 
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class DiagramView extends IDiagramView {
@@ -15,7 +14,7 @@ public class DiagramView extends IDiagramView {
     /**
      * Where the {@link MindMap} is painted.
      */
-    private final JPanel framework;
+    private final DiagramFramework framework;
 
     public DiagramView(MindMap mindMap) {
         this.mindMap = mindMap;
@@ -34,5 +33,15 @@ public class DiagramView extends IDiagramView {
     @Override
     public int getCenterY() {
         return framework.getHeight() / 2;
+    }
+
+    @Override
+    public void paintLine(int x1, int y1, int x2, int y2) {
+        framework.paintLine(x1, y1, x2, y2);
+    }
+
+    @Override
+    public void clearLine() {
+        framework.clearLine();
     }
 }

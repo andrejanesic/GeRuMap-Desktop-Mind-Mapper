@@ -50,6 +50,7 @@ public class TopicPainter extends ElementPainter {
 
     @Override
     public boolean elementAt(Point p) {
+        if (p == null) return false;
         return getShape().contains(p.getX(), p.getY());
     }
 

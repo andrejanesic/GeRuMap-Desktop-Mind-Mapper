@@ -23,6 +23,7 @@ public class DiagramFramework extends JPanel {
      */
     private final MindMap parent;
     private IObserver observer;
+    private int lineX1 = 0, lineY1 = 0, lineX2 = 0, lineY2 = 0;
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
@@ -42,6 +43,35 @@ public class DiagramFramework extends JPanel {
             ep.draw(g2d);
             ep.addObserver(observer);
         }
+
+        if (lineX1 - lineX2 != 0 && lineY1 - lineY2 != 0) {
+            g.drawLine(lineX1, lineY1, lineX2, lineY2);
+        }
+    }
+
+    /**
+     * Paints a (temporary) line for displaying connections being drawn.
+     *
+     * @param x1 Origin x.
+     * @param y1 Origin y.
+     * @param x2 Endpoint x.
+     * @param y2 Endpoint y.
+     */
+    protected void paintLine(int x1, int y1, int x2, int y2) {
+        lineX1 = x1;
+        lineY1 = y1;
+        lineX2 = x2;
+        lineY2 = y2;
+    }
+
+    /**
+     * Clears the (temporary) line for displaying connections being drawn.
+     */
+    protected void clearLine() {
+        lineX1 = 0;
+        lineY1 = 0;
+        lineX2 = 0;
+        lineY2 = 0;
     }
 
     /**

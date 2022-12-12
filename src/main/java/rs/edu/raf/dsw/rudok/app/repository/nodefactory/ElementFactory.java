@@ -10,12 +10,6 @@ public class ElementFactory extends IMapNodeFactory {
 
     public static int TOPIC_DEFAULT_WIDTH = 10;
     public static int TOPIC_DEFAULT_HEIGHT = 10;
-
-    public enum Type {
-        Connection,
-        Topic
-    }
-
     /**
      * For counting all children created thus far.
      */
@@ -37,6 +31,13 @@ public class ElementFactory extends IMapNodeFactory {
                 if ((!(params[1] instanceof Topic)) || (!(params[2] instanceof Topic))) {
                     throw new RuntimeException("Programmatic error: invalid parameters to ElementFactory.createNode");
                 }
+
+                Topic from = (Topic) params[1];
+                Topic to = (Topic) params[2];
+                if (from == to) return null;
+
+                Connection c = from.getConnections().getOrDefault(to, null);
+                if (c != null) return c;
 
                 child = new Connection(
                         "New connection " + ++CHILD_ID,
@@ -74,5 +75,10 @@ public class ElementFactory extends IMapNodeFactory {
             // TODO programmatic error, should never happen
             return null;
         }
+    }
+
+    public enum Type {
+        Connection,
+        Topic
     }
 }
