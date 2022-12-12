@@ -4,10 +4,12 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
-public class StateDeleteElement implements IState {
+public class StateDeleteElement extends IState {
 
     @Override
     public void migrate(Object... params) {
+        super.migrate(params);
+
         try {
             MindMap parent = (MindMap) params[0];
             Element target = (Element) params[1];
@@ -20,7 +22,7 @@ public class StateDeleteElement implements IState {
     }
 
     @Override
-    public void rollback() {
+    public void rollback(Object... params) {
 
     }
 }

@@ -7,10 +7,12 @@ import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 import java.util.Arrays;
 
-public class StateDrawConnection implements IState {
+public class StateDrawConnection extends IState {
 
     @Override
     public void migrate(Object... params) {
+        super.migrate(params);
+
         try {
             MindMap parent = (MindMap) params[0];
             // params[1] = (Topic) from, params[2] = (Topic) to
@@ -25,7 +27,7 @@ public class StateDrawConnection implements IState {
     }
 
     @Override
-    public void rollback() {
+    public void rollback(Object... params) {
 
     }
 }

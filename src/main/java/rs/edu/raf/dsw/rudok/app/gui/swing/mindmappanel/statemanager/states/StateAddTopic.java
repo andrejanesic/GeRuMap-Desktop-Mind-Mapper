@@ -1,16 +1,17 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.nodefactory.ElementFactory;
 import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
-import java.util.Arrays;
-
-public class StateAddTopic implements IState {
+public class StateAddTopic extends IState {
 
     @Override
     public void migrate(Object... params) {
+        super.migrate(params);
+
         try {
             MindMap parent = (MindMap) params[0];
             MapNodeFactoryUtils.getFactory(parent)
@@ -21,12 +22,12 @@ public class StateAddTopic implements IState {
                             ElementFactory.TOPIC_DEFAULT_HEIGHT  // TODO customization
                     );
         } catch (Exception e) {
-            System.out.println(e);
+            AppCore.getInstance().getMessageGenerator().error(e.getMessage());
         }
     }
 
     @Override
-    public void rollback() {
+    public void rollback(Object... params) {
 
     }
 }

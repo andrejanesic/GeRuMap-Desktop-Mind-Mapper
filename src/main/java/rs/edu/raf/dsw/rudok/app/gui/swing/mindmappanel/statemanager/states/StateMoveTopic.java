@@ -9,10 +9,12 @@ import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 import java.util.Arrays;
 
-public class StateMoveTopic implements IState {
+public class StateMoveTopic extends IState {
 
     @Override
     public void migrate(Object... params) {
+        super.migrate(params);
+
         try {
             Topic target = (Topic) params[0];
             int x = (int) params[1];
@@ -25,7 +27,7 @@ public class StateMoveTopic implements IState {
     }
 
     @Override
-    public void rollback() {
+    public void rollback(Object... params) {
 
     }
 }

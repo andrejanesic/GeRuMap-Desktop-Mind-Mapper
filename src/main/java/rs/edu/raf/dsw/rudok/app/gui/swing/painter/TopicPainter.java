@@ -5,7 +5,6 @@ import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.List;
 
 public class TopicPainter extends ElementPainter {
 
@@ -16,9 +15,9 @@ public class TopicPainter extends ElementPainter {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         Topic topic = (Topic) getElement();
-        float textW = topic.getNodeName().length() * g.getFont().getSize2D();
+        float textW = g.getFontMetrics().stringWidth(topic.getNodeName());
         float totalW = textW + topic.getWidth() * 2.0f;
         float textH = g.getFont().getSize2D();
         float totalH = textH + topic.getHeight() * 2.0f;
@@ -28,10 +27,25 @@ public class TopicPainter extends ElementPainter {
                 totalW,
                 totalH
         );
-        g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2), (int) (topic.getY() - textH / 2));
-        ((Graphics2D) g).draw(shape);
-        // DiagramFramework.getShapes().add(shape);
-        // System.out.println(topic.getNodeName().length());
+
+        if (this.isSelected()) {
+            Font fontPrev = g.getFont();
+            Stroke strokePrev = g.getStroke();
+
+            g.setFont(new Font(fontPrev.getFontName(), Font.BOLD, fontPrev.getSize()));
+            g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2.0f), (int) (topic.getY() + textH / 2.0f));
+
+            g.setStroke(new BasicStroke(4));
+            g.draw(shape);
+
+            // revert settings
+            g.setFont(fontPrev);
+            g.setStroke(strokePrev);
+            return;
+        }
+
+        g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2.0f), (int) (topic.getY() + textH / 2.0f));
+        g.draw(shape);
     }
 
     @Override

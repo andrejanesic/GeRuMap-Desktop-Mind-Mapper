@@ -10,7 +10,6 @@ import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -23,10 +22,11 @@ public class DiagramFramework extends JPanel {
      * The {@link MindMap} to be painted.
      */
     private final MindMap parent;
+    private IObserver observer;
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
-        IObserver observer = new DiagramFrameworkObserver(this);
+        observer = new DiagramFrameworkObserver(this);
         parent.addObserver(observer);
         parent.getChildren().forEach(c -> c.addObserver(observer));
     }
@@ -40,6 +40,7 @@ public class DiagramFramework extends JPanel {
             Element e = (Element) it.next();
             ElementPainter ep = ElementPainterFactory.getPainter(e);
             ep.draw(g2d);
+            ep.addObserver(observer);
         }
     }
 
@@ -69,7 +70,12 @@ public class DiagramFramework extends JPanel {
                 }
             }
 
-            if (message instanceof IMapNode.Message || message instanceof IMapNodeComposite.Message) {
+            if (message instanceof IMapNode.Message ||
+                    message instanceof IMapNodeComposite.Message ||
+                    (message instanceof ElementPainter.Message &&
+                            (((ElementPainter.Message) message).getStatus().equals(
+                                    ElementPainter.Message.Type.REPAINT_REQUEST)))
+            ) {
                 host.repaint();
                 host.revalidate();
             }
