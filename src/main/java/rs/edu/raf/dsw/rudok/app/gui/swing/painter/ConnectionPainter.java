@@ -4,8 +4,6 @@ import rs.edu.raf.dsw.rudok.app.repository.Connection;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.util.List;
 
 public class ConnectionPainter extends ElementPainter {
 
@@ -20,7 +18,8 @@ public class ConnectionPainter extends ElementPainter {
     }
 
     @Override
-    public boolean elementAt(List<Shape> list) {
+    public boolean elementAt(Point p) {
+        // TODO connections can't be clicked by default
         return false;
     }
 }

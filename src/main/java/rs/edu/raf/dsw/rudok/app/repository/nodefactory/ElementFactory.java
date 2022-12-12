@@ -8,6 +8,9 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
  */
 public class ElementFactory extends IMapNodeFactory {
 
+    public static int TOPIC_DEFAULT_WIDTH = 10;
+    public static int TOPIC_DEFAULT_HEIGHT = 10;
+
     public enum Type {
         Connection,
         Topic

@@ -5,6 +5,10 @@ package rs.edu.raf.dsw.rudok.app.repository;
  */
 public class Topic extends Element {
 
+    /**
+     * Width and height are considered as top and bottom padding. The original height the text height and is determined
+     * by the GUI component.
+     */
     private int width, height, x, y;
 
     public Topic(String nodeName, int stroke, int color, int x, int y, int w, int h) {

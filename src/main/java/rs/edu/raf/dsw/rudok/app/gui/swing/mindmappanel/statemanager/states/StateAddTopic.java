@@ -15,10 +15,10 @@ public class StateAddTopic implements IState {
             MindMap parent = (MindMap) params[0];
             MapNodeFactoryUtils.getFactory(parent)
                     .createNode(ElementFactory.Type.Topic,
-                            (int) params[2],
-                            (int) params[3],
-                            0, // TODO customization
-                            0  // TODO customization
+                            params[2],
+                            params[3],
+                            ElementFactory.TOPIC_DEFAULT_WIDTH, // TODO customization
+                            ElementFactory.TOPIC_DEFAULT_HEIGHT  // TODO customization
                     );
         } catch (Exception e) {
             System.out.println(e);

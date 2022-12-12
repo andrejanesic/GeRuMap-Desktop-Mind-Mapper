@@ -28,11 +28,11 @@ public abstract class ElementPainter {
     public abstract void draw(Graphics g);
 
     /**
-     * Returns true if the element is painted in one of the passed {@link Shape}s.
+     * Returns true if the element's shape includes the passed {@link Point}.
      *
-     * @param list List of {@link Shape}s the element may be located in.
-     * @return True if the element is found in any of the given {@link Shape}s.
+     * @param p {@link Point} where the interaction happened.
+     * @return True if the element was clicked, false otherwise.
      */
-    public abstract boolean elementAt(List<Shape> list);
+    public abstract boolean elementAt(Point p);
 
 }
