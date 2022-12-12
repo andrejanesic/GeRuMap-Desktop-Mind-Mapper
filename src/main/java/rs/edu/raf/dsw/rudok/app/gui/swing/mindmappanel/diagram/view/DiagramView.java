@@ -25,4 +25,14 @@ public class DiagramView extends IDiagramView {
         setLayout(new BorderLayout());
         add(framework, BorderLayout.CENTER);
     }
+
+    @Override
+    public int getCenterX() {
+        return framework.getWidth() / 2;
+    }
+
+    @Override
+    public int getCenterY() {
+        return framework.getHeight() / 2;
+    }
 }
