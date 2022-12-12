@@ -112,6 +112,7 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                             t = (MapTreeItem) iterator.next();
                             if (t.mapNode == data.getChild()) {
                                 child = t;
+                                break;
                             }
                         }
                         if (child == null) {
@@ -119,6 +120,12 @@ public class MapTreeItem extends DefaultMutableTreeNode {
                             AppCore.getInstance().getMessageGenerator().warning(
                                     "MapTreeItem's IMapNode detected removal of children, but no child with removed IMapNode child detected in MapTreeItem"
                             );
+                        }
+                        // Edge-case where the child is the first element and possibly the last
+                        if (last == null) {
+                            if (iterator.hasNext()) {
+                                last = (MapTreeItem) iterator.next();
+                            }
                         }
                         host.remove(child);
                         MainFrame.getInstance().getMapTree().refreshTree();
