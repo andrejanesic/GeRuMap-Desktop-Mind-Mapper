@@ -28,7 +28,7 @@ public class TopicPainter extends ElementPainter {
                 totalH
         );
 
-        if (this.isSelected()) {
+        if (topic.isSelected()) {
             Font fontPrev = g.getFont();
             Stroke strokePrev = g.getStroke();
 

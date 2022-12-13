@@ -14,11 +14,6 @@ public abstract class ElementPainter extends IPublisher {
      */
     private final Element element;
 
-    /**
-     * Whether the element should be painted in "selected" state or not. Defaults to false.
-     */
-    private boolean selected = false;
-
     public ElementPainter(Element element) {
         this.element = element;
     }
@@ -33,15 +28,6 @@ public abstract class ElementPainter extends IPublisher {
      * @param g {@link Graphics} canvas to paint on.
      */
     public abstract void draw(Graphics2D g);
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-        publish(new Message(Message.Type.REPAINT_REQUEST, new Message.RepaintRequestMessageData(this)));
-    }
 
     /**
      * Returns true if the element's shape includes the passed {@link Point}.

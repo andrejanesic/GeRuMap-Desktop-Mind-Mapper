@@ -22,6 +22,11 @@ public class Topic extends Element {
      */
     private int width, height, x, y;
 
+    /**
+     * Whether this topic has been selected by the user or not. Non-persistent attribute.
+     */
+    private boolean selected = false;
+
     public Topic(String nodeName, int stroke, int color, int x, int y, int w, int h) {
         super(nodeName, stroke, color);
         this.x = x;
@@ -91,6 +96,22 @@ public class Topic extends Element {
                         this,
                         "y",
                         y
+                )
+        ));
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        this.publish(new IMapNode.Message(
+                Message.Type.EDITED,
+                new Message.EditedMessageData(
+                        this,
+                        "selected",
+                        selected
                 )
         ));
     }
