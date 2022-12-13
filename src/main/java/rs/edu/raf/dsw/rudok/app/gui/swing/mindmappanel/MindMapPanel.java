@@ -92,15 +92,11 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
 
     @Override
     public void mouseClickStateMigrate(Element target, int x, int y) {
-        // TODO should be replaced with actual required params
-        // TODO check which state requires which params, but there shouldn't be any if-elses
         stateManager.getState().migrate(mindMap, target, x, y);
     }
 
     @Override
     public void mouseDrawStateMigrate(Element target1, Element target2, int x1, int y1, int x2, int y2) {
-        // TODO should be replaced with actual required params
-        // TODO check which state requires which params, but there shouldn't be any if-elses
         stateManager.getState().migrate(mindMap, target1, target2, x1, y1, x2, y2);
     }
 }

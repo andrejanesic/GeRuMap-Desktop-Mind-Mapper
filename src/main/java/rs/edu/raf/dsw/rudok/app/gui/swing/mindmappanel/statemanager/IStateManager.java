@@ -47,4 +47,9 @@ public interface IStateManager {
      * @return Current app {@link IState}.
      */
     IState getState();
+
+    /**
+     * Rolls back to the previous state.
+     */
+    void rollback();
 }
