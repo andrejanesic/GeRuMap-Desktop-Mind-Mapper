@@ -32,7 +32,7 @@ public class StateDrawConnection extends IState {
     public void migrate(MindMap parent, Topic t1, Topic t2) {
         // Remove markup line
         MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
-                .getActiveMindMapPanel().getDiagramController().getView().clearLine();
+                .getActiveMindMapPanel().getDiagramController().getView().clearHelpers();
 
         // Create new connection
         Connection conn = (Connection) MapNodeFactoryUtils.getFactory(parent)

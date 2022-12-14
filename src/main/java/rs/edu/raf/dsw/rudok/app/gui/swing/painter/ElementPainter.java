@@ -38,6 +38,13 @@ public abstract class ElementPainter extends IPublisher {
     public abstract boolean elementAt(Point p);
 
     /**
+     * The final painted {@link Shape}. May be null.
+     *
+     * @return The final painted {@link Shape}. May be null.
+     */
+    public abstract Shape getShape();
+
+    /**
      * Message for publishing.
      */
     public static class Message extends IMessage<ElementPainter.Message.Type, Message.RepaintRequestMessageData> {

@@ -7,6 +7,7 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 /**
@@ -20,7 +21,11 @@ public class DiagramFramework extends JPanel {
      */
     private final MindMap parent;
     private IObserver observer;
-    private int lineX1 = 0, lineY1 = 0, lineX2 = 0, lineY2 = 0;
+    /**
+     * Helper graphic start and endpoint.
+     */
+    private int helperX1 = 0, helperY1 = 0, helperX2 = 0, helperY2 = 0;
+    private HelperType helperType = null;
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
@@ -54,9 +59,45 @@ public class DiagramFramework extends JPanel {
             ep.addObserver(observer);
         }
 
-        if (lineX1 - lineX2 != 0 && lineY1 - lineY2 != 0) {
-            g.drawLine(lineX1, lineY1, lineX2, lineY2);
+        if (helperType != null) {
+            if (helperType == HelperType.LINE) {
+                // draw stroke
+                g2d.setStroke(new BasicStroke(1));
+                g2d.setColor(Color.BLACK);
+                g2d.drawLine(helperX1, helperY1, helperX2, helperY2);
+            } else {
+                Shape r = new Rectangle2D.Float(
+                        Math.min(helperX1, helperX2),
+                        Math.min(helperY1, helperY2),
+                        Math.abs(helperX2 - helperX1),
+                        Math.abs(helperY2 - helperY1)
+                );
+                // draw fill
+                g2d.setColor(new Color(0, 0, 0, 0.125f));
+                g2d.fill(r);
+
+                // draw stroke
+                g2d.setStroke(new BasicStroke(1));
+                g2d.setColor(Color.BLACK);
+                g2d.draw(r);
+            }
         }
+    }
+
+    /**
+     * Paints a (temporary) rectangle for displaying lasso-selection.
+     *
+     * @param x1 Origin x.
+     * @param y1 Origin y.
+     * @param x2 Endpoint x.
+     * @param y2 Endpoint y.
+     */
+    protected void paintRectangle(int x1, int y1, int x2, int y2) {
+        helperX1 = x1;
+        helperY1 = y1;
+        helperX2 = x2;
+        helperY2 = y2;
+        helperType = HelperType.RECTANGLE;
     }
 
     /**
@@ -68,20 +109,30 @@ public class DiagramFramework extends JPanel {
      * @param y2 Endpoint y.
      */
     protected void paintLine(int x1, int y1, int x2, int y2) {
-        lineX1 = x1;
-        lineY1 = y1;
-        lineX2 = x2;
-        lineY2 = y2;
+        helperX1 = x1;
+        helperY1 = y1;
+        helperX2 = x2;
+        helperY2 = y2;
+        helperType = HelperType.LINE;
     }
 
     /**
-     * Clears the (temporary) line for displaying connections being drawn.
+     * Clears all temporary lines/rectangles/other helpers being drawn.
      */
-    protected void clearLine() {
-        lineX1 = 0;
-        lineY1 = 0;
-        lineX2 = 0;
-        lineY2 = 0;
+    protected void clearHelpers() {
+        helperX1 = 0;
+        helperY1 = 0;
+        helperX2 = 0;
+        helperY2 = 0;
+        helperType = null;
+    }
+
+    /**
+     * Types of helpers to draw.
+     */
+    private enum HelperType {
+        LINE,
+        RECTANGLE
     }
 
     /**

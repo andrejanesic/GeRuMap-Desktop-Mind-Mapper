@@ -81,7 +81,7 @@ public class DiagramController implements IDiagramController {
                         ; // TODO anything here?
                     }
                 }
-                view.clearLine();
+                view.clearHelpers();
                 view.repaint();
                 view.revalidate();
             }

@@ -30,4 +30,9 @@ public class ConnectionPainter extends ElementPainter {
         // TODO connections can't be clicked by default
         return false;
     }
+
+    @Override
+    public Shape getShape() {
+        return null;
+    }
 }
