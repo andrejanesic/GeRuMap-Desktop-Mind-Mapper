@@ -45,20 +45,12 @@ public class StateManager implements IStateManager {
 
     @Override
     public void setSelectTopic() {
-        if (getState().equals(selectTopic)) {
-            selectTopic.rollback();
-            rollback();
-        }
         current = selectTopic;
         history.push(current);
     }
 
     @Override
     public void setMoveTopic() {
-        if (getState().equals(selectTopic)) {
-            selectTopic.rollback();
-            rollback();
-        }
         current = moveTopic;
         history.push(current);
     }

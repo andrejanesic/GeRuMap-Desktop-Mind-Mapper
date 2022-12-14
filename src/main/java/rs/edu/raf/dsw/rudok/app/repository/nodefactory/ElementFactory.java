@@ -49,8 +49,12 @@ public class ElementFactory extends IMapNodeFactory {
             } else if (params[0].equals(Type.Topic)) {
                 int x = (int) params[1];
                 int y = (int) params[2];
-                int w = (int) params[3];
-                int h = (int) params[4];
+                int w = TOPIC_DEFAULT_WIDTH;
+                int h = TOPIC_DEFAULT_HEIGHT;
+                if (params.length >= 5) {
+                    w = (int) params[3];
+                    h = (int) params[4];
+                }
 
                 child = new Topic(
                         "New topic " + ++CHILD_ID,

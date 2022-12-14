@@ -8,6 +8,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.painter.ElementPainterFactory;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
+import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -23,7 +24,8 @@ public class DiagramController implements IDiagramController {
     private final IMindMapPanel mindMapPanel;
     private final MindMap mindMap;
     private final IDiagramView view;
-    private Point dragOrigin;
+    private Point originPoint;
+    private Topic originTopic;
 
     public DiagramController(IMindMapPanel mindMapPanel) {
         this.mindMapPanel = mindMapPanel;
@@ -37,29 +39,49 @@ public class DiagramController implements IDiagramController {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                dragOrigin = e.getPoint();
+                originPoint = e.getPoint();
+                ElementPainter ep = getElementAt(e.getPoint());
+                if (ep == null) {
+                    originTopic = null;
+                } else {
+                    if (ep.getElement() instanceof Topic) {
+                        originTopic = (Topic) ep.getElement();
+                    } else {
+                        originTopic = null;
+                    }
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 // If click
-                if (e.getPoint().equals(dragOrigin)) {
+                if (e.getPoint().equals(originPoint)) {
                     ElementPainter ep = getElementAt(e.getPoint());
-                    if (ep != null) {
-                        mindMapPanel.mouseClickStateMigrate(ep.getElement(), e.getX(), e.getY());
+                    if (ep != null && ep.getElement() instanceof Topic) {
+                        mindMapPanel.mouseClickStateMigrate((Topic) ep.getElement());
                     } else {
-                        mindMapPanel.mouseClickStateMigrate(null, e.getX(), e.getY());
+                        mindMapPanel.mouseClickStateMigrate(e.getX(), e.getY());
                     }
                     return;
                 }
 
                 // If drag
-                ElementPainter ep1 = getElementAt(dragOrigin);
                 ElementPainter ep2 = getElementAt(e.getPoint());
-                Element e1 = ep1 != null ? ep1.getElement() : null;
                 Element e2 = ep2 != null ? ep2.getElement() : null;
-                mindMapPanel.mouseDrawStateMigrate(e1, e2, dragOrigin.x, dragOrigin.y, e.getX(), e.getY());
-
+                if (originTopic != null) {
+                    if (e2 instanceof Topic && originTopic != e2) {
+                        mindMapPanel.mouseDrawStateMigrate(originTopic, (Topic) e2);
+                    } else {
+                        mindMapPanel.mouseDrawStateMigrate(originTopic, e.getX(), e.getY(), true);
+                    }
+                } else {
+                    if (originPoint != null) {
+                        mindMapPanel.mouseDrawStateMigrate(originPoint.x, originPoint.y, e.getX(), e.getY(), true);
+                    } else {
+                        ; // TODO anything here?
+                    }
+                }
+                view.clearLine();
                 view.repaint();
                 view.revalidate();
             }
@@ -74,14 +96,27 @@ public class DiagramController implements IDiagramController {
 
             }
         });
+
         view.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                ElementPainter ep1 = getElementAt(dragOrigin);
                 ElementPainter ep2 = getElementAt(e.getPoint());
-                Element e1 = ep1 != null ? ep1.getElement() : null;
                 Element e2 = ep2 != null ? ep2.getElement() : null;
-                mindMapPanel.mouseDrawStateMigrate(e1, e2, dragOrigin.x, dragOrigin.y, e.getX(), e.getY());
+                if (originTopic != null) {
+                    if (e2 instanceof Topic && originTopic != e2) {
+                        mindMapPanel.mouseDrawStateMigrate(originTopic, (Topic) e2);
+                    } else {
+                        mindMapPanel.mouseDrawStateMigrate(originTopic, e.getX(), e.getY(), false);
+                    }
+                } else {
+                    if (originPoint != null) {
+                        mindMapPanel.mouseDrawStateMigrate(originPoint.x, originPoint.y, e.getX(), e.getY(), false);
+                    } else {
+                        ; // TODO anything here?
+                    }
+                }
+                view.repaint();
+                view.revalidate();
             }
 
             @Override

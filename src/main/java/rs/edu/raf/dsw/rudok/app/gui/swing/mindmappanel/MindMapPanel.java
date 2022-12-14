@@ -6,8 +6,8 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManage
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.StateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.StateActionManager;
-import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
+import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,12 +91,32 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
     }
 
     @Override
-    public void mouseClickStateMigrate(Element target, int x, int y) {
-        stateManager.getState().migrate(mindMap, target, x, y);
+    public void mouseDrawStateMigrate(int x1, int y1, int x2, int y2, boolean complete) {
+        stateManager.getState().migrate(mindMap, x1, y1, x2, y2, complete);
     }
 
     @Override
-    public void mouseDrawStateMigrate(Element target1, Element target2, int x1, int y1, int x2, int y2) {
-        stateManager.getState().migrate(mindMap, target1, target2, x1, y1, x2, y2);
+    public void mouseDrawStateMigrate(Topic t1, Topic t2) {
+        stateManager.getState().migrate(mindMap, t1, t2);
+    }
+
+    @Override
+    public void mouseClickStateMigrate(int x1, int y1) {
+        stateManager.getState().migrate(mindMap, x1, y1);
+    }
+
+    @Override
+    public void mouseClickStateMigrate(Topic topic) {
+        stateManager.getState().migrate(mindMap, topic);
+    }
+
+    @Override
+    public void mouseDrawStateMigrate(Topic... topics) {
+        stateManager.getState().migrate(mindMap, topics);
+    }
+
+    @Override
+    public void mouseDrawStateMigrate(Topic t, int x1, int y1, boolean complete) {
+        stateManager.getState().migrate(mindMap, t, x1, y1, complete);
     }
 }

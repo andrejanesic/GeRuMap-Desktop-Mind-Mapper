@@ -1,6 +1,5 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
-import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.Connection;
@@ -13,53 +12,37 @@ import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 public class StateDrawConnection extends IState {
 
     @Override
-    public void migrate(Object... params) {
+    public void migrate(MindMap parent, Topic t, int x1, int y1, boolean complete) {
+        this.migrate(parent, t.getX(), t.getY(), x1, y1, false);
+    }
 
-        try {
-            if (params.length < 3) return;
+    @Override
+    public void migrate(MindMap parent, int x1, int y1, int x2, int y2, boolean complete) {
+        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().paintLine(
+                        x1, y1, x2, y2
+                );
+        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().repaint();
+        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().revalidate();
+    }
 
-            // If no targets available, draw a markup line
-            if (params[1] == null || params[2] == null) {
-                if (params.length < 7 ||
-                        !(params[3] instanceof Integer) ||
-                        !(params[4] instanceof Integer) ||
-                        !(params[5] instanceof Integer) ||
-                        !(params[6] instanceof Integer)
-                ) return;
-                MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
-                        .getActiveMindMapPanel().getDiagramController().getView().paintLine(
-                                (int) params[3], (int) params[4], (int) params[5], (int) params[6]
-                        );
-                MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
-                        .getActiveMindMapPanel().getDiagramController().getView().repaint();
-                MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
-                        .getActiveMindMapPanel().getDiagramController().getView().revalidate();
-                return;
-            }
+    @Override
+    public void migrate(MindMap parent, Topic t1, Topic t2) {
+        // Remove markup line
+        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().clearLine();
 
-            // Remove markup line
-            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
-                    .getActiveMindMapPanel().getDiagramController().getView().clearLine();
+        // Create new connection
+        Connection conn = (Connection) MapNodeFactoryUtils.getFactory(parent)
+                .createNode(ElementFactory.Type.Connection,
+                        t1,
+                        t2
+                );
 
-            if (!(params[1] instanceof Topic && params[2] instanceof Topic)) return;
-
-            // Create new connection
-            MindMap parent = (MindMap) params[0];
-            Topic from = (Topic) params[1];
-            Topic to = (Topic) params[2];
-            Connection conn = (Connection) MapNodeFactoryUtils.getFactory(parent)
-                    .createNode(ElementFactory.Type.Connection,
-                            from,
-                            to
-                    );
-
-            if (conn != null)
-                super.migrate(parent, conn);
-
-        } catch (Exception e) {
-            AppCore.getInstance().getMessageGenerator().error(e.getMessage());
-            e.printStackTrace();
-        }
+        if (conn != null)
+            super.commit(parent, conn);
     }
 
     @Override
