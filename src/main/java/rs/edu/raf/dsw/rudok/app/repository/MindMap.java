@@ -81,6 +81,7 @@ public class MindMap extends IMapNodeComposite {
             ElementFactory eFactory = (ElementFactory) MapNodeFactoryUtils.getFactory(this);
             if (!(e instanceof Connection)) continue;
             Element eCopy = (Element) eFactory.createNode(
+                    ElementFactory.Type.Connection,
                     copyMap.get(((Connection) e).getFrom()),
                     copyMap.get(((Connection) e).getTo())
             );

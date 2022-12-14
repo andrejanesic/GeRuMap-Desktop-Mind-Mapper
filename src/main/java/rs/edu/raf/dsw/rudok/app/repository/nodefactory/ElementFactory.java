@@ -42,7 +42,7 @@ public class ElementFactory extends IMapNodeFactory {
                 child = new Connection(
                         "New connection " + ++CHILD_ID,
                         2,
-                        0x0,
+                        "#FFFFFF",
                         (Topic) params[1],
                         (Topic) params[2]
                 );
@@ -59,7 +59,7 @@ public class ElementFactory extends IMapNodeFactory {
                 child = new Topic(
                         "New topic " + ++CHILD_ID,
                         2,
-                        0x0,
+                        "#FFFFFF",
                         x,
                         y,
                         w,

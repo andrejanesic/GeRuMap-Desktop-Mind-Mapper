@@ -32,10 +32,15 @@ public class TopicPainter extends ElementPainter {
             Font fontPrev = g.getFont();
             Stroke strokePrev = g.getStroke();
 
+            g.setColor(Color.decode(topic.getColor()));
+            g.fill(shape);
+
+            g.setColor(Color.BLACK);
             g.setFont(new Font(fontPrev.getFontName(), Font.BOLD, fontPrev.getSize()));
             g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2.0f), (int) (topic.getY() + textH / 2.0f));
 
-            g.setStroke(new BasicStroke(4));
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(5));
             g.draw(shape);
 
             // revert settings
@@ -44,7 +49,15 @@ public class TopicPainter extends ElementPainter {
             return;
         }
 
+        g.setColor(Color.decode(topic.getColor()));
+        g.fill(shape);
+
+        g.setColor(Color.BLACK);
         g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2.0f), (int) (topic.getY() + textH / 2.0f));
+
+        Color border = Color.decode(topic.getColor()).darker();
+        g.setColor(border);
+        g.setStroke(new BasicStroke(getElement().getStroke()));
         g.draw(shape);
     }
 

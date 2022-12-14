@@ -1,11 +1,14 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.controller.ActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.controller.IActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.DiagramController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.IDiagramController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.StateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.StateActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.toolbar.MindMapToolbar;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
@@ -30,6 +33,11 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
     private final IStateActionManager stateActionManager;
 
     /**
+     * Manager for other actions.
+     */
+    private final IActionManager actionManager;
+
+    /**
      * Used for painting the mind map.
      */
     private final IDiagramController diagramController;
@@ -37,7 +45,8 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
     public MindMapPanel(MindMap mindMap) {
         super(new BorderLayout());
         this.mindMap = mindMap;
-        stateManager = new StateManager();
+        actionManager = new ActionManager(this);
+        stateManager = new StateManager(mindMap);
         stateActionManager = new StateActionManager(this);
 
         // Add map visualizer
@@ -53,6 +62,11 @@ public class MindMapPanel extends JPanel implements IMindMapPanel {
     @Override
     public MindMap getMindMap() {
         return mindMap;
+    }
+
+    @Override
+    public IActionManager getActionManager() {
+        return actionManager;
     }
 
     @Override

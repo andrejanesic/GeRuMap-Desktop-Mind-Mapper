@@ -101,4 +101,11 @@ public abstract class IState {
      * @param params Parameters.
      */
     public abstract void rollback(Object... params);
+
+    /**
+     * Clears the history stack.
+     */
+    public void clear() {
+        history.clear();
+    }
 }

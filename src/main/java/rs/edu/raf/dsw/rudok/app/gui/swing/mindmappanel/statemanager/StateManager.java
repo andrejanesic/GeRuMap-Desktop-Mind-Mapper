@@ -1,6 +1,9 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states.*;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
+import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import java.util.Stack;
 
@@ -17,8 +20,10 @@ public class StateManager implements IStateManager {
     private IState deleteElement;
     private IState drawConnection;
     private IState current;
+    private MindMap parent;
 
-    public StateManager() {
+    public StateManager(MindMap parent) {
+        this.parent = parent;
         init();
     }
 
@@ -35,10 +40,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public void setAddTopic() {
-        if (getState().equals(selectTopic)) {
-            selectTopic.rollback();
-            rollback();
-        }
+        clearSelected();
         current = addTopic;
         history.push(current);
     }
@@ -57,30 +59,20 @@ public class StateManager implements IStateManager {
 
     @Override
     public void setZoom() {
-        if (getState().equals(selectTopic)) {
-            selectTopic.rollback();
-            rollback();
-        }
         current = zoom;
         history.push(current);
     }
 
     @Override
     public void setDrawConnection() {
-        if (getState().equals(selectTopic)) {
-            selectTopic.rollback();
-            rollback();
-        }
+        clearSelected();
         current = drawConnection;
         history.push(current);
     }
 
     @Override
     public void setDeleteElement() {
-        if (getState().equals(selectTopic)) {
-            selectTopic.rollback();
-            rollback();
-        }
+        clearSelected();
         current = deleteElement;
         history.push(current);
     }
@@ -93,6 +85,14 @@ public class StateManager implements IStateManager {
     @Override
     public void rollback() {
         if (!history.empty()) history.pop();
+    }
+
+    private void clearSelected() {
+        for (IMapNode e : parent.getChildren()) {
+            if (!(e instanceof Topic)) continue;
+            ((Topic) e).setSelected(false);
+        }
+        selectTopic.clear();
     }
 
 }

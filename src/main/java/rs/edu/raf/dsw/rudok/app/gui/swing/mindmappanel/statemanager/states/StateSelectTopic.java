@@ -32,12 +32,29 @@ public class StateSelectTopic extends IState {
 
     @Override
     public void migrate(MindMap parent, Topic... topics) {
-        for (Topic t : topics) {
-            if (t == null) continue;
-            t.setSelected(!t.isSelected());
+        int l = 0;
+        for (IMapNode mapNode : parent.getChildren()) {
+            if (mapNode == null) continue;
+            if (!(mapNode instanceof Topic)) continue;
+            l++;
         }
 
-        super.commit(parent, topics);
+        int i = 0;
+        Topic[] flipped = new Topic[l];
+        for (IMapNode e : parent.getChildren()) {
+            if (!(e instanceof Topic)) continue;
+            Topic t = (Topic) e;
+            t.setSelected(false);
+            for (Topic t1 : topics) {
+                if (t == t1) {
+                    t.setSelected(true);
+                    break;
+                }
+            }
+            flipped[i] = t;
+        }
+
+        super.commit(parent, flipped);
     }
 
     @Override

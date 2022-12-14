@@ -6,9 +6,9 @@ import java.util.Set;
 public class Element extends IMapNode {
 
     private int stroke;
-    private int color;
+    private String color;
 
-    public Element(String nodeName, int stroke, int color) {
+    public Element(String nodeName, int stroke, String color) {
         super(nodeName);
         this.stroke = stroke;
         this.color = color;
@@ -30,11 +30,11 @@ public class Element extends IMapNode {
         ));
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
         this.publish(new IMapNode.Message(
                 Message.Type.EDITED,

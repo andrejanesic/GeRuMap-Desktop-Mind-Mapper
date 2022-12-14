@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.controller.IActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.IDiagramController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
@@ -24,6 +25,8 @@ public interface IMindMapPanel {
      * @return {@link IStateManager} for this {@link IMindMapPanel} instance.
      */
     IStateManager getStateManager();
+
+    IActionManager getActionManager();
 
     /**
      * Returns the {@link IStateActionManager} for this {@link IMindMapPanel} instance.
