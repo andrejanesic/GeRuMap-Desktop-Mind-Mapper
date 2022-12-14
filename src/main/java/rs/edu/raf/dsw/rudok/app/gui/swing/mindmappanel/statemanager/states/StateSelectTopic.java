@@ -2,11 +2,96 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
+import rs.edu.raf.dsw.rudok.app.gui.swing.painter.ElementPainter;
+import rs.edu.raf.dsw.rudok.app.gui.swing.painter.ElementPainterFactory;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
+import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
+import java.util.Set;
+
 public class StateSelectTopic extends IState {
+
+    private final Set<Topic> tempSelect = new HashSet<>();
+
+    @Override
+    public void migrate(MindMap parent, int x1, int y1, int x2, int y2, boolean complete) {
+        int dx = Math.abs(x1 - x2);
+        int dy = Math.abs(y1 - y2);
+        int x = Math.min(x1, x2);
+        int y = Math.min(y1, y2);
+
+        // Add every touched and contained element
+        for (IMapNode e : parent.getChildren()) {
+            if (!(e instanceof Topic)) continue;
+            Topic t = (Topic) e;
+            ElementPainter ep = ElementPainterFactory.getPainter((Element) e);
+            Shape s = ep.getShape();
+
+            // If touched
+            if (ElementPainterFactory.getPainter(t).elementAt(new Point(x2, y2))) {
+                tempSelect.add(t);
+                t.setSelected(true);
+                continue;
+            }
+
+            // If contained
+            if (s != null) {
+                Area rect = new Area(new Rectangle2D.Float(
+                        Math.min(x1, x2),
+                        Math.min(y1, y2),
+                        Math.abs(x1 - x2),
+                        Math.abs(y1 - y2)
+                ));
+                Area sh = new Area(s);
+                rect.intersect(sh);
+                if (!rect.isEmpty()) {
+                    t.setSelected(true);
+                    tempSelect.add(t);
+                    continue;
+                }
+            }
+
+            // If shape not available but center in bounding box
+            if (t.getX() > x && t.getX() < x + dx && t.getY() > y && t.getY() < y + dy) {
+                t.setSelected(true);
+                tempSelect.add(t);
+                continue;
+            }
+
+            tempSelect.remove(t);
+            t.setSelected(false);
+        }
+
+        if (complete) {
+            Topic[] topics = new Topic[tempSelect.size()];
+            int i = 0;
+            for (Topic t : tempSelect) {
+                topics[i] = t;
+            }
+            tempSelect.clear();
+
+            super.commit(parent, topics);
+
+            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                    .getActiveMindMapPanel().getDiagramController().getView().clearHelpers();
+        } else {
+            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                    .getActiveMindMapPanel().getDiagramController().getView().paintRectangle(
+                            x1, y1, x2, y2);
+        }
+
+        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().repaint();
+        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().revalidate();
+    }
 
     @Override
     public void migrate(MindMap parent, int x1, int y1) {

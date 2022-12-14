@@ -67,6 +67,7 @@ public class TopicPainter extends ElementPainter {
         return getShape().contains(p.getX(), p.getY());
     }
 
+    @Override
     public Shape getShape() {
         return shape;
     }

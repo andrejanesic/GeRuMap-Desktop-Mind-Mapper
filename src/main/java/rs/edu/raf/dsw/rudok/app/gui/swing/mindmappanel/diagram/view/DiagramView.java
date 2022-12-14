@@ -36,12 +36,17 @@ public class DiagramView extends IDiagramView {
     }
 
     @Override
+    public void paintRectangle(int x1, int y1, int x2, int y2) {
+        framework.paintRectangle(x1, y1, x2, y2);
+    }
+
+    @Override
     public void paintLine(int x1, int y1, int x2, int y2) {
         framework.paintLine(x1, y1, x2, y2);
     }
 
     @Override
-    public void clearLine() {
-        framework.clearLine();
+    public void clearHelpers() {
+        framework.clearHelpers();
     }
 }
