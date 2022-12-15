@@ -49,4 +49,8 @@ public class DiagramView extends IDiagramView {
     public void clearHelpers() {
         framework.clearHelpers();
     }
+
+    public DiagramFramework getFramework() {
+        return framework;
+    }
 }

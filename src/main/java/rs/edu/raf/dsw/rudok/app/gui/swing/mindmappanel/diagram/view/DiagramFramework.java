@@ -7,6 +7,9 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
@@ -14,7 +17,7 @@ import java.util.Iterator;
  * <h1>DiagramFramework</h1>
  * The "canvas" on which the {@link MindMap} is painted.
  */
-public class DiagramFramework extends JPanel {
+public class DiagramFramework extends JPanel implements AdjustmentListener {
 
     /**
      * The {@link MindMap} to be painted.
@@ -26,19 +29,27 @@ public class DiagramFramework extends JPanel {
      */
     private int helperX1 = 0, helperY1 = 0, helperX2 = 0, helperY2 = 0;
     private HelperType helperType = null;
+    private AffineTransform affineTransform;
+    private double scaling = 1.0;
+    private double translateX = 0.0;
+    private double translateY = 0.0;
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
         observer = new DiagramFrameworkObserver(this);
         parent.addObserver(observer);
         parent.getChildren().forEach(c -> c.addObserver(observer));
+        affineTransform = new AffineTransform();
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
+        ((Graphics2D) g).setTransform(affineTransform);
+        affineTransform.scale(scaling,scaling);
+        affineTransform.translate(translateX,translateY);
         // Draw connections
         Iterator<IMapNode> it = parent.getChildren().iterator();
         while (it.hasNext()) {
@@ -127,6 +138,13 @@ public class DiagramFramework extends JPanel {
         helperType = null;
     }
 
+    @Override
+    public void adjustmentValueChanged(AdjustmentEvent e) {
+        if(e.getValue()==AdjustmentEvent.UNIT_INCREMENT || e.getValue()==AdjustmentEvent.BLOCK_INCREMENT){
+
+        }//else if(e.getValue()==A)
+    }
+
     /**
      * Types of helpers to draw.
      */
@@ -171,5 +189,24 @@ public class DiagramFramework extends JPanel {
                 host.revalidate();
             }
         }
+    }
+    public double getScaling() {
+        return scaling;
+    }
+
+    public void setScaling(double scaling) {
+        this.scaling = scaling;
+    }
+
+    public AffineTransform getAffineTransform() {
+        return affineTransform;
+    }
+
+    public double getTranslateX() {
+        return translateX;
+    }
+
+    public double getTranslateY() {
+        return translateY;
     }
 }

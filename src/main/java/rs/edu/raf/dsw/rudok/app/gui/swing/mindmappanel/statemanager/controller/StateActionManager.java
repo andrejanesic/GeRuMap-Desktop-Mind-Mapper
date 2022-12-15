@@ -10,7 +10,6 @@ public class StateActionManager implements IStateActionManager {
     private IStateAction startDrawConnectionStateAction;
     private IStateAction startMoveTopicStateAction;
     private IStateAction startSelectTopicStateAction;
-    private IStateAction startZoomStateAction;
 
     public StateActionManager(IMindMapPanel mindMapPanel) {
         this.mindMapPanel = mindMapPanel;
@@ -23,7 +22,7 @@ public class StateActionManager implements IStateActionManager {
         startDrawConnectionStateAction = new StartDrawConnectionStateAction(mindMapPanel.getStateManager());
         startMoveTopicStateAction = new StartMoveTopicStateAction(mindMapPanel.getStateManager());
         startSelectTopicStateAction = new StartSelectTopicStateAction(mindMapPanel.getStateManager());
-        startZoomStateAction = new StartZoomStateAction(mindMapPanel.getStateManager());
+
     }
 
     @Override
@@ -51,8 +50,5 @@ public class StateActionManager implements IStateActionManager {
         return startSelectTopicStateAction;
     }
 
-    @Override
-    public IStateAction getStartZoomStateAction() {
-        return startZoomStateAction;
-    }
+
 }

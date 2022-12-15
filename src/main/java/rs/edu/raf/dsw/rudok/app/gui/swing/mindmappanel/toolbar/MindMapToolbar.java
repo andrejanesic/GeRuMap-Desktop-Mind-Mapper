@@ -9,11 +9,12 @@ public class MindMapToolbar extends IMindMapToolbar {
 
         // Add state switchers
         add(mindMapPanel.getStateActionManager().getStartSelectTopicStateAction());
-        add(mindMapPanel.getStateActionManager().getStartZoomStateAction());
         add(mindMapPanel.getStateActionManager().getStartAddTopicStateAction());
         add(mindMapPanel.getStateActionManager().getStartDrawConnectionStateAction());
         add(mindMapPanel.getStateActionManager().getStartMoveTopicStateAction());
         add(mindMapPanel.getStateActionManager().getStartDeleteElementStateAction());
         add(mindMapPanel.getActionManager().getEditTopicAction());
+        add(mindMapPanel.getActionManager().getZoomInAction());
+        add(mindMapPanel.getActionManager().getZoomOutAction());
     }
 }

@@ -47,4 +47,6 @@ public abstract class IDiagramView extends JPanel {
      * Clears all temporary lines/rectangles/other helpers being drawn.
      */
     public abstract void clearHelpers();
+
+    public abstract DiagramFramework getFramework();
 }
