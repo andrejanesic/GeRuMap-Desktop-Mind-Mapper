@@ -22,10 +22,6 @@ public class StateSelectTopic extends IState {
 
     @Override
     public void migrate(MindMap parent, int x1, int y1, int x2, int y2, boolean complete) {
-        int dx = Math.abs(x1 - x2);
-        int dy = Math.abs(y1 - y2);
-        int x = Math.min(x1, x2);
-        int y = Math.min(y1, y2);
 
         // Add every touched and contained element
         for (IMapNode e : parent.getChildren()) {

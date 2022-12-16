@@ -24,6 +24,7 @@ public class DiagramController implements IDiagramController {
     private final IMindMapPanel mindMapPanel;
     private final MindMap mindMap;
     private final IDiagramView view;
+    private Point originPointScaled;
     private Point originPoint;
     private Topic originTopic;
 
@@ -39,8 +40,9 @@ public class DiagramController implements IDiagramController {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                originPoint = getScaledPoint(e.getPoint());
-                ElementPainter ep = getElementAt(originPoint);
+                originPoint = e.getPoint();
+                originPointScaled = getScaledPoint(originPoint);
+                ElementPainter ep = getElementAt(originPointScaled);
                 if (ep == null) {
                     originTopic = null;
                 } else {
@@ -55,7 +57,7 @@ public class DiagramController implements IDiagramController {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // If click
-                if (getScaledPoint(e.getPoint()).equals(originPoint)) {
+                if (e.getPoint().equals(originPoint)) {
                     ElementPainter ep = getElementAt(getScaledPoint(e.getPoint()));
                     if (ep != null && ep.getElement() instanceof Topic) {
                         mindMapPanel.mouseClickStateMigrate(
@@ -88,10 +90,10 @@ public class DiagramController implements IDiagramController {
                         );
                     }
                 } else {
-                    if (originPoint != null) {
+                    if (originPointScaled != null) {
                         mindMapPanel.mouseDrawStateMigrate(
-                                (int) getScaledPointX(originPoint.x),
-                                (int) getScaledPointY(originPoint.y),
+                                originPointScaled.x,
+                                originPointScaled.y,
                                 (int) getScaledPointX(e.getX()),
                                 (int) getScaledPointY(e.getY()),
                                 true
@@ -136,10 +138,10 @@ public class DiagramController implements IDiagramController {
                         );
                     }
                 } else {
-                    if (originPoint != null) {
+                    if (originPointScaled != null) {
                         mindMapPanel.mouseDrawStateMigrate(
-                                (int) getScaledPointX(originPoint.x),
-                                (int) getScaledPointY(originPoint.y),
+                                originPointScaled.x,
+                                originPointScaled.y,
                                 (int) getScaledPointX(e.getX()),
                                 (int) getScaledPointY(e.getY()),
                                 false
@@ -220,7 +222,9 @@ public class DiagramController implements IDiagramController {
      * @return Scaled coordinate.
      */
     private double getScaledPoint(double coordinate, boolean xAxis) {
-        return coordinate / view.getScaling() - (xAxis ? view.getTranslationX() : view.getTranslationY());
+        return coordinate / view.getScaling();// - (xAxis ? view.getTranslationX() : view.getTranslationY());
+        // TODO for centering in view
+        // return coordinate / view.getScaling() - (xAxis ? view.getTranslationX() : view.getTranslationY());
     }
 
     @Override

@@ -174,13 +174,10 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
 
         affineTransform.setToIdentity();
 
-        // Center in view
+        // TODO Center in view
         translateX = (1 - scaling) * getWidth() / 2.0;
         translateY = (1 - scaling) * getHeight() / 2.0;
-        System.out.println(scaling);
-        System.out.println(translateX);
-        System.out.println(translateY);
-        affineTransform.translate(translateX, translateY);
+        // affineTransform.translate(translateX, translateY);
 
         // Scale
         affineTransform.scale(scaling, scaling);

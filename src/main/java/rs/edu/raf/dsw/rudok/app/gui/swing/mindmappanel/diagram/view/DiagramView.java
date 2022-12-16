@@ -24,9 +24,9 @@ public class DiagramView extends IDiagramView {
         framework.setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(framework);
-        add(scrollPane, BorderLayout.CENTER);
+        // JScrollPane scrollPane = new JScrollPane();
+        // scrollPane.setViewportView(framework);
+        add(framework, BorderLayout.CENTER);
     }
 
     @Override
