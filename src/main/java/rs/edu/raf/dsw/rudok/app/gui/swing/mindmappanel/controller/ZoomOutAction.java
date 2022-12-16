@@ -1,36 +1,40 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.controller;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.view.IDiagramView;
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.IProjectPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
-import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
 import java.awt.event.ActionEvent;
-import java.awt.geom.AffineTransform;
 
-public class ZoomOutAction extends IAction{
+public class ZoomOutAction extends IAction {
 
 
     public ZoomOutAction() {
-        super("/images/palette.png", "Zoom out");
+        super("/images/zoomout.png", "Zoom out");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        double scaling = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().getScaling();
-        scaling /= 1.2;
-        if(scaling<0.4)
-            scaling = 0.4;
-        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().setScaling(scaling);
-        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().repaint();
+        IProjectPanel p = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel();
+        if (p == null) {
+            AppCore.getInstance().getMessageGenerator().error("No project open");
+            return;
+        }
 
-        AffineTransform affineTransform = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().getAffineTransform();
-        double translateX = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().getTranslateX();
-        double translateY = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().getTranslateY();
+        IMindMapPanel m = p.getActiveMindMapPanel();
+        if (m == null) {
+            AppCore.getInstance().getMessageGenerator().error("No mind map open");
+            return;
+        }
 
-        affineTransform.setToIdentity();
-        affineTransform.translate(translateX, translateY);
-        affineTransform.scale(scaling, scaling);
-        MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel().getDiagramController().getView().getFramework().repaint();
+        IDiagramView v = m.getDiagramController().getView();
+        if (v == null) {
+            AppCore.getInstance().getMessageGenerator().error("No mind map diagram open");
+            return;
+        }
 
+        v.zoomOut(1.2);
     }
 }

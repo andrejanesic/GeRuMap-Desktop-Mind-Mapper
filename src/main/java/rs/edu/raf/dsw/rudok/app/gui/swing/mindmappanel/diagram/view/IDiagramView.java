@@ -48,5 +48,40 @@ public abstract class IDiagramView extends JPanel {
      */
     public abstract void clearHelpers();
 
+    /**
+     * Zoom in on the view.
+     *
+     * @param coefficient Zooming coefficient.
+     */
+    public abstract void zoomIn(double coefficient);
+
+    /**
+     * Zoom out from the view.
+     *
+     * @param coefficient Zooming coefficient.
+     */
+    public abstract void zoomOut(double coefficient);
+
+    /**
+     * Returns the current scaling factor of the painted view.
+     *
+     * @return Current scaling factor of the painted view.
+     */
+    public abstract double getScaling();
+
+    /**
+     * Translation along the X-axis due to zooming.
+     *
+     * @return Translation along the X-axis due to zooming.
+     */
+    public abstract double getTranslationX();
+
+    /**
+     * Translation along the Y-axis due to zooming.
+     *
+     * @return Translation along the Y-axis due to zooming.
+     */
+    public abstract double getTranslationY();
+
     public abstract DiagramFramework getFramework();
 }

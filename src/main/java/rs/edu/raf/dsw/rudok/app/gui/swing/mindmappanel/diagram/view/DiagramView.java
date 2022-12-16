@@ -2,6 +2,7 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.view;
 
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class DiagramView extends IDiagramView {
@@ -22,6 +23,9 @@ public class DiagramView extends IDiagramView {
         framework.setCursor(new Cursor(Cursor.HAND_CURSOR));
         framework.setBackground(Color.WHITE);
         setLayout(new BorderLayout());
+
+        // JScrollPane scrollPane = new JScrollPane();
+        // scrollPane.setViewportView(framework);
         add(framework, BorderLayout.CENTER);
     }
 
@@ -48,6 +52,31 @@ public class DiagramView extends IDiagramView {
     @Override
     public void clearHelpers() {
         framework.clearHelpers();
+    }
+
+    @Override
+    public void zoomIn(double coefficient) {
+        getFramework().zoomIn(coefficient);
+    }
+
+    @Override
+    public void zoomOut(double coefficient) {
+        getFramework().zoomOut(coefficient);
+    }
+
+    @Override
+    public double getScaling() {
+        return framework.getScaling();
+    }
+
+    @Override
+    public double getTranslationX() {
+        return framework.getTranslateX();
+    }
+
+    @Override
+    public double getTranslationY() {
+        return framework.getTranslateY();
     }
 
     public DiagramFramework getFramework() {

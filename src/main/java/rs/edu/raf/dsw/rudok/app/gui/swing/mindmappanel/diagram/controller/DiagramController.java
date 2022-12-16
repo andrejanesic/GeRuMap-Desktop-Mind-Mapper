@@ -24,6 +24,7 @@ public class DiagramController implements IDiagramController {
     private final IMindMapPanel mindMapPanel;
     private final MindMap mindMap;
     private final IDiagramView view;
+    private Point originPointScaled;
     private Point originPoint;
     private Topic originTopic;
 
@@ -40,7 +41,8 @@ public class DiagramController implements IDiagramController {
             @Override
             public void mousePressed(MouseEvent e) {
                 originPoint = e.getPoint();
-                ElementPainter ep = getElementAt(e.getPoint());
+                originPointScaled = getScaledPoint(originPoint);
+                ElementPainter ep = getElementAt(originPointScaled);
                 if (ep == null) {
                     originTopic = null;
                 } else {
@@ -56,27 +58,46 @@ public class DiagramController implements IDiagramController {
             public void mouseReleased(MouseEvent e) {
                 // If click
                 if (e.getPoint().equals(originPoint)) {
-                    ElementPainter ep = getElementAt(e.getPoint());
+                    ElementPainter ep = getElementAt(getScaledPoint(e.getPoint()));
                     if (ep != null && ep.getElement() instanceof Topic) {
-                        mindMapPanel.mouseClickStateMigrate((Topic) ep.getElement());
+                        mindMapPanel.mouseClickStateMigrate(
+                                (Topic) ep.getElement()
+                        );
                     } else {
-                        mindMapPanel.mouseClickStateMigrate(e.getX(), e.getY());
+                        mindMapPanel.mouseClickStateMigrate(
+                                (int) getScaledPointX(e.getX()),
+                                (int) getScaledPointY(e.getY())
+                        );
                     }
                     return;
                 }
 
                 // If drag
-                ElementPainter ep2 = getElementAt(e.getPoint());
+                ElementPainter ep2 = getElementAt(getScaledPoint(e.getPoint()));
                 Element e2 = ep2 != null ? ep2.getElement() : null;
                 if (originTopic != null) {
                     if (e2 instanceof Topic && originTopic != e2) {
-                        mindMapPanel.mouseDrawStateMigrate(originTopic, (Topic) e2);
+                        mindMapPanel.mouseDrawStateMigrate(
+                                originTopic,
+                                (Topic) e2
+                        );
                     } else {
-                        mindMapPanel.mouseDrawStateMigrate(originTopic, e.getX(), e.getY(), true);
+                        mindMapPanel.mouseDrawStateMigrate(
+                                originTopic,
+                                (int) getScaledPointX(e.getX()),
+                                (int) getScaledPointY(e.getY()),
+                                true
+                        );
                     }
                 } else {
-                    if (originPoint != null) {
-                        mindMapPanel.mouseDrawStateMigrate(originPoint.x, originPoint.y, e.getX(), e.getY(), true);
+                    if (originPointScaled != null) {
+                        mindMapPanel.mouseDrawStateMigrate(
+                                originPointScaled.x,
+                                originPointScaled.y,
+                                (int) getScaledPointX(e.getX()),
+                                (int) getScaledPointY(e.getY()),
+                                true
+                        );
                     } else {
                         ; // TODO anything here?
                     }
@@ -100,17 +121,31 @@ public class DiagramController implements IDiagramController {
         view.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                ElementPainter ep2 = getElementAt(e.getPoint());
+                ElementPainter ep2 = getElementAt(getScaledPoint(e.getPoint()));
                 Element e2 = ep2 != null ? ep2.getElement() : null;
                 if (originTopic != null) {
                     if (e2 instanceof Topic && originTopic != e2) {
-                        mindMapPanel.mouseDrawStateMigrate(originTopic, (Topic) e2);
+                        mindMapPanel.mouseDrawStateMigrate(
+                                originTopic,
+                                (Topic) e2
+                        );
                     } else {
-                        mindMapPanel.mouseDrawStateMigrate(originTopic, e.getX(), e.getY(), false);
+                        mindMapPanel.mouseDrawStateMigrate(
+                                originTopic,
+                                (int) getScaledPointX(e.getX()),
+                                (int) getScaledPointY(e.getY()),
+                                false
+                        );
                     }
                 } else {
-                    if (originPoint != null) {
-                        mindMapPanel.mouseDrawStateMigrate(originPoint.x, originPoint.y, e.getX(), e.getY(), false);
+                    if (originPointScaled != null) {
+                        mindMapPanel.mouseDrawStateMigrate(
+                                originPointScaled.x,
+                                originPointScaled.y,
+                                (int) getScaledPointX(e.getX()),
+                                (int) getScaledPointY(e.getY()),
+                                false
+                        );
                     } else {
                         ; // TODO anything here?
                     }
@@ -124,6 +159,72 @@ public class DiagramController implements IDiagramController {
 
             }
         });
+    }
+
+    /**
+     * Scales the coordinate according to the current scaling factor of the view.
+     *
+     * @param coordinate Coordinate to scale.
+     * @return Scaled coordinate.
+     */
+    private Point getScaledPoint(Point coordinate) {
+        return new Point(
+                (int) getScaledPointX(coordinate.x),
+                (int) getScaledPointY(coordinate.y)
+        );
+    }
+
+    /**
+     * Scales the coordinate according to the current scaling factor of the view along the X-axis.
+     *
+     * @param coordinate Coordinate to scale.
+     * @return Scaled coordinate.
+     */
+    private double getScaledPointX(int coordinate) {
+        return getScaledPointX((double) coordinate);
+    }
+
+    /**
+     * Scales the coordinate according to the current scaling factor of the view along the Y-axis.
+     *
+     * @param coordinate Coordinate to scale.
+     * @return Scaled coordinate.
+     */
+    private double getScaledPointY(int coordinate) {
+        return getScaledPointY((double) coordinate);
+    }
+
+    /**
+     * Scales the coordinate according to the current scaling factor of the view along the X-axis.
+     *
+     * @param coordinate Coordinate to scale.
+     * @return Scaled coordinate.
+     */
+    private double getScaledPointX(double coordinate) {
+        return getScaledPoint(coordinate, true);
+    }
+
+    /**
+     * Scales the coordinate according to the current scaling factor of the view along the Y-axis.
+     *
+     * @param coordinate Coordinate to scale.
+     * @return Scaled coordinate.
+     */
+    private double getScaledPointY(double coordinate) {
+        return getScaledPoint(coordinate, false);
+    }
+
+    /**
+     * Scales the coordinate according to the current scaling factor of the view along the X-axis.
+     *
+     * @param coordinate Coordinate to scale.
+     * @param xAxis      Whether to use x-axis or y-axis.
+     * @return Scaled coordinate.
+     */
+    private double getScaledPoint(double coordinate, boolean xAxis) {
+        return coordinate / view.getScaling();// - (xAxis ? view.getTranslationX() : view.getTranslationY());
+        // TODO for centering in view
+        // return coordinate / view.getScaling() - (xAxis ? view.getTranslationX() : view.getTranslationY());
     }
 
     @Override
