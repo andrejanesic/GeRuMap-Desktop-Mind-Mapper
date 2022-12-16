@@ -23,16 +23,19 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
      * The {@link MindMap} to be painted.
      */
     private final MindMap parent;
-    private IObserver observer;
+    private final IObserver observer;
+    private final AffineTransform affineTransform;
     /**
      * Helper graphic start and endpoint.
      */
     private int helperX1 = 0, helperY1 = 0, helperX2 = 0, helperY2 = 0;
     private HelperType helperType = null;
-    private AffineTransform affineTransform;
+    /**
+     * Zoom in/out and translation of the view.
+     */
     private double scaling = 1.0;
-    private double translateX = 0.0;
-    private double translateY = 0.0;
+    private double translateX = 0;
+    private double translateY = 0;// Center in view
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
@@ -42,14 +45,24 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
         affineTransform = new AffineTransform();
     }
 
+    public double getTranslateX() {
+        return translateX;
+    }
+
+    public double getTranslateY() {
+        return translateY;
+    }
+
+    public double getScaling() {
+        return scaling;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         ((Graphics2D) g).setTransform(affineTransform);
-        affineTransform.scale(scaling,scaling);
-        affineTransform.translate(translateX,translateY);
+
         // Draw connections
         Iterator<IMapNode> it = parent.getChildren().iterator();
         while (it.hasNext()) {
@@ -138,9 +151,47 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
         helperType = null;
     }
 
+    public void zoomIn(double coefficient) {
+        zoom(coefficient, true);
+    }
+
+    public void zoomOut(double coefficient) {
+        zoom(coefficient, false);
+    }
+
+    private void zoom(double coefficient, boolean upscale) {
+        if (upscale) {
+            scaling *= coefficient;
+            if (scaling > 5) {
+                scaling = 5;
+            }
+        } else {
+            scaling /= coefficient;
+            if (scaling < 0.4) {
+                scaling = 0.4;
+            }
+        }
+
+        affineTransform.setToIdentity();
+
+        // Center in view
+        translateX = (1 - scaling) * getWidth() / 2.0;
+        translateY = (1 - scaling) * getHeight() / 2.0;
+        System.out.println(scaling);
+        System.out.println(translateX);
+        System.out.println(translateY);
+        affineTransform.translate(translateX, translateY);
+
+        // Scale
+        affineTransform.scale(scaling, scaling);
+
+        this.repaint();
+        this.revalidate();
+    }
+
     @Override
     public void adjustmentValueChanged(AdjustmentEvent e) {
-        if(e.getValue()==AdjustmentEvent.UNIT_INCREMENT || e.getValue()==AdjustmentEvent.BLOCK_INCREMENT){
+        if (e.getValue() == AdjustmentEvent.UNIT_INCREMENT || e.getValue() == AdjustmentEvent.BLOCK_INCREMENT) {
 
         }//else if(e.getValue()==A)
     }
@@ -189,24 +240,5 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
                 host.revalidate();
             }
         }
-    }
-    public double getScaling() {
-        return scaling;
-    }
-
-    public void setScaling(double scaling) {
-        this.scaling = scaling;
-    }
-
-    public AffineTransform getAffineTransform() {
-        return affineTransform;
-    }
-
-    public double getTranslateX() {
-        return translateX;
-    }
-
-    public double getTranslateY() {
-        return translateY;
     }
 }

@@ -58,13 +58,6 @@ public class StateSelectTopic extends IState {
                 }
             }
 
-            // If shape not available but center in bounding box
-            if (t.getX() > x && t.getX() < x + dx && t.getY() > y && t.getY() < y + dy) {
-                t.setSelected(true);
-                tempSelect.add(t);
-                continue;
-            }
-
             tempSelect.remove(t);
             t.setSelected(false);
         }
