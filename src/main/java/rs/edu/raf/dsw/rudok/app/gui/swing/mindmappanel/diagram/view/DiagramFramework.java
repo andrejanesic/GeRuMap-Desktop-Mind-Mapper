@@ -45,7 +45,7 @@ public class DiagramFramework extends JPanel {
         parent.addObserver(observer);
         parent.getChildren().forEach(c -> c.addObserver(observer));
         affineTransform = new AffineTransform();
-        setBackground(Color.BLUE);
+        setBackground(Color.WHITE);
     }
 
     public double getTranslateX() {
