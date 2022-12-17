@@ -7,8 +7,6 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
@@ -17,7 +15,7 @@ import java.util.Iterator;
  * <h1>DiagramFramework</h1>
  * The "canvas" on which the {@link MindMap} is painted.
  */
-public class DiagramFramework extends JPanel implements AdjustmentListener {
+public class DiagramFramework extends JPanel {
 
     /**
      * The {@link MindMap} to be painted.
@@ -25,17 +23,21 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
     private final MindMap parent;
     private final IObserver observer;
     private final AffineTransform affineTransform;
+
     /**
      * Helper graphic start and endpoint.
      */
     private int helperX1 = 0, helperY1 = 0, helperX2 = 0, helperY2 = 0;
     private HelperType helperType = null;
+
     /**
      * Zoom in/out and translation of the view.
      */
     private double scaling = 1.0;
+
+    // TODO for centering in view
     private double translateX = 0;
-    private double translateY = 0;// Center in view
+    private double translateY = 0;
 
     public DiagramFramework(MindMap parent) {
         this.parent = parent;
@@ -43,6 +45,7 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
         parent.addObserver(observer);
         parent.getChildren().forEach(c -> c.addObserver(observer));
         affineTransform = new AffineTransform();
+        setBackground(Color.BLUE);
     }
 
     public double getTranslateX() {
@@ -159,6 +162,14 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
         zoom(coefficient, false);
     }
 
+    public void translateView(int dx, int dy) {
+        translateX += dx;
+        translateY += dy;
+        affineTransform.translate(dx, dy);
+        repaint();
+        revalidate();
+    }
+
     private void zoom(double coefficient, boolean upscale) {
         if (upscale) {
             scaling *= coefficient;
@@ -175,8 +186,8 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
         affineTransform.setToIdentity();
 
         // TODO Center in view
-        translateX = (1 - scaling) * getWidth() / 2.0;
-        translateY = (1 - scaling) * getHeight() / 2.0;
+        // translateX = (1 - scaling) * getWidth() / 2.0;
+        // translateY = (1 - scaling) * getHeight() / 2.0;
         // affineTransform.translate(translateX, translateY);
 
         // Scale
@@ -184,13 +195,6 @@ public class DiagramFramework extends JPanel implements AdjustmentListener {
 
         this.repaint();
         this.revalidate();
-    }
-
-    @Override
-    public void adjustmentValueChanged(AdjustmentEvent e) {
-        if (e.getValue() == AdjustmentEvent.UNIT_INCREMENT || e.getValue() == AdjustmentEvent.BLOCK_INCREMENT) {
-
-        }//else if(e.getValue()==A)
     }
 
     /**

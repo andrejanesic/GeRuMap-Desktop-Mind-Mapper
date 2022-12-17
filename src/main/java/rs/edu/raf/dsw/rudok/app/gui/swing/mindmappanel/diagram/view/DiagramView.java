@@ -19,13 +19,10 @@ public class DiagramView extends IDiagramView {
 
     public DiagramView(MindMap mindMap) {
         this.mindMap = mindMap;
-        this.framework = new DiagramFramework(mindMap);
-        framework.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        framework.setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
-        // JScrollPane scrollPane = new JScrollPane();
-        // scrollPane.setViewportView(framework);
+        this.framework = new DiagramFramework(mindMap);
+        framework.setCursor(new Cursor(Cursor.HAND_CURSOR));
         add(framework, BorderLayout.CENTER);
     }
 
@@ -62,6 +59,11 @@ public class DiagramView extends IDiagramView {
     @Override
     public void zoomOut(double coefficient) {
         getFramework().zoomOut(coefficient);
+    }
+
+    @Override
+    public void translateView(int dx, int dy) {
+        framework.translateView(dx, dy);
     }
 
     @Override

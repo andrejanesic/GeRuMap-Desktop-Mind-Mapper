@@ -63,6 +63,14 @@ public abstract class IDiagramView extends JPanel {
     public abstract void zoomOut(double coefficient);
 
     /**
+     * Translate diagram view by dx and dy.
+     *
+     * @param dx Horizontal translation.
+     * @param dy Vertical translation.
+     */
+    public abstract void translateView(int dx, int dy);
+
+    /**
      * Returns the current scaling factor of the painted view.
      *
      * @return Current scaling factor of the painted view.

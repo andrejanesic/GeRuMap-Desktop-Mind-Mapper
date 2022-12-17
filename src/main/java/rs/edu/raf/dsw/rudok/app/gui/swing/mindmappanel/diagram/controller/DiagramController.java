@@ -223,8 +223,6 @@ public class DiagramController implements IDiagramController {
      */
     private double getScaledPoint(double coordinate, boolean xAxis) {
         return coordinate / view.getScaling();// - (xAxis ? view.getTranslationX() : view.getTranslationY());
-        // TODO for centering in view
-        // return coordinate / view.getScaling() - (xAxis ? view.getTranslationX() : view.getTranslationY());
     }
 
     @Override

@@ -1,18 +1,23 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
+import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import java.awt.*;
 
+/**
+ * State for moving topics (if any selected) or translating the view (if no topic selected.)
+ */
 public class StateMoveTopic extends IState {
 
     /**
      * For temporary movement (dragging support.)
      */
     private Point tempMovement = null;
+
     /**
      * Origin point of any movement.
      */
@@ -58,6 +63,23 @@ public class StateMoveTopic extends IState {
             t.setX(t.getX() + dX);
             t.setY(t.getY() + dY);
             changed[i++] = t;
+        }
+
+        // No topics selected, so translate view
+        if (i == 0) {
+            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                    .getActiveMindMapPanel().getDiagramController().getView().translateView(
+                            dX, dY);
+            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                    .getActiveMindMapPanel().getDiagramController().getView().clearHelpers();
+            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                    .getActiveMindMapPanel().getDiagramController().getView().repaint();
+            MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                    .getActiveMindMapPanel().getDiagramController().getView().revalidate();
+
+            // if (complete) {
+            //     super.commit(dx, dy);
+            // }
         }
 
         if (complete) {

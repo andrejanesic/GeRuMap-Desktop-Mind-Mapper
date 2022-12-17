@@ -1,6 +1,5 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.painter;
 
-import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
@@ -65,8 +64,9 @@ public class TopicPainter extends ElementPainter {
     @Override
     public boolean elementAt(Point p) {
         if (p == null) return false;
-        double scaling = 1.0;
-        return getShape().contains(p.getX() / scaling, p.getY() / scaling);
+        //double scaling = 1.0;
+        //return getShape().contains(p.getX()
+        return getShape().contains(p.getX(), p.getY());
         // return getShape().contains(p.getX(), p.getY());
     }
 

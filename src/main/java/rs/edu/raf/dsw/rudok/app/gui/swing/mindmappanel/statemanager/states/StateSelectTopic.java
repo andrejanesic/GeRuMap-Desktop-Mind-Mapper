@@ -22,6 +22,16 @@ public class StateSelectTopic extends IState {
 
     @Override
     public void migrate(MindMap parent, int x1, int y1, int x2, int y2, boolean complete) {
+        int trX = (int) MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().getTranslationX();
+        int trY = (int) MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().getTranslationY();
+        double scaling = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
+                .getActiveMindMapPanel().getDiagramController().getView().getScaling();
+        x1 -= trX;
+        x2 -= trX;
+        y1 -= trY;
+        y2 -= trY;
 
         // Add every touched and contained element
         for (IMapNode e : parent.getChildren()) {
