@@ -941,7 +941,7 @@ public class LocalFileSystem extends IFileSystem {
                     // If Element schema
                     Element e = (Element) nodes.getOrDefault(nodeId, null);
                     if (e == null) {
-                        e = new Element(element_name);
+                        e = new Element(element_name,0,"#FFFFFF");
                         nodes.put(nodeId, e);
                     }
                     if (element_name != null) {

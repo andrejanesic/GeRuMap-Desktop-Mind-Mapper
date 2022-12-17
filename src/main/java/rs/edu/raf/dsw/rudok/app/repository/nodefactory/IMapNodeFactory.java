@@ -20,7 +20,7 @@ public abstract class IMapNodeFactory {
      *
      * @return {@link IMapNode} new node on the given parent.
      */
-    public abstract IMapNode createNode();
+    public abstract IMapNode createNode(Object... params);
 
     /**
      * Parent that any new nodes will be created on/existing nodes edited/manipulated on.

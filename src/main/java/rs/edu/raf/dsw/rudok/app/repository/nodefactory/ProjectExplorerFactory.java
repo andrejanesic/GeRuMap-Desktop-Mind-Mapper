@@ -16,7 +16,7 @@ public class ProjectExplorerFactory extends IMapNodeFactory {
     }
 
     @Override
-    public IMapNode createNode() {
+    public IMapNode createNode(Object... params) {
         return PROJECT_EXPLORER_GLOBAL;
     }
 }

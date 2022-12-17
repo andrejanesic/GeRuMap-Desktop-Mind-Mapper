@@ -1,10 +1,15 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.IDiagramController;
+import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.IProjectPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditMindMapDialog;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditProjectDialog;
 import rs.edu.raf.dsw.rudok.app.repository.*;
+import rs.edu.raf.dsw.rudok.app.repository.nodefactory.ElementFactory;
 import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 import java.awt.event.ActionEvent;
@@ -75,7 +80,29 @@ public class TreeNewAction extends ITreeAction {
 
             // new element added
             if (parent instanceof MindMap) {
-                MapNodeFactoryUtils.getFactory((IMapNodeComposite) parent).createNode();
+                IProjectPanel p = MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel();
+                if (p == null) {
+                    AppCore.getInstance().getMessageGenerator().error("No project open");
+                    return;
+                }
+
+                IMindMapPanel mp = p.getActiveMindMapPanel();
+                if (mp == null) {
+                    AppCore.getInstance().getMessageGenerator().error("No mind map open");
+                    return;
+                }
+
+                IDiagramController dc = mp.getDiagramController();
+                int x = dc.getView().getCenterX();
+                int y = dc.getView().getCenterY();
+                MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel();
+                MapNodeFactoryUtils.getFactory((IMapNodeComposite) parent).createNode(
+                        ElementFactory.Type.Topic,
+                        x,
+                        y,
+                        ElementFactory.TOPIC_DEFAULT_WIDTH,
+                        ElementFactory.TOPIC_DEFAULT_HEIGHT
+                );
                 return;
             }
 

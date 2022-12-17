@@ -20,7 +20,7 @@ public class ProjectFactory extends IMapNodeFactory {
     }
 
     @Override
-    public IMapNode createNode() {
+    public IMapNode createNode(Object... params) {
         if (getParent() == null) {
             return new Project("New project " + ++CHILD_ID, "Unknown", null);
         }
