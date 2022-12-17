@@ -1,5 +1,6 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.MindMapPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller.IProjectActionManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller.ProjectActionManager;
@@ -131,6 +132,11 @@ public class ProjectPanel extends JPanel implements IProjectPanel {
     @Override
     public IProjectActionManager getProjectActionManager() {
         return projectActionManager;
+    }
+
+    @Override
+    public IMindMapPanel getActiveMindMapPanel() {
+        return (IMindMapPanel) tabs.getSelectedComponent();
     }
 
     /**

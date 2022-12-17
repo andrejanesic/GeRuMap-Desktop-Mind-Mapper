@@ -12,5 +12,4 @@ public interface IStateActionManager {
 
     IStateAction getStartSelectTopicStateAction();
 
-    IStateAction getStartZoomStateAction();
 }

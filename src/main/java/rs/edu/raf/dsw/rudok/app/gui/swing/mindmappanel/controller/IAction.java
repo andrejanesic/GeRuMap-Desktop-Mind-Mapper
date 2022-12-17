@@ -1,13 +1,13 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller;
+package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.controller;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
 
 import javax.swing.*;
 import java.net.URL;
 
-public abstract class IStateAction extends AbstractAction {
+public abstract class IAction extends AbstractAction {
 
-    public IStateAction(String iconPath, String name) {
+    public IAction(String iconPath, String name) {
         putValue(SMALL_ICON, loadIcon(iconPath));
         putValue(NAME, name);
         putValue(SHORT_DESCRIPTION, name);

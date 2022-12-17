@@ -8,11 +8,8 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
  */
 public class ElementFactory extends IMapNodeFactory {
 
-    public enum Type {
-        Connection,
-        Topic
-    }
-
+    public static int TOPIC_DEFAULT_WIDTH = 10;
+    public static int TOPIC_DEFAULT_HEIGHT = 10;
     /**
      * For counting all children created thus far.
      */
@@ -35,23 +32,34 @@ public class ElementFactory extends IMapNodeFactory {
                     throw new RuntimeException("Programmatic error: invalid parameters to ElementFactory.createNode");
                 }
 
+                Topic from = (Topic) params[1];
+                Topic to = (Topic) params[2];
+                if (from == to) return null;
+
+                Connection c = from.getConnections().getOrDefault(to, null);
+                if (c != null) return c;
+
                 child = new Connection(
                         "New connection " + ++CHILD_ID,
                         2,
-                        0x0,
+                        "#FFFFFF",
                         (Topic) params[1],
                         (Topic) params[2]
                 );
             } else if (params[0].equals(Type.Topic)) {
                 int x = (int) params[1];
                 int y = (int) params[2];
-                int w = (int) params[3];
-                int h = (int) params[4];
+                int w = TOPIC_DEFAULT_WIDTH;
+                int h = TOPIC_DEFAULT_HEIGHT;
+                if (params.length >= 5) {
+                    w = (int) params[3];
+                    h = (int) params[4];
+                }
 
                 child = new Topic(
                         "New topic " + ++CHILD_ID,
                         2,
-                        0x0,
+                        "#FFFFFF",
                         x,
                         y,
                         w,
@@ -71,5 +79,10 @@ public class ElementFactory extends IMapNodeFactory {
             // TODO programmatic error, should never happen
             return null;
         }
+    }
+
+    public enum Type {
+        Connection,
+        Topic
     }
 }

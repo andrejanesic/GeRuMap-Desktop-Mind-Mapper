@@ -5,21 +5,73 @@ import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.List;
 
-public class TopicPainter extends ElementPainter{
-    @Override
-    public void draw(Graphics g, Element e) {
-        Topic topic = (Topic)e;
-        g.drawString(e.getNodeName(), topic.getX(), topic.getY());
-        ((Graphics2D)g).draw(new Ellipse2D.Float(topic.getX(), topic.getY(),e.getNodeName().length()+10,g.getFont().getSize2D()+10));
+public class TopicPainter extends ElementPainter {
+
+    private Shape shape;
+
+    public TopicPainter(Element element) {
+        super(element);
     }
 
     @Override
-    public boolean elementAt(List<Shape> list,int x,int y) {
-        for(Shape s:list){
-            if(s.contains(x,y)) return true;
+    public void draw(Graphics2D g) {
+        Topic topic = (Topic) getElement();
+        float textW = g.getFontMetrics().stringWidth(topic.getNodeName());
+        float totalW = textW + topic.getWidth() * 2.0f;
+        float textH = g.getFont().getSize2D();
+        float totalH = textH + topic.getHeight() * 2.0f;
+        shape = new Ellipse2D.Float(
+                (float) topic.getX() - totalW / 2,
+                (float) topic.getY() - totalH / 2,
+                totalW,
+                totalH
+        );
+
+        if (topic.isSelected()) {
+            Font fontPrev = g.getFont();
+            Stroke strokePrev = g.getStroke();
+
+            g.setColor(Color.decode(topic.getColor()));
+            g.fill(shape);
+
+            g.setColor(Color.BLACK);
+            g.setFont(new Font(fontPrev.getFontName(), Font.BOLD, fontPrev.getSize()));
+            g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2.0f), (int) (topic.getY() + textH / 2.0f));
+
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(5));
+            g.draw(shape);
+
+            // revert settings
+            g.setFont(fontPrev);
+            g.setStroke(strokePrev);
+            return;
         }
-        return false;
+
+        g.setColor(Color.decode(topic.getColor()));
+        g.fill(shape);
+
+        g.setColor(Color.BLACK);
+        g.drawString(topic.getNodeName(), (int) (topic.getX() - textW / 2.0f), (int) (topic.getY() + textH / 2.0f));
+
+        Color border = Color.decode(topic.getColor()).darker();
+        g.setColor(border);
+        g.setStroke(new BasicStroke(getElement().getStroke()));
+        g.draw(shape);
+    }
+
+    @Override
+    public boolean elementAt(Point p) {
+        if (p == null) return false;
+        //double scaling = 1.0;
+        //return getShape().contains(p.getX()
+        return getShape().contains(p.getX(), p.getY());
+        // return getShape().contains(p.getX(), p.getY());
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 }

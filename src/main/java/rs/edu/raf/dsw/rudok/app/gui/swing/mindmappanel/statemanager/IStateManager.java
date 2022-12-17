@@ -26,10 +26,7 @@ public interface IStateManager {
      */
     void setMoveTopic();
 
-    /**
-     * Sets the state of zooming on the map.
-     */
-    void setZoom();
+
 
     /**
      * Sets the state of drawing a new connection.
@@ -47,4 +44,9 @@ public interface IStateManager {
      * @return Current app {@link IState}.
      */
     IState getState();
+
+    /**
+     * Rolls back to the previous state.
+     */
+    void rollback();
 }

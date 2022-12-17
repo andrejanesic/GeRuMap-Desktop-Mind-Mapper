@@ -1,9 +1,11 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.controller.IActionManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.IDiagramController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IStateManager;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.controller.IStateActionManager;
-import rs.edu.raf.dsw.rudok.app.repository.Element;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
+import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
 /**
  * The GUI interface of mind maps.
@@ -24,12 +26,16 @@ public interface IMindMapPanel {
      */
     IStateManager getStateManager();
 
+    IActionManager getActionManager();
+
     /**
      * Returns the {@link IStateActionManager} for this {@link IMindMapPanel} instance.
      *
      * @return {@link IStateActionManager} for this {@link IMindMapPanel} instance.
      */
     IStateActionManager getStateActionManager();
+
+    IDiagramController getDiagramController();
 
     /**
      * Starts add topic state.
@@ -52,24 +58,51 @@ public interface IMindMapPanel {
     void startSelectTopicState();
 
     /**
-     * Performs the state migration for a mouse click event.
-     *
-     * @param target Target of mouse click.
-     * @param x      Mouse click X coordinate.
-     * @param y      Mouse click Y coordinate.
+     * Performs the state migration for a mouse draw.
+     *  @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param complete
      */
-    void mouseClickStateMigrate(Element target, int x, int y);
-
+    void mouseDrawStateMigrate(int x1, int y1, int x2, int y2, boolean complete);
 
     /**
      * Performs the state migration for a mouse draw.
      *
-     * @param target1 First target of mouse draw.
-     * @param target2 Second target of mouse draw.
-     * @param x1      Mouse draw start X coordinate.
-     * @param y1      Mouse draw start Y coordinate.
-     * @param x2      Mouse draw end X coordinate.
-     * @param y2      Mouse draw end Y coordinate.
+     * @param t1
+     * @param t2
      */
-    void mouseDrawStateMigrate(Element target1, Element target2, int x1, int y1, int x2, int y2);
+    void mouseDrawStateMigrate(Topic t1, Topic t2);
+
+    /**
+     * Performs the state migration for a mouse click.
+     *
+     * @param x1
+     * @param y1
+     */
+    void mouseClickStateMigrate(int x1, int y1);
+
+    /**
+     * Performs the state migration for a mouse click.
+     *
+     * @param topic
+     */
+    void mouseClickStateMigrate(Topic topic);
+
+    /**
+     * Performs the state migration for a mouse draw.
+     *
+     * @param topics
+     */
+    void mouseDrawStateMigrate(Topic... topics);
+
+    /**
+     * Performs the state migration for a mouse draw.
+     *  @param t
+     * @param x1
+     * @param y1
+     * @param complete
+     */
+    void mouseDrawStateMigrate(Topic t, int x1, int y1, boolean complete);
 }

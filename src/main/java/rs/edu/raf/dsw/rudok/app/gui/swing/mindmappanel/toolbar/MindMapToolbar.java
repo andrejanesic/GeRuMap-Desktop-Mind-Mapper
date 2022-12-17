@@ -1,18 +1,20 @@
-package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel;
+package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.toolbar;
 
-import javax.swing.*;
+import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
 
-public class MindMapToolbar extends JToolBar {
+public class MindMapToolbar extends IMindMapToolbar {
 
-    public MindMapToolbar(MindMapPanel mindMapPanel) {
+    public MindMapToolbar(IMindMapPanel mindMapPanel) {
         setFloatable(true);
 
         // Add state switchers
         add(mindMapPanel.getStateActionManager().getStartSelectTopicStateAction());
-        add(mindMapPanel.getStateActionManager().getStartZoomStateAction());
         add(mindMapPanel.getStateActionManager().getStartAddTopicStateAction());
         add(mindMapPanel.getStateActionManager().getStartDrawConnectionStateAction());
         add(mindMapPanel.getStateActionManager().getStartMoveTopicStateAction());
         add(mindMapPanel.getStateActionManager().getStartDeleteElementStateAction());
+        add(mindMapPanel.getActionManager().getEditTopicAction());
+        add(mindMapPanel.getActionManager().getZoomInAction());
+        add(mindMapPanel.getActionManager().getZoomOutAction());
     }
 }
