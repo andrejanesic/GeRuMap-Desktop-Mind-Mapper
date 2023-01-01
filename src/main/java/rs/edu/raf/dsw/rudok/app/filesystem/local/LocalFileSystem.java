@@ -6,6 +6,8 @@ import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -202,6 +204,26 @@ public class LocalFileSystem extends IFileSystem {
             // AppCore.getInstance().getMessageGenerator().error("Failed to delete project " + p.getNodeName());
             return false;
         }
+    }
+
+    @Override
+    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
+        // TODO this currently saves to each parent
+        for (IMapNodeComposite parent : mindMap.parents) {
+            Project p = (Project) parent;
+            File f = new File(p.getFilepath());
+            String path = f.getParent() + "\\" + mindMap.getNodeName() + ".png";
+            try {
+                ImageIO.write(renderedImage, "png", new File(path));
+                AppCore.getInstance().getMessageGenerator().log("Mind map saved to " + path);
+            } catch (IOException e) {
+                AppCore.getInstance().getMessageGenerator().error(
+                        "Failed to export mind map " + p.getNodeName() +
+                                "\n:" + Arrays.toString(e.getStackTrace()));
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -941,7 +963,7 @@ public class LocalFileSystem extends IFileSystem {
                     // If Element schema
                     Element e = (Element) nodes.getOrDefault(nodeId, null);
                     if (e == null) {
-                        e = new Element(element_name,0,"#FFFFFF");
+                        e = new Element(element_name, 0, "#FFFFFF");
                         nodes.put(nodeId, e);
                     }
                     if (element_name != null) {

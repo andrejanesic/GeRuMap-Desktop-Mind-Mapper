@@ -14,6 +14,7 @@ public class MainMenuBar extends JMenuBar {
         JMenuItem fileClose = new JMenuItem("Close project");
         JMenuItem fileSave = new JMenuItem("Save project");
         JMenuItem fileSaveAll = new JMenuItem("Save all projects");
+        JMenuItem fileExport = new JMenuItem("Export mind map");
         JMenuItem fileQuit = new JMenuItem("Exit");
 
         JMenu edit = new JMenu("Edit");
@@ -32,6 +33,8 @@ public class MainMenuBar extends JMenuBar {
         file.addSeparator();
         file.add(fileOpen);
         file.add(fileClose);
+        file.addSeparator();
+        file.add(fileExport);
         file.addSeparator();
         file.add(fileQuit);
 
@@ -54,6 +57,7 @@ public class MainMenuBar extends JMenuBar {
         fileSaveAll.addActionListener(MainFrame.getInstance().getActionManager().getSaveAllProjectsAction());
         fileOpen.addActionListener(MainFrame.getInstance().getActionManager().getOpenProjectAction());
         fileClose.addActionListener(MainFrame.getInstance().getActionManager().getCloseProjectAction());
+        fileExport.addActionListener(MainFrame.getInstance().getActionManager().getExportAction());
         fileQuit.addActionListener(MainFrame.getInstance().getActionManager().getQuitAction());
 
         editUndo.addActionListener(MainFrame.getInstance().getActionManager().getUndoAction());
