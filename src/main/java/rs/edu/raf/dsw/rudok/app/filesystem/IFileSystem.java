@@ -1,10 +1,13 @@
 package rs.edu.raf.dsw.rudok.app.filesystem;
 
+import org.json.JSONObject;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
+import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.io.File;
@@ -39,6 +42,7 @@ public abstract class IFileSystem extends IPublisher {
      */
     public abstract void saveProject(Project project);
 
+    public abstract Project parseJson(JSONObject s);
     /**
      * Loads the project from the given filepath.
      *
@@ -55,7 +59,8 @@ public abstract class IFileSystem extends IPublisher {
     public Project loadProject() {
         return loadProject("default");
     }
-
+    public abstract MindMap loadMindMapTemplate(String templatePath);
+    public abstract JSONObject createJSon(IMapNode c);
     /**
      * Deletes the passed {@link Project} from file system.
      *

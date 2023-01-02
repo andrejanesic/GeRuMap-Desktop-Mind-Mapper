@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.controller;
 
+import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.filesystem.local.LocalFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs.EditMindMapDialog;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
@@ -28,6 +30,8 @@ public class AddProjectAction extends IProjectAction {
                 MindMap child = (MindMap) MapNodeFactoryUtils.getFactory(p).createNode();
                 child.setNodeName(d.getNodeName());
                 child.setTemplate(d.getIsTemplate());
+
+                //AppCore.getInstance().getFileSystem().loadMindMapTemplate();
 
                 if (d.getTemplate() != null) {
                     MindMap template = d.getTemplate();

@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class EditMindMapDialog extends JDialog {
+    private final JButton btCreateFromTp;
     private final JTextField tfName;
-    private final JComboBox<String> cbTemplate;
     private final JCheckBox cbIsTemplate;
     private final MindMap[] templateRefs;
     private Result result;
@@ -27,10 +27,20 @@ public class EditMindMapDialog extends JDialog {
         this.setLayout(new BorderLayout());
         this.setLocationRelativeTo(MainFrame.getInstance());
 
+        btCreateFromTp = new JButton("Create");
+        btCreateFromTp.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TemplateDialog td = new TemplateDialog(MainFrame.getInstance(),"Choose a template",true);
+                td.setVisible(true);
+
+                dispose();
+            }
+        });
         JLabel lbName = new JLabel("Name:");
         this.tfName = new JTextField(mindMap != null ? mindMap.getNodeName() : "");
 
-        JLabel lbTemplate = new JLabel("Select template:");
+        JLabel lbTemplate = new JLabel("Make from template:");
         Iterator<IMapNode> iteratorI = project.getChildren().iterator();
         int i = 0;
         while (iteratorI.hasNext()) {
@@ -50,8 +60,6 @@ public class EditMindMapDialog extends JDialog {
             templateNames[j] = m.getNodeName();
             j++;
         }
-        cbTemplate = new JComboBox<>(templateNames);
-        cbTemplate.setSelectedIndex(0);
 
         JLabel lbIsTemplate = new JLabel("Make this a template");
         cbIsTemplate = new JCheckBox("Template", mindMap != null && mindMap.isTemplate());
@@ -64,7 +72,6 @@ public class EditMindMapDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 if (
                         (!tfName.getText().equals(mindMap != null ? mindMap.getNodeName() : "")) ||
-                                (mindMap == null && cbTemplate.getSelectedIndex() > 0) ||
                                 (cbIsTemplate.isSelected() != (mindMap != null && mindMap.isTemplate()))
                 ) {
                     int confirmResult = JOptionPane.showConfirmDialog(
@@ -110,7 +117,7 @@ public class EditMindMapDialog extends JDialog {
 
         JPanel rowSelectTemplate = new JPanel(new BorderLayout(5, 0));
         rowSelectTemplate.add(lbTemplate, BorderLayout.WEST);
-        rowSelectTemplate.add(cbTemplate, BorderLayout.CENTER);
+        rowSelectTemplate.add(btCreateFromTp, BorderLayout.CENTER);
 
         JPanel rowIsTemplate = new JPanel(new BorderLayout(5, 0));
         rowIsTemplate.add(lbIsTemplate, BorderLayout.WEST);
@@ -143,7 +150,7 @@ public class EditMindMapDialog extends JDialog {
     }
 
     public MindMap getTemplate() {
-        return templateRefs[cbTemplate.getSelectedIndex()];
+        return null;
     }
 
     public boolean getIsTemplate() {

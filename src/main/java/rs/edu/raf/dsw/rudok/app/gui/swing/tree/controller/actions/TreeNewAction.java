@@ -64,6 +64,8 @@ public class TreeNewAction extends ITreeAction {
                         child.setNodeName(d.getNodeName());
                         child.setTemplate(d.getIsTemplate());
 
+
+                        //AppCore.getInstance().getFileSystem().loadMindMapTemplate();
                         if (d.getTemplate() != null) {
                             MindMap template = d.getTemplate();
                             child.copyTemplate(template);
