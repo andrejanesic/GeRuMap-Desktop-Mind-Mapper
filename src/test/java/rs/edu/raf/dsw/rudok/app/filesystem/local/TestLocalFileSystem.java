@@ -134,6 +134,11 @@ public class TestLocalFileSystem {
             public IConstants getConstants() {
                 return new IConstants() {
                     @Override
+                    public String MINDMAP_TEMPLATES_DIR() {
+                        return null;
+                    }
+
+                    @Override
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
                     }
@@ -174,6 +179,11 @@ public class TestLocalFileSystem {
             @Override
             public IConstants getConstants() {
                 return new IConstants() {
+                    @Override
+                    public String MINDMAP_TEMPLATES_DIR() {
+                        return null;
+                    }
+
                     @Override
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return temporaryFolder.getRoot().getAbsolutePath() + "/" + dirPath;
@@ -217,6 +227,11 @@ public class TestLocalFileSystem {
             @Override
             public IConstants getConstants() {
                 return new IConstants() {
+                    @Override
+                    public String MINDMAP_TEMPLATES_DIR() {
+                        return null;
+                    }
+
                     @Override
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return null;

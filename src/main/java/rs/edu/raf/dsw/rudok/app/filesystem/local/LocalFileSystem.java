@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
@@ -119,7 +121,7 @@ public class LocalFileSystem extends IFileSystem {
      */
     @Override
     public void saveProject(Project project) {
-        if (!eraseDb(project, false) || !setupDb(project, false)) {
+        if (!deleteProjectFile(project, false) || !createProjectFile(project, false)) {
             // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
             return;
         }
@@ -139,7 +141,7 @@ public class LocalFileSystem extends IFileSystem {
             fos.close();
 
             // backup no longer needed, clean
-            eraseDb(project, true);
+            deleteProjectFile(project, true);
 
         } catch (IOException e) {
             // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
@@ -147,6 +149,7 @@ public class LocalFileSystem extends IFileSystem {
 
         AppCore.getInstance().getMessageGenerator().log("Project " + project.getNodeName() + " saved.");
     }
+
 
     @Override
     public Project loadProject(String filepath) {
@@ -194,6 +197,95 @@ public class LocalFileSystem extends IFileSystem {
         return null;
     }
 
+    @Override
+    public MindMap loadMindMapTemplate(String templatePath) {
+        return new MindMap(false,"");
+    }
+
+    @Override
+    public JSONObject createJSon(IMapNode c) {
+        JSONObject jProject = new JSONObject();
+
+        if(c instanceof Project){
+            jProject.put("Project name",c.getNodeName());
+            jProject.put("Author name",((Project) c).getAuthorName());
+            jProject.put("Filepath",((Project) c).getFilepath());
+            if(!((Project) c).getChildren().isEmpty()){
+                JSONArray jAllMaps = new JSONArray();
+                for(IMapNode m:((Project) c).getChildren()){
+                    JSONObject jMap = new JSONObject();
+                    jMap.put("Map name",m.getNodeName());
+                    jMap.put("Template",((MindMap)m).isTemplate());
+                    if(!((MindMap) m).getChildren().isEmpty()){
+                        JSONObject jAllElements = new JSONObject();
+                        JSONArray jTopics = new JSONArray();
+                        JSONArray jConnections = new JSONArray();
+                        for(IMapNode e: ((MindMap) m).getChildren()){
+                            JSONObject jElement = new JSONObject();
+                            if(e instanceof Topic){
+                                jElement.put("Topic name",e.getNodeName());
+                                jElement.put("Color",((Topic) e).getColor());
+                                jElement.put("Stroke",((Topic) e).getStroke());
+                                jElement.put("Height",((Topic) e).getHeight());
+                                jElement.put("Width",((Topic) e).getWidth());
+                                jElement.put("X",((Topic) e).getX());
+                                jElement.put("Y",((Topic) e).getY());
+                                jTopics.put(jElement);
+                            }else if(e instanceof Connection){
+                                jElement.put("Connection name",e.getNodeName());
+                                jElement.put("Color",((Connection) e).getColor());
+                                jElement.put("Stroke",((Connection) e).getStroke());
+                                jElement.put("From",((Connection) e).getFrom().hashCode());
+                                jElement.put("To",((Connection) e).getTo().hashCode());
+                                jConnections.put(jElement);
+                            }
+                        }
+                        jAllElements.put("Topics", jTopics);
+                        jAllElements.put("Connections",jConnections);
+                        jMap.put("Elements",jAllElements);
+                    }
+                    jAllMaps.put(jMap);
+
+                }
+                jProject.put("Mindmaps",jAllMaps);
+            }
+        }
+
+        return jProject;
+    }
+
+    @Override
+    public Project parseJson(JSONObject s) {
+        Project project = new Project(s.getString("Project name"),s.getString("Author name"),s.getString("Filepath"));
+        JSONArray mindmaps = new JSONArray(s.getJSONArray("Mindmaps"));
+        for(int i = 0;i<mindmaps.length();i++){
+            MindMap mindMap = new MindMap(mindmaps.getJSONObject(i).getString("Template").equals("true") ,mindmaps.getJSONObject(i).getString("Map name"));
+            JSONArray topics = new JSONArray(mindmaps.getJSONObject(i).getJSONObject("Elements").getJSONArray("Topics"));
+            ArrayList<Topic> tmp = new ArrayList<>();
+            for(int j = 0;j<topics.length();j++){
+                Element topic = new Topic(topics.getJSONObject(j).getString("Topic name"),
+                        topics.getJSONObject(j).getInt("Stroke"),
+                        topics.getJSONObject(j).getString("Color"),
+                        topics.getJSONObject(j).getInt("X"),
+                        topics.getJSONObject(j).getInt("Y"),
+                        topics.getJSONObject(j).getInt("Width"),
+                        topics.getJSONObject(j).getInt("Height"));
+                mindMap.addChild(topic);
+                topic.addParent(mindMap);
+                tmp.add((Topic) topic);
+            }
+            JSONArray connections = new JSONArray(mindmaps.getJSONObject(i).getJSONObject("Elements").getJSONArray("Connections"));
+            for(int j = 0;j<connections.length();j++){
+                for(Topic t: tmp){
+                    //if(t.hashCode() == )
+                }
+            }
+            project.addChild(mindMap);
+            mindMap.addParent(project);
+        }
+
+        return project;
+    }
     @Override
     public boolean deleteProject(Project p) {
         try {
@@ -412,7 +504,7 @@ public class LocalFileSystem extends IFileSystem {
      * @param backup Whether to erase the actual DB or its backup.
      * @return Returns true if no error, false otherwise.
      */
-    private boolean eraseDb(Project project, boolean backup) {
+    private boolean deleteProjectFile(Project project, boolean backup) {
         String fileName = this.parseProjectFilepath(project, backup);
         try {
             Files.deleteIfExists(Paths.get(fileName));
@@ -429,7 +521,7 @@ public class LocalFileSystem extends IFileSystem {
      * @param project Project to set up the DB for.
      * @param backup  Whether to make this into a backup DB or not.
      */
-    private boolean setupDb(Project project, boolean backup) {
+    private boolean createProjectFile(Project project, boolean backup) {
         String fileName = this.parseProjectFilepath(project, backup);
         try {
             Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER()));
@@ -455,7 +547,7 @@ public class LocalFileSystem extends IFileSystem {
     private boolean appendOp(Project project, boolean backup, IMapNode node, ATTR_SCHEMA[] attrs) {
 
         // Ensure deltas DB is available
-        if (!setupDb(project, backup)) {
+        if (!createProjectFile(project, backup)) {
             // AppCore.getInstance().getMessageGenerator().error("Project database unavailable");
             return false;
         }
