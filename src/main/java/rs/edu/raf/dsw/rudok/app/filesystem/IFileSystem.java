@@ -1,12 +1,10 @@
 package rs.edu.raf.dsw.rudok.app.filesystem;
 
-import org.json.JSONObject;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
@@ -36,13 +34,13 @@ public abstract class IFileSystem extends IPublisher {
     public abstract Map<String, String> loadConfig(String name);
 
     /**
-     * Saves the project and its subtree.
+     * Saves the {@link Project} and its subtree.
      *
-     * @param project Project to save.
+     * @param project {@link Project} to save.
+     * @return True if successful, false otherwise.
      */
-    public abstract void saveProject(Project project);
+    public abstract boolean saveProject(Project project);
 
-    public abstract Project parseJson(JSONObject s);
     /**
      * Loads the project from the given filepath.
      *
@@ -59,8 +57,23 @@ public abstract class IFileSystem extends IPublisher {
     public Project loadProject() {
         return loadProject("default");
     }
-    public abstract MindMap loadMindMapTemplate(String templatePath);
-    public abstract JSONObject createJSon(IMapNode c);
+
+    /**
+     * Loads the {@link MindMap} from the given path.
+     *
+     * @param path Path to the {@link MindMap}.
+     * @return {@link MindMap} if successful, null otherwise.
+     */
+    public abstract MindMap loadMindMapTemplate(String path);
+
+    /**
+     * Saves the {@link MindMap} and its subtree.
+     *
+     * @param mindMap {@link MindMap} to save.
+     * @return True if successful, false otherwise.
+     */
+    public abstract boolean saveMindMapTemplate(MindMap mindMap);
+
     /**
      * Deletes the passed {@link Project} from file system.
      *

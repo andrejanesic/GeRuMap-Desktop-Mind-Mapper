@@ -112,7 +112,7 @@ public class EditProjectDialog extends JDialog {
     }
 
     public String getFilepath() {
-        return fileChooser.getCurrentDirectory().getAbsolutePath() + "/" + getNodeName() + ".grm";
+        return fileChooser.getCurrentDirectory().getAbsolutePath() + "/" + getNodeName() + ".gerumap.json";
     }
 
     public boolean isConfirmed() {

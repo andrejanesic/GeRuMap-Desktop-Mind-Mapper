@@ -11,7 +11,7 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
-        return System.getProperty("user.dir") + "/config/";
+        return System.getProperty("user.dir") + "/GeRuMap/config/";
     }
 
     @Override
@@ -21,6 +21,6 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
-        return System.getProperty("user.dir") + "/logs/";
+        return System.getProperty("user.dir") + "/GeRuMap/logs/";
     }
 }
