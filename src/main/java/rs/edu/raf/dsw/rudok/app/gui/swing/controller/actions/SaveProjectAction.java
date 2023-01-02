@@ -6,6 +6,7 @@ import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Iterator;
 import java.util.Set;
@@ -44,15 +45,24 @@ public class SaveProjectAction extends IAction {
         if (panel == null) return;
         Project p = panel.getProject();
         if (p == null) return;
-        AppCore.getInstance().getFileSystem().saveProject(p);
+        if (AppCore.getInstance().getFileSystem().saveProject(p)) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Saved project");
+        }
     }
 
     private void saveAll() {
         Set<IMapNode> children = AppCore.getInstance().getProjectExplorer().getChildren();
         Iterator<IMapNode> it = children.iterator();
+        boolean errored = false;
         while (it.hasNext()) {
             Project p = (Project) it.next();
-            AppCore.getInstance().getFileSystem().saveProject(p);
+            if (!AppCore.getInstance().getFileSystem().saveProject(p)) {
+                errored = true;
+                break;
+            }
+        }
+        if (!errored) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance(), "Saved all projects");
         }
     }
 }
