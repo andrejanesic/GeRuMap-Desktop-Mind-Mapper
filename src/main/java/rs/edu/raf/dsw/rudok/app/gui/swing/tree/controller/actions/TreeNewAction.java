@@ -1,6 +1,9 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManagerFactory;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.standard.AddElementCommand;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.IDiagramController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.IProjectPanel;
@@ -99,14 +102,15 @@ public class TreeNewAction extends ITreeAction {
                 IDiagramController dc = mp.getDiagramController();
                 int x = dc.getView().getCenterX();
                 int y = dc.getView().getCenterY();
-                MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel();
-                MapNodeFactoryUtils.getFactory((IMapNodeComposite) parent).createNode(
-                        ElementFactory.Type.Topic,
+                MindMap mindMap = (MindMap) parent;
+                CommandManager cm = CommandManagerFactory.getCommandManager(mindMap);
+                cm.addCommand(new AddElementCommand(
+                        mindMap,
                         x,
                         y,
                         ElementFactory.TOPIC_DEFAULT_WIDTH,
                         ElementFactory.TOPIC_DEFAULT_HEIGHT
-                );
+                ));
                 return;
             }
 
