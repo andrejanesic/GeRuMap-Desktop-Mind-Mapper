@@ -6,7 +6,7 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
-import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import java.util.HashMap;
@@ -34,13 +34,23 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override
@@ -93,13 +103,23 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override
@@ -144,13 +164,23 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override
@@ -195,13 +225,23 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override
@@ -249,13 +289,23 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override
@@ -303,13 +353,23 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override

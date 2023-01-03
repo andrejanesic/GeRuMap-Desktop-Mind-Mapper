@@ -69,8 +69,11 @@ public class MindMap extends IMapNodeComposite {
                     ((Topic) e).getX(),
                     ((Topic) e).getY(),
                     ((Topic) e).getWidth(),
-                    ((Topic) e).getHeight()
+                    ((Topic) e).getHeight(),
+                    e.getStroke(),
+                    e.getColor()
             );
+
             copyMap.put((Topic) e, (Topic) eCopy);
         }
 

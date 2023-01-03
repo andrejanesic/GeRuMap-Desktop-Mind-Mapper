@@ -10,6 +10,7 @@ import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.logger.ILogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
@@ -26,6 +27,11 @@ public class TestGuiSwing {
 
         applicationFramework.initialize(
                 new IConstants() {
+                    @Override
+                    public String MINDMAP_TEMPLATES_DIR() {
+                        return null;
+                    }
+
                     @Override
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return null;
@@ -86,8 +92,7 @@ public class TestGuiSwing {
                 gui,
                 new ProjectExplorer(Helper.randString()) {
                 },
-                new IFileSystem()
-                {
+                new IFileSystem() {
                     @Override
                     public void saveConfig(Map<String, String> config) {
 
@@ -99,13 +104,23 @@ public class TestGuiSwing {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
                     public Project loadProject(String filepath) {
                         return null;
+                    }
+
+                    @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
                     }
 
                     @Override

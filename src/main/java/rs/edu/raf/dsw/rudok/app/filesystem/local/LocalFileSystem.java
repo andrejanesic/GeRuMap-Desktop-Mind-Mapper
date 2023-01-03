@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.filesystem.local;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
@@ -18,32 +20,8 @@ import java.util.*;
 
 /**
  * <h1>Local file system</h1>
- * Saves data into the local file system.<br>
- * <br>
- * Continuously listens for changes to the project structure and appends them to a database log file. Changes are saved
- * in the form of "state" statements for each node. Each statement logs a change to the state of a node, overwriting the
- * previous one. States are formatted in the database like so:<br>
- * <br>
- * <code>&lt;nodeId (int)&gt; &lt;number of changes (byte)&gt; [...attribute [...value]</code><br>
- * <br>
- * There may be an arbitrary amount of attributes and values, depending on the node type. Node type is inferred from the
- * schema. The schema is written for forwards and backwards compatibility, but could be omitted to preserve space.<br>
- * <br>
- * A backup of the project is kept in the <code>&lt;filename&gt;.bak</code> file located in the same directory as the
- * project file.<br>
- * <br>
- * <h2>Database structure</h2>
- * <h3>Save file</h3>
- * The save file of the project (the "source"/"original" project file) is saved in a log-alike structure, in binary
- * format without compression. Only final states of each node are recorded&mdash;the project history is omitted.<br>
- * <br>
- * <h3>Backup file</h3>
- * A backup file is created for each project. It works in a similar way to the source project file&mdash;however, full
- * project history is recorded in this file and the current state of the project can be re-created anywhere by
- * "replaying" the backup file. The backup file is appended to, and there may be duplicate data when new children are
- * added. Because the program does not know when a new node is created in memory, it can only detect new nodes when they
- * are added to a parent. Thus, each time a node is added to a parent and it has no more than 1 parent at the time of
- * reading, the node type and current values are written.
+ * Saves data into the local file system. Continuously listens for changes to the project structure and (optionally)
+ * autosaves each changed {@link Project}. All repository items are saved as JSON objects via {@link org.json}.
  */
 public class LocalFileSystem extends IFileSystem {
 
@@ -111,78 +89,70 @@ public class LocalFileSystem extends IFileSystem {
         }
     }
 
-    /**
-     * Saves the project file as a logfile of operations on the project tree. The root tree node is saved inside the
-     * file too.
-     *
-     * @param project Project to save.
-     */
     @Override
-    public void saveProject(Project project) {
-        if (!eraseDb(project, false) || !setupDb(project, false)) {
+    public boolean saveProject(Project project) {
+        if (!deleteProjectFile(project, false) || !createProjectFile(project, false)) {
             // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
-            return;
+            return false;
         }
 
         try {
-            FileOutputStream fos = new FileOutputStream(
-                    this.parseProjectFilepath(project, false),
-                    true);
+            FileOutputStream fos = new FileOutputStream(this.parseProjectFilepath(project, false), true);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
             DataOutputStream dos = new DataOutputStream(bos);
 
-            // encode values
-            recreateOperations(dos, project);
+            // encode whole json as one string
+            JSONObject jsonObject = createJsonProject(project);
+            String json = jsonObject.toString();
+            dos.writeUTF(json);
 
+            // backup no longer needed, clean
+            deleteProjectFile(project, true);
+
+            // close output stream and return
             dos.close();
             bos.close();
             fos.close();
 
-            // backup no longer needed, clean
-            eraseDb(project, true);
+            // save templates too
+            for (IMapNode child : project.getChildren()) {
+                MindMap m = (MindMap) child;
+                if (!m.isTemplate()) continue;
+                saveMindMapTemplate(m);
+            }
+
+            return true;
 
         } catch (IOException e) {
             // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
+            return false;
         }
-
-        AppCore.getInstance().getMessageGenerator().log("Project " + project.getNodeName() + " saved.");
     }
 
     @Override
     public Project loadProject(String filepath) {
         Project project = null;
 
+        /**
+         * TODO DANGER! Deserialized data should be checked!
+         */
+
         try {
             File f = new File(filepath);
             FileInputStream fis = new FileInputStream(f);
             DataInputStream dis = new DataInputStream(fis);
 
-            // Store a temporary map of node IDs and their objects for easier referencing
-            Map<Integer, IMapNode> nodes = new HashMap<>();
-
-            // Parse states.
-            while (dis.available() > 0) {
-                if (!decodeNodeState(dis, nodes)) {
-                    // TODO invalid operation or programmatic error in parsing
-                    // AppCore.getInstance().getMessageGenerator().error("Failed to decode project file " + filepath);
-                    return null;
-                }
+            // attempt to decode whole json from one string
+            if (dis.available() == 0) {
+                AppCore.getInstance().getMessageGenerator().error("Could not read file " + filepath);
+                return null;
             }
 
-            // Find root project. TODO there should be a better solution than traversing the whole structure again
-            Iterator<Integer> iterator = nodes.keySet().iterator();
-            while (iterator.hasNext()) {
-                int key = iterator.next();
-                if (nodes.get(key) instanceof Project) {
-                    if (project != null) {
-                        // TODO programmatic error, there may only be one project per project file
-                        return null;
-                    }
-                    project = (Project) nodes.get(key);
-                }
-            }
+            String json = dis.readUTF();
+            JSONObject jsonObject = new JSONObject(json);
+            project = parseJsonProject(jsonObject);
 
-            // Close the input stream and return project
+            // close input stream and return project
             dis.close();
             fis.close();
             return project;
@@ -192,6 +162,458 @@ public class LocalFileSystem extends IFileSystem {
             // e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean saveMindMapTemplate(MindMap mindMap) {
+        if (!deleteMindMapFile(mindMap) || !createMindMapFile(mindMap)) {
+            // AppCore.getInstance().getMessageGenerator().error("Failed to save mind map " + mindMap.getNodeName());
+            return false;
+        }
+
+        try {
+            FileOutputStream fos = new FileOutputStream(this.parseMindMapFilepath(mindMap), true);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            DataOutputStream dos = new DataOutputStream(bos);
+
+            // encode whole json as one string
+            JSONObject jsonObject = createJsonMindMap(mindMap);
+            String json = jsonObject.toString();
+            dos.writeUTF(json);
+
+            // close output stream and return
+            dos.close();
+            bos.close();
+            fos.close();
+
+            return true;
+
+        } catch (IOException e) {
+            // AppCore.getInstance().getMessageGenerator().error("Failed to save project " + project.getNodeName());
+            return false;
+        }
+    }
+
+    @Override
+    public MindMap loadMindMapTemplate(String path) {
+        MindMap template = null;
+
+        /**
+         * TODO DANGER! Deserialized data should be checked!
+         */
+
+        try {
+            File f = new File(path);
+            FileInputStream fis = new FileInputStream(f);
+            DataInputStream dis = new DataInputStream(fis);
+
+            // attempt to decode whole json from one string
+            if (dis.available() == 0) {
+                AppCore.getInstance().getMessageGenerator().error("Could not read file " + path);
+                return null;
+            }
+
+            String json = dis.readUTF();
+            JSONObject jsonObject = new JSONObject(json);
+            template = parseJsonMindMap(jsonObject);
+
+            // close input stream and return project
+            dis.close();
+            fis.close();
+            return template;
+
+        } catch (IOException e) {
+            AppCore.getInstance().getMessageGenerator().error("Failed to load mind map from " + path);
+            // e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Translates {@link Project} into JSON format.
+     *
+     * @param project {@link Project}
+     * @return {@link JSONObject} representation of the {@link Project}
+     */
+    public JSONObject createJsonProject(Project project) {
+        JSONObject json = new JSONObject();
+        String nodeName = "nodeName",
+                authorName = "authorName",
+                filepath = "filepath",
+                children = "children";
+        json.put(nodeName, project.getNodeName());
+        json.put(authorName, project.getAuthorName());
+        json.put(filepath, project.getFilepath());
+
+        JSONArray mindMaps = new JSONArray();
+        for (IMapNode c : project.getChildren()) {
+            JSONObject child = null;
+            if (c instanceof MindMap) {
+                child = createJsonMindMap((MindMap) c);
+            } else {
+                // TODO unsupported
+            }
+
+            if (child == null) {
+                // TODO should not be encountered!
+                continue;
+            }
+            mindMaps.put(child);
+        }
+        json.put(children, mindMaps);
+
+        return json;
+    }
+
+    /**
+     * Translates {@link MindMap} into JSON format.
+     *
+     * @param mindMap {@link MindMap}
+     * @return {@link JSONObject} representation of the {@link MindMap}
+     */
+    public JSONObject createJsonMindMap(MindMap mindMap) {
+        JSONObject json = new JSONObject();
+        String nodeName = "nodeName",
+                template = "template",
+                children = "children";
+        json.put(nodeName, mindMap.getNodeName());
+        json.put(template, mindMap.isTemplate());
+
+        JSONArray elements = new JSONArray();
+        for (IMapNode c : mindMap.getChildren()) {
+            JSONObject child = null;
+            if (c instanceof Topic) {
+                child = createJsonTopic((Topic) c);
+            } else if (c instanceof Connection) {
+                child = createJsonConnection((Connection) c);
+            } else {
+                // TODO unsupported
+            }
+
+            if (child == null) {
+                // TODO should not be encountered!
+                continue;
+            }
+            elements.put(child);
+        }
+        json.put(children, elements);
+
+        return json;
+    }
+
+    /**
+     * Translates {@link Topic} into JSON format.
+     *
+     * @param topic {@link Topic}
+     * @return {@link JSONObject} representation of the {@link Topic}
+     */
+    public JSONObject createJsonTopic(Topic topic) {
+        JSONObject json = new JSONObject();
+        String id = "id",
+                typeKey = "type",
+                typeTopic = "topic",
+                nodeName = "nodeName",
+                stroke = "stroke",
+                color = "color",
+                width = "width",
+                height = "height",
+                x = "x",
+                y = "y";
+        json.put(id, String.valueOf(topic.hashCode()));
+        json.put(typeKey, typeTopic);
+        json.put(nodeName, topic.getNodeName());
+        json.put(stroke, topic.getStroke());
+        json.put(color, topic.getColor());
+        json.put(width, topic.getWidth());
+        json.put(height, topic.getHeight());
+        json.put(x, topic.getX());
+        json.put(y, topic.getY());
+        return json;
+    }
+
+    /**
+     * Translates {@link Connection} into JSON format.
+     *
+     * @param connection {@link Connection}
+     * @return {@link JSONObject} representation of the {@link Connection}
+     */
+    public JSONObject createJsonConnection(Connection connection) {
+        JSONObject json = new JSONObject();
+        String id = "id",
+                typeKey = "type",
+                typeConnection = "connection",
+                nodeName = "nodeName",
+                stroke = "stroke",
+                color = "color",
+                from = "from",
+                to = "to";
+        json.put(id, String.valueOf(connection.hashCode()));
+        json.put(typeKey, typeConnection);
+        json.put(nodeName, connection.getNodeName());
+        json.put(stroke, connection.getStroke());
+        json.put(color, connection.getColor());
+        json.put(from, String.valueOf(connection.getFrom().hashCode()));
+        json.put(to, String.valueOf(connection.getTo().hashCode()));
+        return json;
+    }
+
+    /**
+     * Parses given {@link JSONObject} into a {@link Project}.
+     *
+     * @param json {@link JSONObject} source object.
+     * @return {@link Project} if successful, null otherwise.
+     */
+    private Project parseJsonProject(JSONObject json) {
+        try {
+            String nodeName = "nodeName",
+                    authorName = "authorName",
+                    filepath = "filepath",
+                    children = "children";
+            if (!json.has(nodeName)) {
+                AppCore.getInstance().getMessageGenerator().error("Project name not specified");
+                return null;
+            }
+            if (!json.has(authorName)) {
+                AppCore.getInstance().getMessageGenerator().error("Project author not specified");
+                return null;
+            }
+            if (!json.has(filepath)) {
+                AppCore.getInstance().getMessageGenerator().error("Project filepath not specified");
+                return null;
+            }
+
+            Project project = new Project(
+                    json.getString(nodeName),
+                    json.getString(authorName),
+                    json.getString(filepath)
+            );
+
+            if (!json.has(children)) {
+                return project;
+            }
+
+            JSONArray mindMaps = json.getJSONArray(children);
+            for (int i = 0; i < mindMaps.length(); i++) {
+                JSONObject child = mindMaps.getJSONObject(i);
+                MindMap mindMap = parseJsonMindMap(child);
+                if (mindMap == null) {
+                    // error parsing
+                    continue;
+                }
+
+                project.addChild(mindMap);
+            }
+
+            return project;
+
+        } catch (Exception e) {
+            // TODO runtime errors expected when parsing
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Parses given {@link JSONObject} into a {@link MindMap}.
+     *
+     * @param json {@link JSONObject} source object.
+     * @return {@link MindMap} if successful, null otherwise.
+     */
+    private MindMap parseJsonMindMap(JSONObject json) {
+        try {
+            String nodeName = "nodeName",
+                    template = "template",
+                    children = "children";
+
+            if (!json.has(nodeName)) {
+                AppCore.getInstance().getMessageGenerator().error("Mind map name not specified");
+                return null;
+            }
+            if (!json.has(template)) {
+                AppCore.getInstance().getMessageGenerator().error("Mind map template not specified");
+                return null;
+            }
+
+            MindMap mindMap = new MindMap(
+                    json.getBoolean(template),
+                    json.getString(nodeName)
+            );
+
+            if (!json.has(children)) {
+                return mindMap;
+            }
+
+            JSONArray elements = json.getJSONArray(children);
+
+            // go through topics first, then connections
+            String typeKey = "type", typeTopic = "topic", typeConnection = "connection";
+            Map<String, Topic> pool = new HashMap<>();
+
+            for (int i = 0; i < elements.length(); i++) {
+                JSONObject child = elements.getJSONObject(i);
+                if (!child.has(typeKey)) continue;
+                if (!child.getString(typeKey).equals(typeTopic)) continue;
+                Element e = parseJsonTopic(child, pool);
+                if (e != null) {
+                    mindMap.addChild(e);
+                }
+            }
+
+            for (int i = 0; i < elements.length(); i++) {
+                JSONObject child = elements.getJSONObject(i);
+                if (!child.has(typeKey)) continue;
+                if (!child.getString(typeKey).equals(typeConnection)) continue;
+                Element e = parseJsonConnection(child, pool);
+                if (e != null) {
+                    mindMap.addChild(e);
+                }
+            }
+
+            return mindMap;
+        } catch (Exception e) {
+            // TODO runtime errors expected when parsing
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Parses given {@link JSONObject} into a {@link Topic}.
+     *
+     * @param json {@link JSONObject} source object.
+     * @param pool Map of old Topic IDs and current instances.
+     * @return {@link Topic} if successful, null otherwise.
+     */
+    private Element parseJsonTopic(JSONObject json, Map<String, Topic> pool) {
+        try {
+            String id = "id",
+                    nodeName = "nodeName",
+                    stroke = "stroke",
+                    color = "color",
+                    width = "width",
+                    height = "height",
+                    x = "x",
+                    y = "y";
+
+            if (!json.has(id)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic id not specified");
+                return null;
+            }
+            if (!json.has(nodeName)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic name not specified");
+                return null;
+            }
+            if (!json.has(stroke)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic stroke not specified");
+                return null;
+            }
+            if (!json.has(color)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic color not specified");
+                return null;
+            }
+            if (!json.has(width)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic width not specified");
+                return null;
+            }
+            if (!json.has(height)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic height not specified");
+                return null;
+            }
+            if (!json.has(x)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic x not specified");
+                return null;
+            }
+            if (!json.has(y)) {
+                AppCore.getInstance().getMessageGenerator().error("Topic y not specified");
+                return null;
+            }
+
+            Topic t = new Topic(
+                    json.getString(nodeName),
+                    json.getInt(stroke),
+                    json.getString(color),
+                    json.getInt(x),
+                    json.getInt(y),
+                    json.getInt(width),
+                    json.getInt(height)
+            );
+
+            pool.put(json.getString(id), t);
+
+            return t;
+
+        } catch (Exception e) {
+            // TODO runtime errors expected when parsing
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Parses given {@link JSONObject} into a {@link Connection}.
+     *
+     * @param json {@link JSONObject} source object.
+     * @param pool Map of old Topic IDs and current instances.
+     * @return {@link Connection} if successful, null otherwise.
+     */
+    private Element parseJsonConnection(JSONObject json, Map<String, Topic> pool) {
+        try {
+            String id = "id",
+                    nodeName = "nodeName",
+                    stroke = "stroke",
+                    color = "color",
+                    from = "from",
+                    to = "to";
+
+            if (!json.has(id)) {
+                AppCore.getInstance().getMessageGenerator().error("Connection id not specified");
+                return null;
+            }
+            if (!json.has(nodeName)) {
+                AppCore.getInstance().getMessageGenerator().error("Connection name not specified");
+                return null;
+            }
+            if (!json.has(stroke)) {
+                AppCore.getInstance().getMessageGenerator().error("Connection stroke not specified");
+                return null;
+            }
+            if (!json.has(color)) {
+                AppCore.getInstance().getMessageGenerator().error("Connection color not specified");
+                return null;
+            }
+            if (!json.has(from)) {
+                AppCore.getInstance().getMessageGenerator().error("Connection from not specified");
+                return null;
+            }
+            if (!json.has(to)) {
+                AppCore.getInstance().getMessageGenerator().error("Connection to not specified");
+                return null;
+            }
+
+            from = json.getString(from);
+            to = json.getString(to);
+            if (pool.getOrDefault(from, null) == null) {
+                AppCore.getInstance().getMessageGenerator().error("Connection to not loaded");
+                return null;
+            }
+            if (pool.getOrDefault(to, null) == null) {
+                AppCore.getInstance().getMessageGenerator().error("Connection to not loaded");
+                return null;
+            }
+
+            return new Connection(
+                    json.getString(nodeName),
+                    json.getInt(stroke),
+                    json.getString(color),
+                    pool.get(from),
+                    pool.get(to)
+            );
+
+        } catch (Exception e) {
+            // TODO runtime errors expected when parsing
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -245,86 +667,24 @@ public class LocalFileSystem extends IFileSystem {
             while (iterator.hasNext()) {
                 Project p = iterator.next();
 
-                switch (((IMapNodeComposite.Message) message).getStatus()) {
-
-                    case CHILD_ADDED: {
-                        if (data.getChild() instanceof Project) {
-                            // New project added
-                            appendOp(p, true, data.getChild());
-
-                            if (Boolean.parseBoolean(
-                                    String.valueOf(AppCore.getInstance().getConfigHandler()
-                                            .get("autosave", false)))) {
-                                saveProject((Project) data.getChild());
-                            }
-
-                        } else if (data.getChild() instanceof MindMap) {
-                            appendOp(p, true, data.getChild());
-                            appendOp(p, true, data.getParent(),
-                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
-
-                            if (Boolean.parseBoolean(
-                                    String.valueOf(AppCore.getInstance().getConfigHandler()
-                                            .get("autosave", false)))) {
-                                saveProject(p);
-                            }
-
-                        } else if (data.getChild() instanceof Element) {
-                            appendOp(p, true, data.getChild());
-                            appendOp(p, true, data.getParent(),
-                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
-
-                            if (Boolean.parseBoolean(
-                                    String.valueOf(AppCore.getInstance().getConfigHandler()
-                                            .get("autosave", false)))) {
-                                saveProject(p);
-                            }
-                        }
-                        break;
-                    }
-
-                    case CHILD_REMOVED: {
-                        if (data.getChild() instanceof Project) {
-                            // TODO Check if nothing should be done here (project was removed from workspace, potentially deleted)
-                            if (Boolean.parseBoolean(
-                                    String.valueOf(AppCore.getInstance().getConfigHandler()
-                                            .get("autosave", false)))) {
-                                saveProject(p);
-                            }
-
-                        } else if (data.getChild() instanceof MindMap) {
-                            appendOp(p, true, data.getChild());
-                            appendOp(p, true, data.getParent(),
-                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_CHILDREN});
-
-                            if (Boolean.parseBoolean(
-                                    String.valueOf(AppCore.getInstance().getConfigHandler()
-                                            .get("autosave", false)))) {
-                                saveProject(p);
-                            }
-
-                        } else if (data.getChild() instanceof Element) {
-                            appendOp(p, true, data.getChild());
-                            appendOp(p, true, data.getParent(),
-                                    new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_CHILDREN});
-
-                            if (Boolean.parseBoolean(
-                                    String.valueOf(AppCore.getInstance().getConfigHandler()
-                                            .get("autosave", false)))) {
-                                saveProject(p);
-                            }
-                        }
-                        break;
-                    }
+                if (Boolean.parseBoolean(
+                        String.valueOf(AppCore.getInstance().getConfigHandler()
+                                .get("autosave", false)))) {
+                    saveProject(p);
                 }
+                break;
             }
 
         } else if (message instanceof IMapNode.Message) {
             switch (((IMapNode.Message) message).getStatus()) {
 
                 case EDITED: {
+                    if (Boolean.parseBoolean(
+                            String.valueOf(AppCore.getInstance().getConfigHandler()
+                                    .get("autosave", false)))) {
+                        break;
+                    }
                     IMapNode sender = (IMapNode) ((IMapNode.Message) message).getData().getSender();
-                    String key = ((IMapNode.Message.EditedMessageData) ((IMapNode.Message) message).getData()).getKey();
 
                     // Child because we want to avoid getting the "root-est" ProjectExplorer; if null, getChild() is a Project
                     Set<Project> projects = getProjects(sender);
@@ -333,38 +693,7 @@ public class LocalFileSystem extends IFileSystem {
                     Iterator<Project> iterator = projects.iterator();
                     while (iterator.hasNext()) {
                         Project p = iterator.next();
-
-                        if (sender instanceof Project) {
-
-                            if (key.equals("nodeName")) {
-                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_NAME});
-                            } else if (key.equals("authorName")) {
-                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_AUTHORNAME});
-                            } else if (key.equals("filepath")) {
-                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.PROJECT_FILEPATH});
-                            } else {
-                                throw new RuntimeException("Should never be reached");
-                            }
-
-                        } else if (sender instanceof MindMap) {
-
-                            if (key.equals("nodeName")) {
-                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_NAME});
-                            } else if (key.equals("template")) {
-                                appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.MINDMAP_TEMPLATE});
-                            } else {
-                                throw new RuntimeException("Should never be reached");
-                            }
-
-                        } else if (sender instanceof Element) {
-                            appendOp(p, true, sender, new ATTR_SCHEMA[]{ATTR_SCHEMA.ELEMENT_NAME});
-                        }
-
-                        if (Boolean.parseBoolean(
-                                String.valueOf(AppCore.getInstance().getConfigHandler()
-                                        .get("autosave", false)))) {
-                            saveProject(p);
-                        }
+                        saveProject(p);
                     }
                     break;
                 }
@@ -380,39 +709,13 @@ public class LocalFileSystem extends IFileSystem {
     }
 
     /**
-     * Encodes the project tree by reverse-encoding it from the leaves to the root.
+     * Erases an existing project file. TODO this should use project name as filename
      *
-     * @param dos  {@link DataOutputStream} Stream to write to.
-     * @param node Root IMapNode.
-     * @return True if no errors, false otherwise.
-     */
-    private boolean recreateOperations(DataOutputStream dos, IMapNode node) {
-        if (node == null) return true;
-
-        // If a composite, write leaves first so we can read the children first
-        if (node instanceof IMapNodeComposite) {
-            IMapNodeComposite root = (IMapNodeComposite) node;
-
-            Iterator<IMapNode> iterator = root.getChildren().iterator();
-            while (iterator.hasNext()) {
-                IMapNode child = iterator.next();
-                if (!recreateOperations(dos, child)) {
-                    // AppCore.getInstance().getMessageGenerator().error("Failed to recreate project tree");
-                    return false;
-                }
-            }
-        }
-
-        return encodeNodeState(dos, node);
-    }
-
-    /**
-     * Erases an existing database file. TODO this should use project name as filename
-     *
-     * @param backup Whether to erase the actual DB or its backup.
+     * @param project Project file to erase
+     * @param backup  Whether to erase the actual file or its backup.
      * @return Returns true if no error, false otherwise.
      */
-    private boolean eraseDb(Project project, boolean backup) {
+    private boolean deleteProjectFile(Project project, boolean backup) {
         String fileName = this.parseProjectFilepath(project, backup);
         try {
             Files.deleteIfExists(Paths.get(fileName));
@@ -424,12 +727,12 @@ public class LocalFileSystem extends IFileSystem {
     }
 
     /**
-     * Sets up the database for the project. Does not reset an existing file. Creates new file if not found.
+     * Creates file for the project.
      *
-     * @param project Project to set up the DB for.
+     * @param project Project to set up the file for.
      * @param backup  Whether to make this into a backup DB or not.
      */
-    private boolean setupDb(Project project, boolean backup) {
+    private boolean createProjectFile(Project project, boolean backup) {
         String fileName = this.parseProjectFilepath(project, backup);
         try {
             Files.createDirectories(Paths.get(applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER()));
@@ -444,52 +747,39 @@ public class LocalFileSystem extends IFileSystem {
     }
 
     /**
-     * Appends partial attribute (changes) of a node to a project's database.
+     * Erases an existing mind map file.
      *
-     * @param project Which project to append ot.
-     * @param backup  Which database to append to for the given project.
-     * @param node    Node the delta occurred on.
-     * @param attrs   Which attributes to append to regarding the changed node.
-     * @return True if no errors, false otherwise.
+     * @param mindMap Mind map file to erase
+     * @return Returns true if no error, false otherwise.
      */
-    private boolean appendOp(Project project, boolean backup, IMapNode node, ATTR_SCHEMA[] attrs) {
-
-        // Ensure deltas DB is available
-        if (!setupDb(project, backup)) {
-            // AppCore.getInstance().getMessageGenerator().error("Project database unavailable");
-            return false;
-        }
-
+    private boolean deleteMindMapFile(MindMap mindMap) {
+        String fileName = this.parseMindMapFilepath(mindMap);
         try {
-            FileOutputStream fos = new FileOutputStream(
-                    this.parseProjectFilepath(project, backup),
-                    true);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            DataOutputStream dos = new DataOutputStream(bos);
-
-            // encode values
-            encodeNodeState(dos, node, attrs);
-
-            dos.close();
-            bos.close();
-            fos.close();
+            Files.deleteIfExists(Paths.get(fileName));
             return true;
         } catch (IOException e) {
-            // AppCore.getInstance().getMessageGenerator().error("Failed to write to project database: " + e.getMessage());
+            // AppCore.getInstance().getMessageGenerator().error("Failed to erase project database " + fileName);
             return false;
         }
     }
 
     /**
-     * Appends all attributes of a node to a project's database.
+     * Creates file for the mind map.
      *
-     * @param project Which project to append ot.
-     * @param backup  Which database to append to for the given project.
-     * @param node    Node the delta occurred on.
-     * @return True if no errors, false otherwise.
+     * @param mindMap Mind map to set up the file for.
      */
-    private boolean appendOp(Project project, boolean backup, IMapNode node) {
-        return appendOp(project, backup, node, new ATTR_SCHEMA[]{});
+    private boolean createMindMapFile(MindMap mindMap) {
+        String fileName = this.parseMindMapFilepath(mindMap);
+        try {
+            Files.createDirectories(Paths.get(applicationFramework.getConstants().MINDMAP_TEMPLATES_DIR()));
+
+            new File(fileName).createNewFile();
+            return true;
+        } catch (IOException e) {
+            // AppCore.getInstance().getMessageGenerator().error("Failed to setup project database at " + fileName);
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -502,7 +792,25 @@ public class LocalFileSystem extends IFileSystem {
     private String parseProjectFilepath(Project project, boolean backup) {
         String t = applicationFramework.getConstants().FILESYSTEM_LOCAL_PROJECTS_FOLDER();
         t = t + project.getFilepath();
+        if (!t.endsWith(".gerumap.json")) {
+            t = t + ".gerumap.json";
+        }
         return t + (backup ? ".bak" : "");
+    }
+
+    /**
+     * Returns the fully-qualified path to the mind map (template), taking all parameters into account.
+     *
+     * @param mindMap {@link MindMap}
+     * @return The fully qualified filepath.
+     */
+    private String parseMindMapFilepath(MindMap mindMap) {
+        String t = applicationFramework.getConstants().MINDMAP_TEMPLATES_DIR();
+        t = t + mindMap.getNodeName();
+        if (!t.endsWith(".gerumap.json")) {
+            t = t + ".gerumap.json";
+        }
+        return t;
     }
 
     /**
@@ -547,434 +855,4 @@ public class LocalFileSystem extends IFileSystem {
         return null;
     }
 
-    /**
-     * Encode the full state of a node into the DataOutputStream.
-     *
-     * @param dos  {@link DataOutputStream} Stream to write to.
-     * @param node {@link IMapNode} node.
-     * @return True if no errors, false otherwise.
-     */
-    private boolean encodeNodeState(DataOutputStream dos, IMapNode node) {
-        return encodeNodeState(dos, node, new ATTR_SCHEMA[]{});
-    }
-
-    /**
-     * Partially encode the state of a node (only select values).
-     *
-     * @param dos   {@link DataOutputStream} Stream to write to.
-     * @param node  {@link IMapNode} node.
-     * @param attrs {@link ATTR_SCHEMA}[] array of schema attributes to encode.
-     * @return True if no errors, false otherwise.
-     */
-    private boolean encodeNodeState(DataOutputStream dos, IMapNode node, ATTR_SCHEMA[] attrs) {
-
-        // TODO add other attributes here
-
-        try {
-            if (node instanceof Project) {
-                Project p = (Project) node;
-
-                if (attrs.length == 0) {
-                    attrs = new ATTR_SCHEMA[]{
-                            ATTR_SCHEMA.PROJECT_NAME,
-                            ATTR_SCHEMA.PROJECT_AUTHORNAME,
-                            ATTR_SCHEMA.PROJECT_FILEPATH,
-                            ATTR_SCHEMA.PROJECT_CHILDREN,
-                    };
-                }
-
-                dos.writeInt(node.hashCode());
-                // TODO this could snap if more than 2^8 attributes on node
-                dos.writeByte(attrs.length);
-
-                for (int i = 0; i < attrs.length; i++) {
-                    dos.write((byte) attrs[i].ordinal());
-
-                    switch (attrs[i]) {
-                        case PROJECT_NAME:
-                            dos.writeUTF(p.getNodeName());
-                            break;
-                        case PROJECT_AUTHORNAME:
-                            dos.writeUTF(p.getAuthorName());
-                            break;
-                        case PROJECT_FILEPATH:
-                            dos.writeUTF(p.getFilepath());
-                            break;
-                        case PROJECT_CHILDREN:
-                            dos.writeInt(p.getChildren().size());
-
-                            Iterator<IMapNode> iterator = p.getChildren().iterator();
-                            while (iterator.hasNext()) {
-                                dos.writeInt(iterator.next().hashCode());
-                            }
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                return true;
-            }
-
-            if (node instanceof MindMap) {
-
-                MindMap m = (MindMap) node;
-
-                if (attrs.length == 0) {
-                    attrs = new ATTR_SCHEMA[]{
-                            ATTR_SCHEMA.MINDMAP_TEMPLATE,
-                            ATTR_SCHEMA.MINDMAP_NAME,
-                            ATTR_SCHEMA.MINDMAP_CHILDREN,
-                    };
-                }
-
-                dos.writeInt(node.hashCode());
-                // TODO this could snap if more than 2^8 attributes on node
-                dos.writeByte(attrs.length);
-
-                for (int i = 0; i < attrs.length; i++) {
-                    dos.write((byte) attrs[i].ordinal());
-
-                    switch (attrs[i]) {
-                        case MINDMAP_TEMPLATE:
-                            dos.writeBoolean(m.isTemplate());
-                            break;
-                        case MINDMAP_NAME:
-                            dos.writeUTF(m.getNodeName());
-                            break;
-                        case MINDMAP_CHILDREN:
-                            dos.writeInt(m.getChildren().size());
-
-                            Iterator<IMapNode> iterator = m.getChildren().iterator();
-                            while (iterator.hasNext()) {
-                                dos.writeInt(iterator.next().hashCode());
-                            }
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                return true;
-
-            }
-
-            if (node instanceof Element) {
-
-                Element e = (Element) node;
-
-                if (attrs.length == 0) {
-                    attrs = new ATTR_SCHEMA[]{
-                            ATTR_SCHEMA.ELEMENT_NAME,
-                    };
-                }
-
-                dos.writeInt(node.hashCode());
-                // TODO this could snap if more than 2^8 attributes on node
-                dos.writeByte(attrs.length);
-
-                for (int i = 0; i < attrs.length; i++) {
-                    dos.write((byte) attrs[i].ordinal());
-
-                    switch (attrs[i]) {
-                        case ELEMENT_NAME:
-                            dos.writeUTF(e.getNodeName());
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                return true;
-
-            }
-
-            // TODO add a method on IAddon for exporting repository objects of arbitrary type as bytes
-            // Arbitrary implementation of IMapNode
-            return false;
-
-        } catch (Exception e) {
-            // AppCore.getInstance().getMessageGenerator().error("Error writing to project database: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Decode the state of a node from a byte array into a tree of nodes.
-     *
-     * @param dis   DataInputStream to read from.
-     * @param nodes Map of nodes where the node is (potentially) located.
-     * @return True if no error, false otherwise.
-     */
-    private boolean decodeNodeState(DataInputStream dis, Map<Integer, IMapNode> nodes) {
-        try {
-            // Read node ID
-            int nodeId = dis.readInt();
-
-            // Read number of changes
-            int changes = dis.readByte();
-
-            // Possible values to be read from schema for each delta
-            String
-                    project_name = null,
-                    project_authorName = null,
-                    project_filePath = null,
-                    mindmap_name = null,
-                    element_name = null;
-            Boolean
-                    mindmap_template = null;
-            List<Integer>
-                    project_children = null,
-                    mindmap_children = null;
-
-            int type = -1;
-            int i = changes;
-
-            // Iterate on deltas while checking schema
-            while (i > 0) {
-                ATTR_SCHEMA schema = ATTR_SCHEMA.values()[dis.readUnsignedByte()];
-
-                switch (schema) {
-                    case PROJECT_NAME: {
-                        if (type > -1 && type != 0) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 0;
-                        project_name = dis.readUTF();
-                        break;
-                    }
-
-                    case PROJECT_AUTHORNAME: {
-                        if (type > -1 && type != 0) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 0;
-                        project_authorName = dis.readUTF();
-                        break;
-                    }
-
-                    case PROJECT_FILEPATH: {
-                        if (type > -1 && type != 0) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 0;
-                        project_filePath = dis.readUTF();
-                        break;
-                    }
-
-                    case PROJECT_CHILDREN: {
-                        // TODO this will fail if children are not loaded yet!
-
-                        if (type > -1 && type != 0) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 0;
-                        project_children = new ArrayList<>();
-                        int numChildren = dis.readInt();
-                        for (int j = 0; j < numChildren; j++) {
-                            project_children.add(dis.readInt());
-                        }
-                        break;
-                    }
-
-                    case MINDMAP_TEMPLATE: {
-                        if (type > -1 && type != 1) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 1;
-                        mindmap_template = dis.readBoolean();
-                        break;
-                    }
-
-                    case MINDMAP_NAME: {
-                        if (type > -1 && type != 1) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 1;
-                        mindmap_name = dis.readUTF();
-                        break;
-                    }
-
-                    case MINDMAP_CHILDREN: {
-                        // TODO this will fail if children are not loaded yet!
-
-                        if (type > -1 && type != 1) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 1;
-                        mindmap_children = new ArrayList<>();
-                        int numChildren = dis.readInt();
-                        for (int j = 0; j < numChildren; j++) {
-                            mindmap_children.add(dis.readInt());
-                        }
-                        break;
-                    }
-
-                    case ELEMENT_NAME: {
-                        if (type > -1 && type != 2) {
-                            // Type already inferred from another attribute, so invalid schema!
-                            return false;
-                        }
-
-                        type = 1;
-                        element_name = dis.readUTF();
-                        break;
-                    }
-                }
-
-                i--;
-            }
-
-            switch (type) {
-
-                case 0: {
-
-                    // If Project schema
-                    Project p = (Project) nodes.getOrDefault(nodeId, null);
-                    if (p == null) {
-                        p = new Project(
-                                project_name,
-                                project_authorName,
-                                project_filePath
-                        );
-                        nodes.put(nodeId, p);
-                    }
-                    if (project_name != null) {
-                        p.setNodeName(project_name);
-                    }
-                    if (project_authorName != null) {
-                        p.setAuthorName(project_authorName);
-                    }
-                    if (project_filePath != null) {
-                        p.setFilepath(project_filePath);
-                    }
-                    if (project_children != null) {
-                        // Remove all children
-                        Iterator<IMapNode> iterator = p.getChildren().iterator();
-                        while (iterator.hasNext()) {
-                            IMapNode c = iterator.next();
-                            iterator.remove();
-                            p.removeChild(c);
-                        }
-
-                        int s = project_children.size();
-                        for (int k = 0; k < s; k++) {
-                            IMapNode child = nodes.getOrDefault(project_children.get(k), null);
-                            if (child == null) {
-                                // TODO this is a programmatic error as children are not yet initialized
-                                continue;
-                            }
-                            if (!(child instanceof MindMap)) {
-                                // TODO log error, could be programmatic or corruption of data, invalid subelement
-                                continue;
-                            }
-                            p.addChild(child);
-                        }
-                    }
-
-                    break;
-                }
-
-                case 1: {
-
-                    // If MindMap schema
-                    MindMap m = (MindMap) nodes.getOrDefault(nodeId, null);
-                    if (m == null) {
-                        m = new MindMap(
-                                Boolean.TRUE.equals(mindmap_template),
-                                mindmap_name
-                        );
-                        nodes.put(nodeId, m);
-                    }
-                    if (mindmap_template != null) {
-                        m.setTemplate(Boolean.TRUE.equals(mindmap_template));
-                    }
-                    if (mindmap_name != null) {
-                        m.setNodeName(mindmap_name);
-                    }
-                    if (mindmap_children != null) {
-                        // Remove all children
-                        Iterator<IMapNode> iterator = m.getChildren().iterator();
-                        while (iterator.hasNext()) {
-                            IMapNode c = iterator.next();
-                            iterator.remove();
-                            m.removeChild(c);
-                        }
-
-                        int s = mindmap_children.size();
-                        for (int k = 0; k < s; k++) {
-                            IMapNode child = nodes.getOrDefault(mindmap_children.get(k), null);
-                            if (child == null) {
-                                // TODO this is a programmatic error as children are not yet initialized
-                                continue;
-                            }
-                            if (!(child instanceof Element)) {
-                                // TODO log error, could be programmatic or corruption of data, invalid subelement
-                                continue;
-                            }
-                            m.addChild(child);
-                        }
-                    }
-
-                    break;
-                }
-
-                case 2: {
-
-                    // If Element schema
-                    Element e = (Element) nodes.getOrDefault(nodeId, null);
-                    if (e == null) {
-                        e = new Element(element_name,0,"#FFFFFF");
-                        nodes.put(nodeId, e);
-                    }
-                    if (element_name != null) {
-                        e.setNodeName(element_name);
-                    }
-
-                    break;
-                }
-
-                default:
-                    // TODO log error or pass to IAddon because no registered  type inferred
-                    return false;
-            }
-
-            return true;
-        } catch (Exception e) {
-            // AppCore.getInstance().getMessageGenerator().warning("Corrupted project file");
-            return false;
-        }
-    }
-
-    /**
-     * Int-codes representing the schema for each node.
-     */
-    private enum ATTR_SCHEMA {
-        PROJECT_NAME,
-        PROJECT_AUTHORNAME,
-        PROJECT_FILEPATH,
-        PROJECT_CHILDREN,
-        MINDMAP_TEMPLATE,
-        MINDMAP_NAME,
-        MINDMAP_CHILDREN,
-        ELEMENT_NAME,
-        // TODO add other attributes here
-    }
 }
