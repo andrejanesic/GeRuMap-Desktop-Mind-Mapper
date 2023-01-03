@@ -1,6 +1,5 @@
 package rs.edu.raf.dsw.rudok.app.confighandler.standard;
 
-import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.confighandler.IConfigHandler;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
@@ -39,6 +38,11 @@ public class StandardConfigHandler extends IPublisher implements IConfigHandler 
 
     @Override
     public boolean loadConfig(String name) {
+        if (name.equals("default")) {
+            resetConfig();
+            return true;
+        }
+
         Map<String, String> configRaw = this.applicationFramework.getFileSystem().loadConfig(name);
         if (configRaw == null) return false;
 
