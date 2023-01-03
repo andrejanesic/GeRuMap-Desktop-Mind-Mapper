@@ -7,6 +7,7 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 // TODO local file saving will have to be expanded once more metadata is added for projects, etc.
 
@@ -214,8 +216,11 @@ public class LocalFileSystem extends IFileSystem {
             File f = new File(p.getFilepath());
             String path = f.getParent() + "\\" + mindMap.getNodeName() + ".png";
             try {
-                ImageIO.write(renderedImage, "png", new File(path));
+                File target = new File(path);
+                ImageIO.write(renderedImage, "png", target);
                 AppCore.getInstance().getMessageGenerator().log("Mind map saved to " + path);
+                if (!Desktop.isDesktopSupported()) return true;
+                Desktop.getDesktop().open(target);
             } catch (IOException e) {
                 AppCore.getInstance().getMessageGenerator().error(
                         "Failed to export mind map " + p.getNodeName() +
