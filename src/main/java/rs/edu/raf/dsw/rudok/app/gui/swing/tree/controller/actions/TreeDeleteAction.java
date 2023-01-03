@@ -1,6 +1,9 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManagerFactory;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.standard.RemoveElementCommand;
 import rs.edu.raf.dsw.rudok.app.gui.swing.tree.model.MapTreeItem;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.*;
@@ -38,16 +41,18 @@ public class TreeDeleteAction extends ITreeAction {
 
 
             if (selectedMapNode instanceof MindMap) {
+                // TODO only works for single parent
                 IMapNode node = ((MindMap) selectedMapNode).getParents().iterator().next();
                 Project parent = (Project) node;
                 parent.removeChild(selectedMapNode);
             }
 
             if (selectedMapNode instanceof Element) {
+                // TODO only works for single parent
                 IMapNode node = ((Element) selectedMapNode).getParents().iterator().next();
                 MindMap parent = (MindMap) node;
-                parent.removeChild(selectedMapNode);
-
+                CommandManager cm = CommandManagerFactory.getCommandManager(parent);
+                cm.addCommand(new RemoveElementCommand(parent, (Element) selectedMapNode));
             }
         }
     }
