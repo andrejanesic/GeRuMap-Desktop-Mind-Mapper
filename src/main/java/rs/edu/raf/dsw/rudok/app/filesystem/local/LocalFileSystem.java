@@ -8,6 +8,9 @@ import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNodeComposite.Message.ChildChangeMessageData;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -627,6 +630,29 @@ public class LocalFileSystem extends IFileSystem {
     }
 
     @Override
+    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
+        // TODO this currently saves to each parent
+        for (IMapNodeComposite parent : mindMap.parents) {
+            Project p = (Project) parent;
+            File f = new File(p.getFilepath());
+            String path = f.getParent() + "\\" + mindMap.getNodeName() + ".png";
+            try {
+                File target = new File(path);
+                ImageIO.write(renderedImage, "png", target);
+                AppCore.getInstance().getMessageGenerator().log("Mind map saved to " + path);
+                if (!Desktop.isDesktopSupported()) return true;
+                Desktop.getDesktop().open(target);
+            } catch (IOException e) {
+                AppCore.getInstance().getMessageGenerator().error(
+                        "Failed to export mind map " + p.getNodeName() +
+                                "\n:" + Arrays.toString(e.getStackTrace()));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void log(String line) {
         try {
             String logPath = AppCore.getInstance().getConstants().FILESYSTEM_LOCAL_LOGS_FOLDER() +
@@ -854,5 +880,4 @@ public class LocalFileSystem extends IFileSystem {
         AppCore.getInstance().getMessageGenerator().warning("App encountered unreachable state");
         return null;
     }
-
 }

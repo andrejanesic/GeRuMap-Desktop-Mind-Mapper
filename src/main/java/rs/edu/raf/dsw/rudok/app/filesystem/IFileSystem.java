@@ -8,6 +8,7 @@ import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -80,6 +81,15 @@ public abstract class IFileSystem extends IPublisher {
      * @return True if successfully deleted, false otherwise.
      */
     public abstract boolean deleteProject(Project p);
+
+    /**
+     * Exports a rendered mind map.
+     *
+     * @param mindMap       Mind map source.
+     * @param renderedImage Mind map render.
+     * @return True if successfully exported, false otherwise.
+     */
+    public abstract boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage);
 
     /**
      * Loads an add-on based on class name.

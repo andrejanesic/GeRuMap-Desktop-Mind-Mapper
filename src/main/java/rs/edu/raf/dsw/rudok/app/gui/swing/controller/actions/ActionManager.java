@@ -18,6 +18,7 @@ public class ActionManager implements IActionManager {
     private OpenPreferencesAction openPreferencesAction;
     private SaveProjectAction saveProjectAction;
     private SaveProjectAction saveAllProjectsAction;
+    private ExportAction exportAction;
 
     public ActionManager() {
         initActions();
@@ -37,6 +38,7 @@ public class ActionManager implements IActionManager {
         openPreferencesAction = new OpenPreferencesAction();
         saveProjectAction = new SaveProjectAction(false);
         saveAllProjectsAction = new SaveProjectAction(true);
+        exportAction = new ExportAction();
     }
 
     @Override
@@ -102,5 +104,10 @@ public class ActionManager implements IActionManager {
     @Override
     public SaveProjectAction getSaveAllProjectsAction() {
         return saveAllProjectsAction;
+    }
+
+    @Override
+    public ExportAction getExportAction() {
+        return exportAction;
     }
 }

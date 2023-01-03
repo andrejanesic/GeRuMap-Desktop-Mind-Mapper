@@ -10,10 +10,13 @@ import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.util.Iterator;
 
 /**
@@ -228,6 +231,18 @@ public class DiagramController implements IDiagramController {
     @Override
     public IDiagramView getView() {
         return view;
+    }
+
+    @Override
+    public RenderedImage exportImage() {
+        BufferedImage bufferedImage = new BufferedImage(
+                view.getFramework().getWidth(),
+                view.getFramework().getHeight(),
+                BufferedImage.TYPE_INT_RGB
+        );
+        Graphics2D g2d = bufferedImage.createGraphics();
+        view.getFramework().paintAll(g2d);
+        return bufferedImage;
     }
 
     /**

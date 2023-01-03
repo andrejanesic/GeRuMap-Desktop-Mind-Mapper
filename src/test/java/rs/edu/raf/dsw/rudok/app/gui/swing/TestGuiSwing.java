@@ -14,6 +14,7 @@ import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
+import java.awt.image.RenderedImage;
 import java.util.Map;
 
 public class TestGuiSwing {
@@ -125,6 +126,11 @@ public class TestGuiSwing {
 
                     @Override
                     public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
                         return false;
                     }
 

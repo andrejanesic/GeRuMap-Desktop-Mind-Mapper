@@ -12,6 +12,7 @@ import rs.edu.raf.dsw.rudok.app.gui.IGuiAddon;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
+import java.awt.image.RenderedImage;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -142,6 +143,11 @@ public class TestStandardAddonManager {
                     }
 
                     @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         try {
                             return TestAddon.class.getConstructor().newInstance();
@@ -258,6 +264,11 @@ public class TestStandardAddonManager {
 
                     @Override
                     public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
                         return false;
                     }
 

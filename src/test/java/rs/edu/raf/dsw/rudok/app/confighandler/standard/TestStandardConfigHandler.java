@@ -9,6 +9,7 @@ import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
+import java.awt.image.RenderedImage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,11 @@ public class TestStandardConfigHandler {
 
                     @Override
                     public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
                         return false;
                     }
 
@@ -128,6 +134,11 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -189,6 +200,11 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -246,6 +262,11 @@ public class TestStandardConfigHandler {
 
                     @Override
                     public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
                         return false;
                     }
 
@@ -314,6 +335,11 @@ public class TestStandardConfigHandler {
                     }
 
                     @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
+                        return false;
+                    }
+
+                    @Override
                     public IAddon loadAddon(String classname) {
                         return null;
                     }
@@ -374,6 +400,11 @@ public class TestStandardConfigHandler {
 
                     @Override
                     public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
                         return false;
                     }
 
