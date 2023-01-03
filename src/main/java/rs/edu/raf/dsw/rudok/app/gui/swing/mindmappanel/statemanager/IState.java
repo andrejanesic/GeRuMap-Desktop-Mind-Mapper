@@ -32,7 +32,8 @@ public abstract class IState {
 
     /**
      * Performs the migration of {@link IState} with the given parameters. May produce no result if not implemented.
-     *  @param parent
+     *
+     * @param parent
      * @param x1
      * @param y1
      * @param x2
@@ -77,7 +78,8 @@ public abstract class IState {
 
     /**
      * Performs the migration of {@link IState} with the given parameters. May produce no result if not implemented.
-     *  @param parent
+     *
+     * @param parent
      * @param t
      * @param x1
      * @param y1
@@ -100,7 +102,9 @@ public abstract class IState {
      *
      * @param params Parameters.
      */
-    public abstract void rollback(Object... params);
+    public void rollback(Object... params) {
+
+    }
 
     /**
      * Clears the history stack.

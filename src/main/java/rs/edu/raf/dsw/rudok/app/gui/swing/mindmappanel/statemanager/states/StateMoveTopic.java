@@ -1,5 +1,7 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManagerFactory;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.standard.MoveTopicCommand;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
 import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
@@ -76,29 +78,19 @@ public class StateMoveTopic extends IState {
                     .getActiveMindMapPanel().getDiagramController().getView().repaint();
             MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel()
                     .getActiveMindMapPanel().getDiagramController().getView().revalidate();
-
-            // if (complete) {
-            //     super.commit(dx, dy);
-            // }
         }
 
         if (complete) {
             dX = x2 - origin.x;
             dY = y2 - origin.y;
-            super.commit(parent, changed, dX, dY);
+            // Commit change if any
+            if (i > 0) {
+                CommandManagerFactory.getCommandManager(parent)
+                        .addCommand(new MoveTopicCommand(dX, dY, changed));
+            }
             origin = null;
         } else {
             tempMovement = new Point(x2, y2);
-        }
-    }
-
-    @Override
-    public void rollback(Object... params) {
-        int dX = (int) params[2];
-        int dY = (int) params[3];
-        for (Topic t : (Topic[]) params[1]) {
-            t.setX(t.getX() - dX);
-            t.setY(t.getX() - dY);
         }
     }
 }
