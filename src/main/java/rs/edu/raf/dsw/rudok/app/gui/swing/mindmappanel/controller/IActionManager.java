@@ -5,4 +5,5 @@ public interface IActionManager {
     IAction getEditTopicAction();
     IAction getZoomInAction();
     IAction getZoomOutAction();
+    IAction getEditMindMapAction();
 }

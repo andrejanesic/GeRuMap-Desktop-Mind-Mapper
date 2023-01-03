@@ -35,7 +35,14 @@ public class EditMindMapDialog extends JDialog {
         JLabel lbName = new JLabel("Name:");
         this.tfName = new JTextField(mindMap != null ? mindMap.getNodeName() : "");
 
-        JLabel lbTemplate = new JLabel("Use template:");
+        // if mind map not empty, cannot apply template!
+        String lbTemplateText;
+        if (mindMap == null || mindMap.getChildren().isEmpty()) {
+            lbTemplateText = "Use template:";
+        } else {
+            lbTemplateText = "Can't apply template, mind map not empty";
+        }
+        JLabel lbTemplate = new JLabel(lbTemplateText);
         btSelectTemplate = new JButton("Select");
         btSelectTemplate.addActionListener(new AbstractAction() {
             @Override
@@ -102,7 +109,9 @@ public class EditMindMapDialog extends JDialog {
 
         JPanel rowSelectTemplate = new JPanel(new BorderLayout(5, 0));
         rowSelectTemplate.add(lbTemplate, BorderLayout.WEST);
-        rowSelectTemplate.add(btSelectTemplate, BorderLayout.CENTER);
+        if (mindMap == null || mindMap.getChildren().isEmpty()) {
+            rowSelectTemplate.add(btSelectTemplate, BorderLayout.CENTER);
+        }
 
         JPanel rowIsTemplate = new JPanel(new BorderLayout(5, 0));
         rowIsTemplate.add(lbIsTemplate, BorderLayout.WEST);
@@ -111,10 +120,8 @@ public class EditMindMapDialog extends JDialog {
         central.add(Box.createVerticalStrut(5));
         central.add(rowName);
         central.add(Box.createVerticalStrut(5));
-        if (mindMap == null) {
-            central.add(rowSelectTemplate);
-            central.add(Box.createVerticalStrut(5));
-        }
+        central.add(rowSelectTemplate);
+        central.add(Box.createVerticalStrut(5));
         central.add(rowIsTemplate);
         central.add(Box.createVerticalStrut(5));
 
