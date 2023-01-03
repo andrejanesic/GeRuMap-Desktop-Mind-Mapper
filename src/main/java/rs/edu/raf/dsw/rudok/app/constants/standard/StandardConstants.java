@@ -6,7 +6,7 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String MINDMAP_TEMPLATES_DIR() {
-        return System.getenv("user.dir") + "/GeRuMap/templates/";
+        return System.getProperty("user.dir") + "/GeRuMap/templates/";
     }
 
     @Override

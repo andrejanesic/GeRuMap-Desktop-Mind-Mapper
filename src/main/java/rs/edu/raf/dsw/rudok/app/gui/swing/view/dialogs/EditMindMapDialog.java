@@ -2,64 +2,49 @@ package rs.edu.raf.dsw.rudok.app.gui.swing.view.dialogs;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
-import rs.edu.raf.dsw.rudok.app.repository.Project;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
-import java.util.function.Predicate;
 
+// TODO Fix this
 public class EditMindMapDialog extends JDialog {
-    private final JButton btCreateFromTp;
+    private final JButton btSelectTemplate;
     private final JTextField tfName;
     private final JCheckBox cbIsTemplate;
-    private final MindMap[] templateRefs;
+
+    /**
+     * Result of the dialog.
+     */
     private Result result;
 
-    public EditMindMapDialog(Project project, MindMap mindMap) {
+    /**
+     * {@link MindMap} template path.
+     */
+    private String template = null;
+
+    public EditMindMapDialog(MindMap mindMap) {
         super(MainFrame.getInstance(), mindMap != null ? "Edit " + mindMap.getNodeName() : "Create Mind map", true);
 
         this.setSize(new Dimension(260, 160));
         this.setLayout(new BorderLayout());
         this.setLocationRelativeTo(MainFrame.getInstance());
 
-        btCreateFromTp = new JButton("Create");
-        btCreateFromTp.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TemplateDialog td = new TemplateDialog(MainFrame.getInstance(),"Choose a template",true);
-                td.setVisible(true);
-
-                dispose();
-            }
-        });
         JLabel lbName = new JLabel("Name:");
         this.tfName = new JTextField(mindMap != null ? mindMap.getNodeName() : "");
 
-        JLabel lbTemplate = new JLabel("Make from template:");
-        Iterator<IMapNode> iteratorI = project.getChildren().iterator();
-        int i = 0;
-        while (iteratorI.hasNext()) {
-            MindMap m = (MindMap) iteratorI.next();
-            if (m.isTemplate()) i++;
-        }
-        templateRefs = new MindMap[i + 1];
-        String[] templateNames = new String[i + 1];
-        templateRefs[0] = null;
-        templateNames[0] = "No template";
-        Iterator<IMapNode> iteratorJ = project.getChildren().iterator();
-        int j = 1;
-        while (iteratorJ.hasNext()) {
-            MindMap m = (MindMap) iteratorJ.next();
-            if (!m.isTemplate()) continue;
-            templateRefs[j] = m;
-            templateNames[j] = m.getNodeName();
-            j++;
-        }
+        JLabel lbTemplate = new JLabel("Use template:");
+        btSelectTemplate = new JButton("Select");
+        btSelectTemplate.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TemplateDialog td = new TemplateDialog();
+                td.setVisible(true);
+                template = td.getPath();
+            }
+        });
 
         JLabel lbIsTemplate = new JLabel("Make this a template");
         cbIsTemplate = new JCheckBox("Template", mindMap != null && mindMap.isTemplate());
@@ -117,7 +102,7 @@ public class EditMindMapDialog extends JDialog {
 
         JPanel rowSelectTemplate = new JPanel(new BorderLayout(5, 0));
         rowSelectTemplate.add(lbTemplate, BorderLayout.WEST);
-        rowSelectTemplate.add(btCreateFromTp, BorderLayout.CENTER);
+        rowSelectTemplate.add(btSelectTemplate, BorderLayout.CENTER);
 
         JPanel rowIsTemplate = new JPanel(new BorderLayout(5, 0));
         rowIsTemplate.add(lbIsTemplate, BorderLayout.WEST);
@@ -149,11 +134,11 @@ public class EditMindMapDialog extends JDialog {
         return tfName.getText();
     }
 
-    public MindMap getTemplate() {
-        return null;
+    public String getTemplate() {
+        return template;
     }
 
-    public boolean getIsTemplate() {
+    public boolean isTemplate() {
         return cbIsTemplate.isSelected();
     }
 

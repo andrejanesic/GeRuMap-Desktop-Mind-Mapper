@@ -114,6 +114,13 @@ public class LocalFileSystem extends IFileSystem {
             bos.close();
             fos.close();
 
+            // save templates too
+            for (IMapNode child : project.getChildren()) {
+                MindMap m = (MindMap) child;
+                if (!m.isTemplate()) continue;
+                saveMindMapTemplate(m);
+            }
+
             return true;
 
         } catch (IOException e) {
