@@ -6,12 +6,12 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String MINDMAP_TEMPLATES_DIR() {
-        return System.getProperty("user.dir") + "/GeRuMap/templates/";
+        return System.getProperty("user.home") + "/GeRuMap/templates/";
     }
 
     @Override
     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
-        return System.getProperty("user.dir") + "/GeRuMap/config/";
+        return System.getProperty("user.home") + "/GeRuMap/config/";
     }
 
     @Override
@@ -21,6 +21,6 @@ public class StandardConstants implements IConstants {
 
     @Override
     public String FILESYSTEM_LOCAL_LOGS_FOLDER() {
-        return System.getProperty("user.dir") + "/GeRuMap/logs/";
+        return System.getProperty("user.home") + "/GeRuMap/logs/";
     }
 }
