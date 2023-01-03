@@ -30,6 +30,8 @@ public interface IActionManager {
 
     SaveProjectAction getSaveProjectAction();
 
+    SaveProjectAsAction getSaveProjectAsAction();
+
     SaveProjectAction getSaveAllProjectsAction();
 
     ExportAction getExportAction();
