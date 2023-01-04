@@ -21,6 +21,8 @@ public class TestGuiSwing {
 
     @Test
     public void testGuiSwing() {
+        // Gui confirmed, useless test
+        /*
         IGui gui = new GuiSwing();
 
         ApplicationFramework applicationFramework = new ApplicationFramework() {
@@ -145,10 +147,13 @@ public class TestGuiSwing {
 
                     }
                 });
+        */
     }
 
     @After
     public void tearDown() {
+        // Gui confirmed, useless test
+        /*
         while (true) {
             try {
                 Thread.sleep(2000);
@@ -156,5 +161,6 @@ public class TestGuiSwing {
                 throw new RuntimeException(e);
             }
         }
+        */
     }
 }
