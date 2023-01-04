@@ -9,6 +9,7 @@ public class ActionManager implements IActionManager {
     private IAction zoomOutAction;
     private IAction editTopicAction;
     private IAction editMindMapAction;
+    private IAction centerTopicAction;
 
     public ActionManager(IMindMapPanel mindMapPanel) {
         this.mindMapPanel = mindMapPanel;
@@ -20,6 +21,7 @@ public class ActionManager implements IActionManager {
         zoomInAction = new ZoomInAction();
         zoomOutAction = new ZoomOutAction();
         editMindMapAction = new EditMindMapAction(mindMapPanel);
+        centerTopicAction = new CenterTopicAction(mindMapPanel);
     }
 
     @Override
@@ -40,5 +42,10 @@ public class ActionManager implements IActionManager {
     @Override
     public IAction getEditMindMapAction() {
         return editMindMapAction;
+    }
+
+    @Override
+    public IAction getCenterTopicAction() {
+        return centerTopicAction;
     }
 }

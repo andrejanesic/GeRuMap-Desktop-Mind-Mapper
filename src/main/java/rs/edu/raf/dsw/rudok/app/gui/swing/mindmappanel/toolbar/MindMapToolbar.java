@@ -17,5 +17,6 @@ public class MindMapToolbar extends IMindMapToolbar {
         add(mindMapPanel.getActionManager().getZoomInAction());
         add(mindMapPanel.getActionManager().getZoomOutAction());
         add(mindMapPanel.getActionManager().getEditMindMapAction());
+        add(mindMapPanel.getActionManager().getCenterTopicAction());
     }
 }
