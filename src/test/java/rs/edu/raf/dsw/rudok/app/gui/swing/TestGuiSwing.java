@@ -10,15 +10,19 @@ import rs.edu.raf.dsw.rudok.app.filesystem.IFileSystem;
 import rs.edu.raf.dsw.rudok.app.gui.IGui;
 import rs.edu.raf.dsw.rudok.app.logger.ILogger;
 import rs.edu.raf.dsw.rudok.app.messagegenerator.IMessageGenerator;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 import rs.edu.raf.dsw.rudok.app.repository.ProjectExplorer;
 
+import java.awt.image.RenderedImage;
 import java.util.Map;
 
 public class TestGuiSwing {
 
     @Test
     public void testGuiSwing() {
+        // Gui confirmed, useless test
+        /*
         IGui gui = new GuiSwing();
 
         ApplicationFramework applicationFramework = new ApplicationFramework() {
@@ -26,6 +30,11 @@ public class TestGuiSwing {
 
         applicationFramework.initialize(
                 new IConstants() {
+                    @Override
+                    public String MINDMAP_TEMPLATES_DIR() {
+                        return null;
+                    }
+
                     @Override
                     public String FILESYSTEM_LOCAL_CONFIG_FOLDER() {
                         return null;
@@ -86,8 +95,7 @@ public class TestGuiSwing {
                 gui,
                 new ProjectExplorer(Helper.randString()) {
                 },
-                new IFileSystem()
-                {
+                new IFileSystem() {
                     @Override
                     public void saveConfig(Map<String, String> config) {
 
@@ -99,8 +107,8 @@ public class TestGuiSwing {
                     }
 
                     @Override
-                    public void saveProject(Project project) {
-
+                    public boolean saveProject(Project project) {
+                        return false;
                     }
 
                     @Override
@@ -109,7 +117,22 @@ public class TestGuiSwing {
                     }
 
                     @Override
+                    public MindMap loadMindMapTemplate(String path) {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean saveMindMapTemplate(MindMap mindMap) {
+                        return false;
+                    }
+
+                    @Override
                     public boolean deleteProject(Project p) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage) {
                         return false;
                     }
 
@@ -124,10 +147,13 @@ public class TestGuiSwing {
 
                     }
                 });
+        */
     }
 
     @After
     public void tearDown() {
+        // Gui confirmed, useless test
+        /*
         while (true) {
             try {
                 Thread.sleep(2000);
@@ -135,5 +161,6 @@ public class TestGuiSwing {
                 throw new RuntimeException(e);
             }
         }
+        */
     }
 }

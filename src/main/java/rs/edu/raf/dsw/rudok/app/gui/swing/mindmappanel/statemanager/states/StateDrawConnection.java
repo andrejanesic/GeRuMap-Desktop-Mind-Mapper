@@ -1,13 +1,11 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.states;
 
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManagerFactory;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.standard.AddElementCommand;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.statemanager.IState;
 import rs.edu.raf.dsw.rudok.app.gui.swing.view.MainFrame;
-import rs.edu.raf.dsw.rudok.app.repository.Connection;
-import rs.edu.raf.dsw.rudok.app.repository.IMapNode;
 import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Topic;
-import rs.edu.raf.dsw.rudok.app.repository.nodefactory.ElementFactory;
-import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
 public class StateDrawConnection extends IState {
 
@@ -35,19 +33,11 @@ public class StateDrawConnection extends IState {
                 .getActiveMindMapPanel().getDiagramController().getView().clearHelpers();
 
         // Create new connection
-        Connection conn = (Connection) MapNodeFactoryUtils.getFactory(parent)
-                .createNode(ElementFactory.Type.Connection,
+        CommandManagerFactory.getCommandManager(parent)
+                .addCommand(new AddElementCommand(
+                        parent,
                         t1,
                         t2
-                );
-
-        if (conn != null)
-            super.commit(parent, conn);
-    }
-
-    @Override
-    public void rollback(Object... params) {
-        MindMap parent = (MindMap) params[0];
-        parent.removeChild((IMapNode) params[1]);
+                ));
     }
 }

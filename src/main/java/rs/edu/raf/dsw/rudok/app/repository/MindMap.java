@@ -69,9 +69,18 @@ public class MindMap extends IMapNodeComposite {
                     ((Topic) e).getX(),
                     ((Topic) e).getY(),
                     ((Topic) e).getWidth(),
-                    ((Topic) e).getHeight()
+                    ((Topic) e).getHeight(),
+                    e.getStroke(),
+                    e.getColor()
             );
+
             copyMap.put((Topic) e, (Topic) eCopy);
+            Topic t = (Topic) eCopy;
+            t.setNodeName(e.getNodeName());
+            t.setWidth(((Topic) e).getWidth());
+            t.setHeight(((Topic) e).getHeight());
+            t.setColor(e.getColor());
+            t.setStroke(e.getStroke());
         }
 
         // Then copy connections

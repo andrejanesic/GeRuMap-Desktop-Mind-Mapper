@@ -5,8 +5,10 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddon;
 import rs.edu.raf.dsw.rudok.app.observer.IMessage;
 import rs.edu.raf.dsw.rudok.app.observer.IMessageData;
 import rs.edu.raf.dsw.rudok.app.observer.IPublisher;
+import rs.edu.raf.dsw.rudok.app.repository.MindMap;
 import rs.edu.raf.dsw.rudok.app.repository.Project;
 
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,11 +35,12 @@ public abstract class IFileSystem extends IPublisher {
     public abstract Map<String, String> loadConfig(String name);
 
     /**
-     * Saves the project and its subtree.
+     * Saves the {@link Project} and its subtree.
      *
-     * @param project Project to save.
+     * @param project {@link Project} to save.
+     * @return True if successful, false otherwise.
      */
-    public abstract void saveProject(Project project);
+    public abstract boolean saveProject(Project project);
 
     /**
      * Loads the project from the given filepath.
@@ -57,11 +60,36 @@ public abstract class IFileSystem extends IPublisher {
     }
 
     /**
+     * Loads the {@link MindMap} from the given path.
+     *
+     * @param path Path to the {@link MindMap}.
+     * @return {@link MindMap} if successful, null otherwise.
+     */
+    public abstract MindMap loadMindMapTemplate(String path);
+
+    /**
+     * Saves the {@link MindMap} and its subtree.
+     *
+     * @param mindMap {@link MindMap} to save.
+     * @return True if successful, false otherwise.
+     */
+    public abstract boolean saveMindMapTemplate(MindMap mindMap);
+
+    /**
      * Deletes the passed {@link Project} from file system.
      *
      * @return True if successfully deleted, false otherwise.
      */
     public abstract boolean deleteProject(Project p);
+
+    /**
+     * Exports a rendered mind map.
+     *
+     * @param mindMap       Mind map source.
+     * @param renderedImage Mind map render.
+     * @return True if successfully exported, false otherwise.
+     */
+    public abstract boolean exportMindMap(MindMap mindMap, RenderedImage renderedImage);
 
     /**
      * Loads an add-on based on class name.

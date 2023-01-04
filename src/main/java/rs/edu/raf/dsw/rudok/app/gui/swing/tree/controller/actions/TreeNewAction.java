@@ -1,6 +1,9 @@
 package rs.edu.raf.dsw.rudok.app.gui.swing.tree.controller.actions;
 
 import rs.edu.raf.dsw.rudok.app.AppCore;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManager;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.CommandManagerFactory;
+import rs.edu.raf.dsw.rudok.app.gui.swing.command.standard.AddElementCommand;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.IMindMapPanel;
 import rs.edu.raf.dsw.rudok.app.gui.swing.mindmappanel.diagram.controller.IDiagramController;
 import rs.edu.raf.dsw.rudok.app.gui.swing.projectpanel.IProjectPanel;
@@ -12,7 +15,10 @@ import rs.edu.raf.dsw.rudok.app.repository.*;
 import rs.edu.raf.dsw.rudok.app.repository.nodefactory.ElementFactory;
 import rs.edu.raf.dsw.rudok.app.repository.nodefactory.MapNodeFactoryUtils;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
+
+// TODO Fix this
 
 /**
  * Handles the creation of a new project, mind map or element.
@@ -51,7 +57,7 @@ public class TreeNewAction extends ITreeAction {
 
             // new mindmap added
             if (parent instanceof Project) {
-                EditMindMapDialog d = new EditMindMapDialog((Project) parent, null);
+                EditMindMapDialog d = new EditMindMapDialog(null);
                 d.setVisible(true);
                 if (d.getResult() == null) return;
                 switch (d.getResult()) {
@@ -62,12 +68,13 @@ public class TreeNewAction extends ITreeAction {
                         // Project spec required the use of factory pattern - however the method above may be more streamlined.
                         MindMap child = (MindMap) MapNodeFactoryUtils.getFactory((Project) parent).createNode();
                         child.setNodeName(d.getNodeName());
-                        child.setTemplate(d.getIsTemplate());
+                        child.setTemplate(d.isTemplate());
 
-                        if (d.getTemplate() != null) {
-                            MindMap template = d.getTemplate();
-                            child.copyTemplate(template);
-                        }
+                        if (d.getTemplate() == null) break;
+                        MindMap template = AppCore.getInstance().getFileSystem().loadMindMapTemplate(d.getTemplate());
+                        if (template == null) break; // errored
+                        child.copyTemplate(template);
+                        JOptionPane.showMessageDialog(MainFrame.getInstance(), "Template applied");
                         break;
                     }
                     case CANCELED:
@@ -95,14 +102,15 @@ public class TreeNewAction extends ITreeAction {
                 IDiagramController dc = mp.getDiagramController();
                 int x = dc.getView().getCenterX();
                 int y = dc.getView().getCenterY();
-                MainFrame.getInstance().getProjectExplorerPanel().getProjectPanel().getActiveMindMapPanel();
-                MapNodeFactoryUtils.getFactory((IMapNodeComposite) parent).createNode(
-                        ElementFactory.Type.Topic,
+                MindMap mindMap = (MindMap) parent;
+                CommandManager cm = CommandManagerFactory.getCommandManager(mindMap);
+                cm.addCommand(new AddElementCommand(
+                        mindMap,
                         x,
                         y,
                         ElementFactory.TOPIC_DEFAULT_WIDTH,
                         ElementFactory.TOPIC_DEFAULT_HEIGHT
-                );
+                ));
                 return;
             }
 
