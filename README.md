@@ -20,6 +20,9 @@ The project has been documented using [Notion](https://gerumap.notion.site/Reque
 2. Documentation:
 **https://gerumap.notion.site/GeRuMap-Documentation-346a22bd26b6435a9ee88d83d5c1d00f**
 
+3. Sequence diagram:
+**https://gerumap.notion.site/8-Sequence-Diagram-7e25ef34ab9a421c996f0fc0b4c94027**
+
 ## 2. Authors
 
 _Authored by:_
