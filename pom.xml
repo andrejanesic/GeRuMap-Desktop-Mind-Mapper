@@ -11,6 +11,10 @@
         <maven.compiler.target>8</maven.compiler.target>
         <junit.version>4.13.2</junit.version>
         <json.version>20220924</json.version>
+        <plugin.jar.version>3.3.0</plugin.jar.version>
+        <plugin.site.version>3.7.1</plugin.site.version>
+        <plugin.info.version>3.3.0</plugin.info.version>
+        <javadoc.version>3.5.0</javadoc.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -26,7 +30,12 @@
             <artifactId>json</artifactId>
             <version>${json.version}</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${javadoc.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -42,6 +51,17 @@
                         </manifest>
                     </archive>
                 </configuration>
+                <version>${plugin.jar.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${plugin.info.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${plugin.site.version}</version>
             </plugin>
         </plugins>
     </build>
