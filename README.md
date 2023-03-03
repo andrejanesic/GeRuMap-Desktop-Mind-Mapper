@@ -19,10 +19,7 @@ The project has been documented using and may be accessed on the links below:
    **https://gerumap.notion.site/GeRuMap-Requirements-5484f5c082414cefa93308e405f314be**
 
 2. Documentation:
-   **https://gerumap.notion.site/GeRuMap-Documentation-346a22bd26b6435a9ee88d83d5c1d00f**
-
-3. Sequence diagram:
-   **https://gerumap.notion.site/8-Sequence-Diagram-7e25ef34ab9a421c996f0fc0b4c94027**
+   **https://andrejanesic.github.io/GeRuMap-Desktop-Mind-Mapper/**
 
 ## 2. Authors
 
