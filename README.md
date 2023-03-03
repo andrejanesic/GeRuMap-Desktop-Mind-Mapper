@@ -1,27 +1,28 @@
-# gerumap-tim_andrejanesic_aleksavucinic
+# GeRuMap
+
 gerumap-tim_andrejanesic_aleksavucinic created by GitHub Classroom
 
 Mind map application created in Java (Swing) as part of the [Software Design (3307)](https://raf.edu.rs/en/component/content/article/192-english/subjects/3307-design-of-software) pair assignment.
 
 The project was conducted with the goal of practising:
 
-- Software architecture / request modelling
-- Design patterns
+- Software architecture / requirement modelling
+- Design patterns & OOP
 - Collaborative programming (Git)
 - Client communication, documentation and more
 
 ## 1. Requirements & Documentation
 
-The project has been documented using [Notion](https://gerumap.notion.site/Request-5484f5c082414cefa93308e405f314be) and may be accessed on the link below:
+The project has been documented using and may be accessed on the links below:
 
-1. Requirements:
-**https://gerumap.notion.site/GeRuMap-Requirements-5484f5c082414cefa93308e405f314be**
+1. Requirements (client request):
+   **https://gerumap.notion.site/GeRuMap-Requirements-5484f5c082414cefa93308e405f314be**
 
 2. Documentation:
-**https://gerumap.notion.site/GeRuMap-Documentation-346a22bd26b6435a9ee88d83d5c1d00f**
+   **https://gerumap.notion.site/GeRuMap-Documentation-346a22bd26b6435a9ee88d83d5c1d00f**
 
 3. Sequence diagram:
-**https://gerumap.notion.site/8-Sequence-Diagram-7e25ef34ab9a421c996f0fc0b4c94027**
+   **https://gerumap.notion.site/8-Sequence-Diagram-7e25ef34ab9a421c996f0fc0b4c94027**
 
 ## 2. Authors
 

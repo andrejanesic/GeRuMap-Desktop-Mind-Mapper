@@ -5,7 +5,7 @@ import rs.edu.raf.dsw.rudok.app.addon.IAddonManager;
 import rs.edu.raf.dsw.rudok.app.core.ApplicationFramework;
 
 /**
- * Default implementation of the Addon Manager. Loads add-ons into
+ * Default implementation of the Addon Manager. Loads {@link IAddon} into the app.
  */
 public class StandardAddonManager extends IAddonManager {
 
